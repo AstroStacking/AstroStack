@@ -9,6 +9,7 @@ class ImageData;
 class QChartView;
 class QTableWidget;
 class QGraphicsScene;
+class QGraphicsPixmapItem;
 
 class ImageData : public QFrame
 {
@@ -22,9 +23,12 @@ class ImageData : public QFrame
     void doubleClicked(const QModelIndex& index);
 
   private:
+    void handleItem(const QPixmap& item);
+
     std::unique_ptr<Ui::ImageData> m_ui;
 
     QChartView* m_histograms{};
     QTableWidget* m_stats{};
     QGraphicsScene* m_scene{};
+    QGraphicsPixmapItem* m_item{};
 };

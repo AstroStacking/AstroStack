@@ -4,8 +4,8 @@
 #include <imagedata.h>
 
 #include <QtCore/QDir>
-#include <QtGui/QFileSystemModel>
 #include <QtCore/QSettings>
+#include <QtGui/QFileSystemModel>
 
 Explorer::Explorer(QWidget* parent)
     : QWidget(parent), m_ui(std::make_unique<Ui::Explorer>())

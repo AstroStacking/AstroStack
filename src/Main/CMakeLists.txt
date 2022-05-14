@@ -20,5 +20,5 @@ ASTRO_add_executable(
     FOLDER Main
     SRC ${ASTRO_MAIN_SRC}
     HEADERS ${ASTRO_MAIN_HEADERS}
-    LIBRARIES Qt6::Widgets
+    LIBRARIES Qt6::Widgets Qt6::Charts
 )
