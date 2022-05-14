@@ -1,18 +1,15 @@
 #include <QMainWindow>
 
-namespace Ui
-{
-    class MainWindow;
-}
+class Ui_MainWindow;
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-public:
-    MainWindow(QWidget *parent = nullptr);
+  public:
+    MainWindow(QWidget* parent = nullptr);
+    ~MainWindow();
 
-protected:
-    Ui::MainWindow* m_ui{};
+  protected:
+    std::unique_ptr<Ui_MainWindow> m_ui;
 };
-

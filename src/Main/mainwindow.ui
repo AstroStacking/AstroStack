@@ -13,7 +13,7 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>MainWindow</string>
+   <string>AstroStack</string>
   </property>
   <widget class="QMenuBar" name="menubar" />
   <widget class="QWidget" name="centralwidget" />
