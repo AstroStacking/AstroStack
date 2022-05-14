@@ -3,9 +3,9 @@
 
 #include <explorer.h>
 
-#include <QMdiArea>
-#include <QMdiSubWindow>
-#include <QSettings>
+#include <QtWidgets/QMdiArea>
+#include <QtWidgets/QMdiSubWindow>
+#include <QtCore/QSettings>
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), m_ui(std::make_unique<Ui_MainWindow>())
@@ -19,13 +19,14 @@ MainWindow::MainWindow(QWidget* parent)
 
     QSettings settings("AstroStack", "AstroStack");
     settings.beginGroup("Main");
-    if(!settings.contains("geometry"))
+    if (!settings.contains("geometry"))
     {
         return;
     }
     restoreGeometry(settings.value("geometry").toByteArray());
     restoreState(settings.value("state").toByteArray());
-    m_treeWindow->restoreGeometry(settings.value("explorerGeometry").toByteArray());
+    m_treeWindow->restoreGeometry(
+        settings.value("explorerGeometry").toByteArray());
     m_treeWindow->move(settings.value("explorerPosition").toPoint());
     settings.endGroup();
 }
