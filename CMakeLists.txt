@@ -9,12 +9,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(Git REQUIRED)
-find_package(Qt6 REQUIRED COMPONENTS Core)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
 
 #qt_standard_project_setup()
 
 set(CMAKE_AUTOMOC TRUE)
-set(CMAKE_AUTOUI TRUE)
+set(CMAKE_AUTOUIC TRUE)
 
 # configure a header file to pass some of the CMake settings
 # to the source code

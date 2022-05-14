@@ -15,6 +15,7 @@ ASTRO_add_executable(AstroStack
   FOLDER Main
   SRC ${ASTRO_MAIN_SRC}
   HEADERS ${ASTRO_MAIN_HEADERS}
+  LIBRARIES Qt6::Widgets
 )
 
 set_target_properties(AstroStack PROPERTIES
