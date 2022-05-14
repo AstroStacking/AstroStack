@@ -6,6 +6,7 @@ namespace Ui
 {
 class Explorer;
 }
+class QFileSystemModel;
 
 class Explorer : public QWidget
 {
@@ -16,5 +17,6 @@ class Explorer : public QWidget
     ~Explorer();
 
   private:
-    std::unique_ptr<Ui::Explorer> ui;
+    std::unique_ptr<Ui::Explorer> m_ui;
+    std::unique_ptr<QFileSystemModel> m_model;
 };

@@ -2,6 +2,7 @@
 
 class Ui_MainWindow;
 class QMdiArea;
+class QMdiSubWindow;
 
 class MainWindow : public QMainWindow
 {
@@ -12,6 +13,9 @@ class MainWindow : public QMainWindow
     ~MainWindow();
 
   protected:
+    void closeEvent(QCloseEvent* event) override;
+
     std::unique_ptr<Ui_MainWindow> m_ui;
     QMdiArea* m_mdiArea{};
+    QMdiSubWindow* m_treeWindow{};
 };
