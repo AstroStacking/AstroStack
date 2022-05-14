@@ -27,7 +27,7 @@ include(Utilities)
 
 add_subdirectory(src)
 
-FILE(GLOB CMAKE_OTHER_SRC CMake/*.cmake *.in src/*.in *.yml *.md scripts/*.sh CMakeLists.txt)
+FILE(GLOB CMAKE_OTHER_SRC CMake/*.cmake *.in src/*.in src/*.txt *.yml *.md scripts/*.sh CMakeLists.txt)
 SOURCE_GROUP_BY_FOLDER(CMAKE_OTHER)
 add_custom_target(CMake SOURCES ${CMAKE_OTHER_SRC})
 

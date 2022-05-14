@@ -1,6 +1,7 @@
 #include <QMainWindow>
 
 class Ui_MainWindow;
+class QMdiArea;
 
 class MainWindow : public QMainWindow
 {
@@ -12,4 +13,5 @@ class MainWindow : public QMainWindow
 
   protected:
     std::unique_ptr<Ui_MainWindow> m_ui;
+    QMdiArea* m_mdiArea{};
 };
