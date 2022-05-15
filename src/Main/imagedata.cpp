@@ -20,21 +20,7 @@ ImageData::ImageData(QWidget* parent)
     m_ui->graphicsView->setScene(m_scene);
 
     m_histograms = new QChartView();
-    m_stats = new QTableWidget();
-    m_stats->setRowCount(3);
-    m_stats->setColumnCount(2);
-    QStringList list;
-    list << tr("Red");
-    list << tr("Green");
-    list << tr("Blue");
-    m_stats->setVerticalHeaderLabels(list);
-    list.clear();
-    list << tr("Min");
-    list << tr("Max");
-    m_stats->setHorizontalHeaderLabels(list);
-
     m_ui->verticalLayout->addWidget(m_histograms);
-    m_ui->verticalLayout->addWidget(m_stats);
 
     QSettings settings("AstroStack", "AstroStack");
     settings.beginGroup("ImageData");

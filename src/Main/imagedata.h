@@ -28,7 +28,6 @@ class ImageData : public QFrame
     std::unique_ptr<Ui::ImageData> m_ui;
 
     QChartView* m_histograms{};
-    QTableWidget* m_stats{};
     QGraphicsScene* m_scene{};
     QGraphicsPixmapItem* m_item{};
 };
