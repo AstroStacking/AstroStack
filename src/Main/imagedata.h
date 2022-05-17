@@ -1,4 +1,6 @@
 #pragma once
+#include <io.h>
+
 #include <QtWidgets/QFrame>
 
 namespace Ui
@@ -11,10 +13,12 @@ class QTableWidget;
 class QGraphicsScene;
 class QGraphicsPixmapItem;
 
+namespace astro
+{
 class ImageData : public QFrame
 {
     Q_OBJECT
-
+    
   public:
     explicit ImageData(QWidget* parent = nullptr);
     ~ImageData();
@@ -30,4 +34,6 @@ class ImageData : public QFrame
     QChartView* m_histograms{};
     QGraphicsScene* m_scene{};
     QGraphicsPixmapItem* m_item{};
+    ImageTypePtr m_img;
 };
+}

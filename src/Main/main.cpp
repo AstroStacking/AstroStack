@@ -5,7 +5,7 @@
 int main(int argc, char* argv[])
 {
     QApplication app(argc, argv);
-    MainWindow clock;
-    clock.show();
+    astro::MainWindow window;
+    window.show();
     return app.exec();
 }

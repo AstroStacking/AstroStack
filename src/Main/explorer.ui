@@ -20,7 +20,7 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <widget class="QTreeView" name="treeView"/>
-     <widget class="ImageData" name="data" native="true"/>
+     <widget class="astro::ImageData" name="data" native="true"/>
     </widget>
    </item>
   </layout>

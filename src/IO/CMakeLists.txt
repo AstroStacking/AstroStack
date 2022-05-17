@@ -1,11 +1,13 @@
 FILE(GLOB ASTRO_IO_SRC
     input.cpp
+    itkInput.cpp
     output.cpp
 )
 
 FILE(GLOB ASTRO_IO_HEADERS
-    io.h
     input.h
+    itkInput.h
+    io.h
     output.h
 )
 

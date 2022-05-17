@@ -4,6 +4,8 @@ class Ui_MainWindow;
 class QMdiArea;
 class QMdiSubWindow;
 
+namespace astro
+{
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -19,3 +21,4 @@ class MainWindow : public QMainWindow
     QMdiArea* m_mdiArea{};
     QMdiSubWindow* m_treeWindow{};
 };
+}

@@ -7,6 +7,8 @@
 #include <QtCore/QSettings>
 #include <QtGui/QFileSystemModel>
 
+namespace astro
+{
 Explorer::Explorer(QWidget* parent)
     : QWidget(parent), m_ui(std::make_unique<Ui::Explorer>())
 {
@@ -71,4 +73,5 @@ Explorer::~Explorer()
                           m_ui->treeView->columnWidth(i));
     }
     settings.endGroup();
+}
 }

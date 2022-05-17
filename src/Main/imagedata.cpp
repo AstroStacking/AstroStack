@@ -1,6 +1,8 @@
 #include "imagedata.h"
 #include "ui_imagedata.h"
 
+#include <itkInput.h>
+
 #include <QtCharts/QAreaSeries>
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
@@ -12,6 +14,8 @@
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QTableWidget>
 
+namespace astro
+{
 ImageData::ImageData(QWidget* parent)
     : QFrame(parent), m_ui(std::make_unique<Ui::ImageData>())
 {
@@ -47,6 +51,9 @@ void ImageData::doubleClicked(const QModelIndex& index)
         current = current.parent();
         path = current.data().toString() + "/" + path;
     }
+    
+    ITKInputPlugin plugin;
+    m_img = plugin.open(path, this);
     QImage image(path);
     m_item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
 
@@ -95,4 +102,5 @@ void ImageData::handleItem(const QPixmap& item)
     serie->setBrush(QColor(0, 0, 255, 64));
     chart->addSeries(serie);
     m_histograms->setChart(chart);
+}
 }

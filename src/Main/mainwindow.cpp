@@ -7,6 +7,8 @@
 #include <QtWidgets/QMdiArea>
 #include <QtWidgets/QMdiSubWindow>
 
+namespace astro
+{
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent), m_ui(std::make_unique<Ui_MainWindow>())
 {
@@ -43,4 +45,5 @@ void MainWindow::closeEvent(QCloseEvent* event)
     settings.setValue("explorerPosition", m_treeWindow->pos());
     settings.endGroup();
     QMainWindow::closeEvent(event);
+}
 }
