@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(AstroStack VERSION 1.0.0 LANGUAGES CXX)
+project(AstroStack VERSION 1.0.0 LANGUAGES C CXX)
 
 SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -10,6 +10,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 find_package(Git REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Charts)
+find_package(ITK REQUIRED COMPONENTS ITKIOImageBase)
+
+set(ITK_FACTORY_LIST ImageIO)
+include(${ITK_USE_FILE})
 
 #qt_standard_project_setup()
 
