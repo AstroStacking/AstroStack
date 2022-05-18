@@ -15,3 +15,8 @@ public:
     virtual void save(const ImageType& image, QString filename, QWidget* parent) = 0;
 };
 }
+
+QT_BEGIN_NAMESPACE
+Q_DECLARE_INTERFACE(astro::OutputInterface, "org.Astro.IO.OutputInterface")
+QT_END_NAMESPACE
+

@@ -19,6 +19,6 @@ public:
 }
 
 QT_BEGIN_NAMESPACE
-Q_DECLARE_INTERFACE(astro::InputInterface, "org.Astro.IO.InputInterface")
+    Q_DECLARE_INTERFACE(astro::InputInterface, "org.Astro.IO.InputInterface")
 QT_END_NAMESPACE
 

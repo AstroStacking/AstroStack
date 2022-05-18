@@ -1,10 +1,10 @@
 #pragma once
-#include "itkImage.h"
+#include "itkVectorImage.h"
 
 namespace astro
 {
 using PixelType = float;
 constexpr unsigned int Dimension = 2;
-using ImageType = itk::Image<PixelType, Dimension>;
+using ImageType = itk::VectorImage<PixelType, Dimension>;
 using ImageTypePtr = itk::SmartPointer<ImageType>;
 }

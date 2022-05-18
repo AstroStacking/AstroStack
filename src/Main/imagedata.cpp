@@ -41,29 +41,9 @@ ImageData::~ImageData()
     settings.setValue("verticalLayout", m_ui->verticalLayout->saveState());
 }
 
-void ImageData::doubleClicked(const QModelIndex& index)
+void ImageData::handleItem(ImageTypePtr img)
 {
-    m_scene->clear();
-    QModelIndex current = index;
-    QString path(current.data().toString());
-    while (current.parent() != QModelIndex())
-    {
-        current = current.parent();
-        path = current.data().toString() + "/" + path;
-    }
-    
-    ITKInputPlugin plugin;
-    m_img = plugin.open(path, this);
-    QImage image(path);
-    m_item = new QGraphicsPixmapItem(QPixmap::fromImage(image));
-
-    m_scene->addItem(m_item);
-    handleItem(m_item->pixmap());
-}
-
-void ImageData::handleItem(const QPixmap& item)
-{
-    QImage img = item.toImage();
+    /*QImage img = item.toImage();
     std::array<std::array<int, 64>, 3> hist{};
     for (int i = 0; i < img.width(); ++i)
     {
@@ -101,6 +81,6 @@ void ImageData::handleItem(const QPixmap& item)
     serie->setColor(QColor(0, 0, 255));
     serie->setBrush(QColor(0, 0, 255, 64));
     chart->addSeries(serie);
-    m_histograms->setChart(chart);
+    m_histograms->setChart(chart);*/
 }
 }

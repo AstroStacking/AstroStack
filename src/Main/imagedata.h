@@ -23,17 +23,12 @@ class ImageData : public QFrame
     explicit ImageData(QWidget* parent = nullptr);
     ~ImageData();
 
-  public slots:
-    void doubleClicked(const QModelIndex& index);
-
-  private:
-    void handleItem(const QPixmap& item);
-
+    void handleItem(ImageTypePtr img);
+private:
     std::unique_ptr<Ui::ImageData> m_ui;
 
     QChartView* m_histograms{};
     QGraphicsScene* m_scene{};
     QGraphicsPixmapItem* m_item{};
-    ImageTypePtr m_img;
 };
 }

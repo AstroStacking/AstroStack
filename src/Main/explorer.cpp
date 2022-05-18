@@ -26,8 +26,8 @@ Explorer::Explorer(QWidget* parent)
     m_ui->treeView->setModel(m_model.get());
     m_ui->treeView->setCurrentIndex(m_model->index(QDir::homePath()));
 
-    connect(m_ui->treeView, &QTreeView::doubleClicked, m_ui->data,
-            &ImageData::doubleClicked);
+    connect(m_ui->treeView, &QTreeView::doubleClicked, m_ui->display,
+            &ImageDisplay::doubleClicked);
 
     QSettings settings("AstroStack", "AstroStack");
     settings.beginGroup("Explorer");
@@ -46,7 +46,7 @@ Explorer::Explorer(QWidget* parent)
         m_ui->treeView->setColumnWidth(
             i, settings.value("header" + QString::number(i)).toInt());
     }
-    m_ui->data->doubleClicked(m_ui->treeView->currentIndex());
+    m_ui->display->doubleClicked(m_ui->treeView->currentIndex());
     settings.endGroup();
 }
 
