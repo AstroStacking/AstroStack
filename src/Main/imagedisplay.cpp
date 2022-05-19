@@ -1,5 +1,6 @@
 #include "imagedisplay.h"
 #include "ui_imagedisplay.h"
+#include <pluginfactory.h>
 
 #include <itkInput.h>
 
@@ -7,6 +8,7 @@
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QValueAxis>
+#include <QtCore/QFileInfo>
 #include <QtCore/QModelIndex>
 #include <QtCore/QSettings>
 #include <QtWidgets/QGraphicsPixmapItem>
@@ -40,8 +42,21 @@ void ImageDisplay::doubleClicked(const QModelIndex& index)
         current = current.parent();
         path = current.data().toString() + "/" + path;
     }
+    QFileInfo info(path);
+    QString extension = info.completeSuffix();
     
-    ITKInputPlugin plugin;
-    m_img = plugin.open(path, this);
+    const auto& plugins = PluginFactory::get().getPluginsFor<InputInterface*>();
+    for(auto object: plugins)
+    {
+        auto* plugin = qobject_cast<InputInterface*>(object);
+        if(plugin->filters().count(extension))
+        {
+            m_img = plugin->open(path, this);
+            if(m_img)
+            {
+                break;
+            }
+        }
+    }
 }
 }
