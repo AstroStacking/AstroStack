@@ -8,6 +8,7 @@ FILE(GLOB ASTRO_MAIN_SRC
     mainwindow.ui
     mainwindow.cpp
     main.cpp
+    pluginfactory.cpp
 )
 
 FILE(GLOB ASTRO_MAIN_HEADERS
@@ -15,6 +16,7 @@ FILE(GLOB ASTRO_MAIN_HEADERS
     imagedata.h
     imagedisplay.h
     mainwindow.h
+    pluginfactory.h
 )
 
 ASTRO_add_executable(
