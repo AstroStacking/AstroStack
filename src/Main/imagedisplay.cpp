@@ -56,16 +56,9 @@ ImageTypePtr ImageDisplay::loadImg(QString path)
     return {};
 }
 
-void ImageDisplay::doubleClicked(const QModelIndex& index)
+void ImageDisplay::display(QString file)
 {
-    QModelIndex current = index;
-    QString path(current.data().toString());
-    while (current.parent() != QModelIndex())
-    {
-        current = current.parent();
-        path = current.data().toString() + "/" + path;
-    }
-    m_img = loadImg(path);
+    m_img = loadImg(file);
     if (m_img)
     {
         m_ui->data->handleItem(m_img);
@@ -73,7 +66,7 @@ void ImageDisplay::doubleClicked(const QModelIndex& index)
     else
     {
         QMessageBox msgBox;
-        msgBox.setText("Could not load image " + path + ".");
+        msgBox.setText("Could not load image " + file + ".");
         msgBox.exec();
     }
 }

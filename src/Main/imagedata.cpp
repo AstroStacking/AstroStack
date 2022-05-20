@@ -22,22 +22,25 @@ QRgba64 from(ImageType::PixelType pixel);
 template<>
 QRgba64 from<1>(ImageType::PixelType pixel)
 {
-    return QRgba64::fromRgba64(static_cast<quint16>(pixel[0]*65535), static_cast<quint16>(pixel[0]*65535), static_cast<quint16>(pixel[0]*65535), 65535);
+    return QRgba64::fromRgba64(static_cast<quint16>(pixel[0] * 65535), static_cast<quint16>(pixel[0] * 65535),
+                               static_cast<quint16>(pixel[0] * 65535), 65535);
 }
 
 template<>
 QRgba64 from<3>(ImageType::PixelType pixel)
 {
-    return QRgba64::fromRgba64(static_cast<quint16>(pixel[0]*65535), static_cast<quint16>(pixel[1]*65535), static_cast<quint16>(pixel[2]*65535), 65535);
+    return QRgba64::fromRgba64(static_cast<quint16>(pixel[0] * 65535), static_cast<quint16>(pixel[1] * 65535),
+                               static_cast<quint16>(pixel[2] * 65535), 65535);
 }
 
 template<>
 QRgba64 from<4>(ImageType::PixelType pixel)
 {
-    return QRgba64::fromRgba64(static_cast<quint16>(pixel[0]*65535), static_cast<quint16>(pixel[1]*65535), static_cast<quint16>(pixel[2]*65535), static_cast<quint16>(pixel[3]*65535));
+    return QRgba64::fromRgba64(static_cast<quint16>(pixel[0] * 65535), static_cast<quint16>(pixel[1] * 65535),
+                               static_cast<quint16>(pixel[2] * 65535), static_cast<quint16>(pixel[3] * 65535));
 }
 
-}
+} // namespace
 
 ImageData::ImageData(QWidget* parent)
     : QFrame(parent)

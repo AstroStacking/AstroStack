@@ -27,7 +27,7 @@ Explorer::Explorer(QWidget* parent)
     m_ui->treeView->setModel(m_model.get());
     m_ui->treeView->setCurrentIndex(m_model->index(QDir::homePath()));
 
-    connect(m_ui->treeView, &QTreeView::doubleClicked, m_ui->display, &ImageDisplay::doubleClicked);
+    connect(m_ui->treeView, &QTreeView::doubleClicked, this, &Explorer::selectImg);
 
     QSettings settings("AstroStack", "AstroStack");
     settings.beginGroup("Explorer");
@@ -43,7 +43,7 @@ Explorer::Explorer(QWidget* parent)
     {
         m_ui->treeView->setColumnWidth(i, settings.value("header" + QString::number(i)).toInt());
     }
-    m_ui->display->doubleClicked(m_ui->treeView->currentIndex());
+    selectImg(m_ui->treeView->currentIndex());
     settings.endGroup();
 }
 
@@ -56,12 +56,7 @@ Explorer::~Explorer()
     settings.setValue("treeGeometry", m_ui->treeView->saveGeometry());
 
     QModelIndex index = m_ui->treeView->currentIndex();
-    QString path(index.data().toString());
-    while (index.parent() != QModelIndex())
-    {
-        index = index.parent();
-        path = index.data().toString() + "/" + path;
-    }
+    QString path = m_model->fileInfo(index).absoluteFilePath();
     settings.setValue("index", path);
 
     for (int i = 0; i < m_model->columnCount(); ++i)
@@ -69,5 +64,11 @@ Explorer::~Explorer()
         settings.setValue("header" + QString::number(i), m_ui->treeView->columnWidth(i));
     }
     settings.endGroup();
+}
+
+void Explorer::selectImg(const QModelIndex& index)
+{
+    QString file = m_model->fileInfo(index).absoluteFilePath();
+    m_ui->display->display(file);
 }
 } // namespace astro

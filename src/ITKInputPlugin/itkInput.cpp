@@ -43,11 +43,11 @@ try
 
     reader->SetFileName(filename.toStdString());
     reader->Update();
-    
+
     using IndexSelectionType = itk::VectorIndexSelectionCastImageFilter<ImageType, ScalarImageType>;
-  auto indexSelectionFilter = IndexSelectionType::New();
-  indexSelectionFilter->SetIndex(0);
-  indexSelectionFilter->SetInput(reader->GetOutput());
+    auto indexSelectionFilter = IndexSelectionType::New();
+    indexSelectionFilter->SetIndex(0);
+    indexSelectionFilter->SetInput(reader->GetOutput());
     indexSelectionFilter->Update();
 
     using ImageCalculatorFilterType = itk::MinimumMaximumImageCalculator<ScalarImageType>;
@@ -58,7 +58,7 @@ try
     using FilterType = itk::MultiplyImageFilter<ImageType, ScalarImageType, ImageType>;
     auto filter = FilterType::New();
     filter->SetInput(reader->GetOutput());
-    filter->SetConstant(imageCalculatorFilter->GetMaximum() > 255 ? 1/65535. : 1/255.);
+    filter->SetConstant(imageCalculatorFilter->GetMaximum() > 255 ? 1 / 65535. : 1 / 255.);
     filter->Update();
     return filter->GetOutput();
 }

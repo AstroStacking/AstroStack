@@ -25,8 +25,7 @@ public:
     explicit ImageDisplay(QWidget* parent = nullptr);
     ~ImageDisplay();
 
-public slots:
-    void doubleClicked(const QModelIndex& index);
+    void display(QString file);
 
 private:
     std::unique_ptr<Ui::ImageDisplay> m_ui;
