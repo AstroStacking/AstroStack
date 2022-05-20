@@ -41,9 +41,15 @@ ImageData::~ImageData()
     settings.setValue("verticalLayout", m_ui->verticalLayout->saveState());
 }
 
-void ImageData::handleItem(ImageTypePtr img)
+template<int PIXEL_SIZE>
+QGraphicsPixmapItem* ImageData::processImg(const ImageTypePtr& img)
 {
-    /*QImage img = item.toImage();
+    return nullptr;
+}
+
+void ImageData::processItem(const QPixmap& item)
+{
+    QImage img = item.toImage();
     std::array<std::array<int, 64>, 3> hist{};
     for (int i = 0; i < img.width(); ++i)
     {
@@ -81,6 +87,32 @@ void ImageData::handleItem(ImageTypePtr img)
     serie->setColor(QColor(0, 0, 255));
     serie->setBrush(QColor(0, 0, 255, 64));
     chart->addSeries(serie);
-    m_histograms->setChart(chart);*/
+    m_histograms->setChart(chart);
+}
+
+void ImageData::handleItem(ImageTypePtr img)
+{
+    switch (img->GetNumberOfComponentsPerPixel())
+    {
+        case 1:
+            m_item = processImg<1>(img);
+            break;
+        case 3:
+            m_item = processImg<3>(img);
+            break;
+        case 4:
+            m_item = processImg<4>(img);
+            break;
+        default:
+        {
+        }
+    }
+    m_scene->clear();
+    m_histograms->setChart(nullptr);
+    if (m_item != nullptr)
+    {
+        m_scene->addItem(m_item);
+        processItem(m_item->pixmap());
+    }
 }
 } // namespace astro

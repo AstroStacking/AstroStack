@@ -19,6 +19,9 @@ class ImageData : public QFrame
 {
     Q_OBJECT
 
+    template<int PIXEL_SIZE>
+    QGraphicsPixmapItem* processImg(const ImageTypePtr& img);
+    void processItem(const QPixmap& item);
 
 public:
     explicit ImageData(QWidget* parent = nullptr);
