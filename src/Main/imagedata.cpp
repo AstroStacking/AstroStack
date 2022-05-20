@@ -14,6 +14,31 @@
 
 namespace astro
 {
+namespace
+{
+template<int size>
+QRgba64 from(ImageType::PixelType pixel);
+
+template<>
+QRgba64 from<1>(ImageType::PixelType pixel)
+{
+    return QRgba64::fromRgba64(static_cast<quint16>(pixel[0]*65535), static_cast<quint16>(pixel[0]*65535), static_cast<quint16>(pixel[0]*65535), 65535);
+}
+
+template<>
+QRgba64 from<3>(ImageType::PixelType pixel)
+{
+    return QRgba64::fromRgba64(static_cast<quint16>(pixel[0]*65535), static_cast<quint16>(pixel[1]*65535), static_cast<quint16>(pixel[2]*65535), 65535);
+}
+
+template<>
+QRgba64 from<4>(ImageType::PixelType pixel)
+{
+    return QRgba64::fromRgba64(static_cast<quint16>(pixel[0]*65535), static_cast<quint16>(pixel[1]*65535), static_cast<quint16>(pixel[2]*65535), static_cast<quint16>(pixel[3]*65535));
+}
+
+}
+
 ImageData::ImageData(QWidget* parent)
     : QFrame(parent)
     , m_ui(std::make_unique<Ui::ImageData>())
@@ -47,11 +72,14 @@ QGraphicsPixmapItem* ImageData::processImg(const ImageTypePtr& img)
     ImageType::RegionType region = img->GetLargestPossibleRegion();
     ImageType::SizeType size = region.GetSize();
     QImage image(size[0], size[1], QImage::Format_ARGB32);
+    ImageType::IndexType index;
     for (int j = 0; j < size[1]; ++j)
     {
+        index.SetElement(1, j);
         for (int i = 0; i < size[0]; ++i)
         {
-            image.setPixelColor(i, j, QColor("red"));
+            index.SetElement(0, i);
+            image.setPixelColor(i, j, from<PIXEL_SIZE>(img->GetPixel(index)));
         }
     }
 
