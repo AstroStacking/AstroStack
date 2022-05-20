@@ -1,5 +1,7 @@
 #include "pluginfactory.h"
 
+#include <iostream>
+
 namespace astro
 {
 PluginFactory::PluginFactory() = default;
@@ -27,7 +29,7 @@ const PluginFactory::PluginContainer& PluginFactory::getPluginForInterface(const
             container.push_back(plugin);
         }
     }
-
+    std::cout << container.size() << std::endl;
     return container;
 }
 

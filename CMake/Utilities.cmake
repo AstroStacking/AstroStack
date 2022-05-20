@@ -57,9 +57,9 @@ if(NOT ${PREFIX}_NAME)
   message(ERROR "No name set for ${PREFIX}")
 endif(NOT ${PREFIX}_NAME)
 
-add_library(${${PREFIX}_NAME}
+qt_add_library(${${PREFIX}_NAME}
     SHARED
-        ${${PREFIX}_SRC} ${${PREFIX}_HEADERS} ${NATVIS_FILE} ${${PREFIX}_ARCH_GEN_SRC}
+        ${${PREFIX}_SRC} ${${PREFIX}_HEADERS} ${NATVIS_FILE}
 )
 
 target_compile_definitions(${${PREFIX}_NAME} PRIVATE ${${PREFIX}_DEFINITIONS} -DBUILD_${PREFIX} -DASTRO_SHARED)
@@ -73,7 +73,59 @@ target_include_directories(${${PREFIX}_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
 target_link_libraries(${${PREFIX}_NAME} PUBLIC ${${PREFIX}_LIBRARIES})
 
 set_target_properties (${${PREFIX}_NAME} PROPERTIES
-    FOLDER C++/${${PREFIX}_FOLDER}/shared
+    FOLDER ${${PREFIX}_FOLDER}
+)
+
+stagedebug(${${PREFIX}_NAME})
+
+INSTALL(TARGETS ${${PREFIX}_NAME}
+EXPORT ASTRO
+RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/ COMPONENT libraries
+LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/ COMPONENT libraries
+ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/ COMPONENT libraries
+)
+
+INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/include/ASTRO/
+    FILES_MATCHING PATTERN *.h
+)
+endfunction()
+
+function(ASTRO_add_plugin PREFIX)
+
+set(FLAGS )
+set(SINGLEVALUES NAME FOLDER)
+set(MULTIVALUES SRC HEADERS DEFINITIONS INCLUDE LIBRARIES)
+
+cmake_parse_arguments(${PREFIX}
+                 "${FLAGS}"
+                 "${SINGLEVALUES}"
+                 "${MULTIVALUES}"
+                ${ARGN})
+
+SOURCE_GROUP_BY_FOLDER(${PREFIX})
+
+if(NOT ${PREFIX}_NAME)
+  message(ERROR "No name set for ${PREFIX}")
+endif(NOT ${PREFIX}_NAME)
+
+qt_add_plugin(${${PREFIX}_NAME}
+    SHARED
+)
+target_sources(${${PREFIX}_NAME} PRIVATE ${${PREFIX}_SRC} ${${PREFIX}_HEADERS} ${NATVIS_FILE})
+
+target_compile_definitions(${${PREFIX}_NAME} PRIVATE ${${PREFIX}_DEFINITIONS} -DBUILD_${PREFIX} -DASTRO_SHARED)
+target_include_directories(${${PREFIX}_NAME} PRIVATE ${${PREFIX}_INCLUDE})
+target_include_directories(${${PREFIX}_NAME} BEFORE PRIVATE ${PROJECT_SOURCE_DIR}/src)
+target_include_directories(${${PREFIX}_NAME} PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/>
+    $<INSTALL_INTERFACE:include>
+)
+target_include_directories(${${PREFIX}_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(${${PREFIX}_NAME} PUBLIC ${${PREFIX}_LIBRARIES})
+
+set_target_properties (${${PREFIX}_NAME} PROPERTIES
+    FOLDER ${${PREFIX}_FOLDER}
 )
 
 stagedebug(${${PREFIX}_NAME})
@@ -113,18 +165,18 @@ add_definitions(${${PREFIX}_DEFINITIONS})
 
 include_directories(${PROJECT_SOURCE_DIR} ${${PREFIX}_INCLUDE})
 
-add_executable(${${PREFIX}_NAME}
+qt_add_executable(${${PREFIX}_NAME}
   ${${PREFIX}_SRC} ${${PREFIX}_HEADERS} ${NATVIS_FILE}
 )
 
 if(${PREFIX}_FOLDER)
   set_target_properties (${${PREFIX}_NAME} PROPERTIES
-    FOLDER C++/${${PREFIX}_FOLDER}
+    FOLDER ${${PREFIX}_FOLDER}
   )
 endif(${PREFIX}_FOLDER)
 
 target_include_directories(${${PREFIX}_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(${${PREFIX}_NAME} ${${PREFIX}_LIBRARIES})
+target_link_libraries(${${PREFIX}_NAME} PUBLIC ${${PREFIX}_LIBRARIES})
 
 if(${PREFIX}_INSTALL)
     INSTALL(TARGETS ${${PREFIX}_NAME}

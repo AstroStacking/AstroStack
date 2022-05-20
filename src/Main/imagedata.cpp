@@ -1,8 +1,6 @@
 #include "imagedata.h"
 #include "ui_imagedata.h"
 
-#include <itkInput.h>
-
 #include <QtCharts/QAreaSeries>
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
@@ -44,7 +42,18 @@ ImageData::~ImageData()
 template<int PIXEL_SIZE>
 QGraphicsPixmapItem* ImageData::processImg(const ImageTypePtr& img)
 {
-    return nullptr;
+    ImageType::RegionType region = img->GetLargestPossibleRegion();
+    ImageType::SizeType size = region.GetSize();
+    QImage image(size[0], size[1], QImage::Format_ARGB32);
+    for (int j = 0; j < size[1]; ++j)
+    {
+        for (int i = 0; i < size[0]; ++i)
+        {
+            image.setPixelColor(i, j, QColor("red"));
+        }
+    }
+
+    return new QGraphicsPixmapItem(QPixmap::fromImage(image));
 }
 
 void ImageData::processItem(const QPixmap& item)

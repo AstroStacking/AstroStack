@@ -1,5 +1,6 @@
 #include "itkInput.h"
 
+#include <QtWidgets/QMessageBox>
 #include <itkImageFileReader.h>
 
 namespace itk
@@ -38,6 +39,11 @@ try
 }
 catch (...)
 {
+    QMessageBox msgBox;
+    msgBox.setText("Could not load image " + filename + ".");
+    msgBox.exec();
     return ImageTypePtr();
 }
 } // namespace astro
+
+Q_IMPORT_PLUGIN(ITKInputPlugin);

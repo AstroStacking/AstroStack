@@ -27,3 +27,5 @@ ASTRO_add_executable(
     HEADERS ${ASTRO_MAIN_HEADERS}
     LIBRARIES AstroIO Qt6::Widgets Qt6::Charts
 )
+
+qt_import_plugins(AstroStack INCLUDE AstroIOITK)

@@ -2,7 +2,7 @@
 #include "ui_imagedisplay.h"
 #include <pluginfactory.h>
 
-#include <itkInput.h>
+#include <input.h>
 
 #include <QtCharts/QAreaSeries>
 #include <QtCharts/QChartView>
@@ -13,6 +13,7 @@
 #include <QtCore/QSettings>
 #include <QtWidgets/QGraphicsPixmapItem>
 #include <QtWidgets/QGraphicsView>
+#include <QtWidgets/QMessageBox>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QTableWidget>
 
@@ -68,6 +69,12 @@ void ImageDisplay::doubleClicked(const QModelIndex& index)
     if (m_img)
     {
         m_ui->data->handleItem(m_img);
+    }
+    else
+    {
+        QMessageBox msgBox;
+        msgBox.setText("Could not load image " + path + ".");
+        msgBox.exec();
     }
 }
 } // namespace astro

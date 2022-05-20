@@ -11,9 +11,9 @@ FILE(GLOB ASTRO_IO_HEADERS
     output.h
 )
 
-ASTRO_add_library(
-    AstroIO
-    NAME AstroIO
+ASTRO_add_plugin(
+    AstroIOITK
+    NAME AstroIOITK
     FOLDER IO
     SRC ${ASTRO_IO_SRC}
     HEADERS ${ASTRO_IO_HEADERS}
