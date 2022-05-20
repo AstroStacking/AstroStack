@@ -10,7 +10,8 @@
 namespace astro
 {
 MainWindow::MainWindow(QWidget* parent)
-    : QMainWindow(parent), m_ui(std::make_unique<Ui_MainWindow>())
+    : QMainWindow(parent)
+    , m_ui(std::make_unique<Ui_MainWindow>())
 {
     m_ui->setupUi(this);
     m_mdiArea = new QMdiArea();
@@ -27,8 +28,7 @@ MainWindow::MainWindow(QWidget* parent)
     }
     restoreGeometry(settings.value("geometry").toByteArray());
     restoreState(settings.value("state").toByteArray());
-    m_treeWindow->restoreGeometry(
-        settings.value("explorerGeometry").toByteArray());
+    m_treeWindow->restoreGeometry(settings.value("explorerGeometry").toByteArray());
     m_treeWindow->move(settings.value("explorerPosition").toPoint());
     settings.endGroup();
 }
@@ -46,4 +46,4 @@ void MainWindow::closeEvent(QCloseEvent* event)
     settings.endGroup();
     QMainWindow::closeEvent(event);
 }
-}
+} // namespace astro

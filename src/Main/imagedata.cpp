@@ -17,7 +17,8 @@
 namespace astro
 {
 ImageData::ImageData(QWidget* parent)
-    : QFrame(parent), m_ui(std::make_unique<Ui::ImageData>())
+    : QFrame(parent)
+    , m_ui(std::make_unique<Ui::ImageData>())
 {
     m_ui->setupUi(this);
     m_scene = new QGraphicsScene;
@@ -29,8 +30,7 @@ ImageData::ImageData(QWidget* parent)
     QSettings settings("AstroStack", "AstroStack");
     settings.beginGroup("ImageData");
     m_ui->splitter->restoreState(settings.value("splitter").toByteArray());
-    m_ui->verticalLayout->restoreState(
-        settings.value("verticalLayout").toByteArray());
+    m_ui->verticalLayout->restoreState(settings.value("verticalLayout").toByteArray());
 }
 
 ImageData::~ImageData()
@@ -83,4 +83,4 @@ void ImageData::handleItem(ImageTypePtr img)
     chart->addSeries(serie);
     m_histograms->setChart(chart);*/
 }
-}
+} // namespace astro

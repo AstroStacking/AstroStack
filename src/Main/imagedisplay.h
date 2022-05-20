@@ -18,12 +18,14 @@ namespace astro
 class ImageDisplay : public QFrame
 {
     Q_OBJECT
-    
-  public:
+
+    ImageTypePtr loadImg(QString path);
+
+public:
     explicit ImageDisplay(QWidget* parent = nullptr);
     ~ImageDisplay();
 
-  public slots:
+public slots:
     void doubleClicked(const QModelIndex& index);
 
 private:
@@ -31,4 +33,4 @@ private:
 
     ImageTypePtr m_img;
 };
-}
+} // namespace astro

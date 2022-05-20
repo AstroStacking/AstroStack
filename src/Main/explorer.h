@@ -14,12 +14,12 @@ class Explorer : public QWidget
 {
     Q_OBJECT
 
-  public:
+public:
     explicit Explorer(QWidget* parent = nullptr);
     ~Explorer();
 
-  private:
+private:
     std::unique_ptr<Ui::Explorer> m_ui;
     std::unique_ptr<QFileSystemModel> m_model;
 };
-}
+} // namespace astro

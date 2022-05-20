@@ -7,7 +7,7 @@ namespace itk
 void JPEGImageIOFactoryRegister__Private();
 void PNGImageIOFactoryRegister__Private();
 void TIFFImageIOFactoryRegister__Private();
-}
+} // namespace itk
 
 namespace astro
 {
@@ -28,15 +28,16 @@ QStringList ITKInputPlugin::filters() const
 }
 
 ImageTypePtr ITKInputPlugin::open(QString filename, QWidget* parent) const
-try {
+try
+{
     auto reader = ReaderType::New();
-    
+
     reader->SetFileName(filename.toStdString());
     reader->Update();
     return reader->GetOutput();
 }
-catch(...)
+catch (...)
 {
     return ImageTypePtr();
 }
-}
+} // namespace astro

@@ -4,7 +4,9 @@
 namespace astro
 {
 
-class ITKInputPlugin : public QObject, public InputInterface
+class ITKInputPlugin
+    : public QObject
+    , public InputInterface
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.Astro.IO.InputInterface")
@@ -17,5 +19,4 @@ public:
     ImageTypePtr open(QString filename, QWidget* parent) const override;
 };
 
-}
-
+} // namespace astro

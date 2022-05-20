@@ -9,7 +9,8 @@ namespace astro
 class PluginFactory
 {
     PluginFactory();
-  public:
+
+public:
     static PluginFactory& get();
 
     using PluginContainer = std::vector<QObject*>;
@@ -19,9 +20,9 @@ class PluginFactory
     {
         return getPluginForInterface(qobject_interface_iid<T>());
     }
-    
-  protected:
+
+protected:
     const PluginContainer& getPluginForInterface(const std::string& interface);
     std::unordered_map<std::string, PluginContainer> m_cache;
 };
-}
+} // namespace astro

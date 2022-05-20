@@ -10,15 +10,15 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-  public:
+public:
     MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
 
-  protected:
+protected:
     void closeEvent(QCloseEvent* event) override;
 
     std::unique_ptr<Ui_MainWindow> m_ui;
     QMdiArea* m_mdiArea{};
     QMdiSubWindow* m_treeWindow{};
 };
-}
+} // namespace astro

@@ -19,7 +19,8 @@
 namespace astro
 {
 ImageDisplay::ImageDisplay(QWidget* parent)
-    : QFrame(parent), m_ui(std::make_unique<Ui::ImageDisplay>())
+    : QFrame(parent)
+    , m_ui(std::make_unique<Ui::ImageDisplay>())
 {
     m_ui->setupUi(this);
 
@@ -33,6 +34,27 @@ ImageDisplay::~ImageDisplay()
     settings.beginGroup("ImageDisplay");
 }
 
+ImageTypePtr ImageDisplay::loadImg(QString path)
+{
+    QFileInfo info(path);
+    QString extension = info.completeSuffix();
+
+    const auto& plugins = PluginFactory::get().getPluginsFor<InputInterface*>();
+    for (auto object : plugins)
+    {
+        auto* plugin = qobject_cast<InputInterface*>(object);
+        if (plugin->filters().count(extension))
+        {
+            ImageTypePtr img = plugin->open(path, this);
+            if (img)
+            {
+                return img;
+            }
+        }
+    }
+    return {};
+}
+
 void ImageDisplay::doubleClicked(const QModelIndex& index)
 {
     QModelIndex current = index;
@@ -42,21 +64,10 @@ void ImageDisplay::doubleClicked(const QModelIndex& index)
         current = current.parent();
         path = current.data().toString() + "/" + path;
     }
-    QFileInfo info(path);
-    QString extension = info.completeSuffix();
-    
-    const auto& plugins = PluginFactory::get().getPluginsFor<InputInterface*>();
-    for(auto object: plugins)
+    m_img = loadImg(path);
+    if (m_img)
     {
-        auto* plugin = qobject_cast<InputInterface*>(object);
-        if(plugin->filters().count(extension))
-        {
-            m_img = plugin->open(path, this);
-            if(m_img)
-            {
-                break;
-            }
-        }
+        m_ui->data->handleItem(m_img);
     }
 }
-}
+} // namespace astro

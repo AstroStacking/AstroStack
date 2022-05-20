@@ -10,7 +10,8 @@
 namespace astro
 {
 Explorer::Explorer(QWidget* parent)
-    : QWidget(parent), m_ui(std::make_unique<Ui::Explorer>())
+    : QWidget(parent)
+    , m_ui(std::make_unique<Ui::Explorer>())
 {
     m_ui->setupUi(this);
 
@@ -26,8 +27,7 @@ Explorer::Explorer(QWidget* parent)
     m_ui->treeView->setModel(m_model.get());
     m_ui->treeView->setCurrentIndex(m_model->index(QDir::homePath()));
 
-    connect(m_ui->treeView, &QTreeView::doubleClicked, m_ui->display,
-            &ImageDisplay::doubleClicked);
+    connect(m_ui->treeView, &QTreeView::doubleClicked, m_ui->display, &ImageDisplay::doubleClicked);
 
     QSettings settings("AstroStack", "AstroStack");
     settings.beginGroup("Explorer");
@@ -37,14 +37,11 @@ Explorer::Explorer(QWidget* parent)
     }
     restoreGeometry(settings.value("geometry").toByteArray());
     m_ui->splitter->restoreState(settings.value("splitter").toByteArray());
-    m_ui->treeView->restoreGeometry(
-        settings.value("treeGeometry").toByteArray());
-    m_ui->treeView->setCurrentIndex(
-        m_model->index(settings.value("index").toByteArray()));
+    m_ui->treeView->restoreGeometry(settings.value("treeGeometry").toByteArray());
+    m_ui->treeView->setCurrentIndex(m_model->index(settings.value("index").toByteArray()));
     for (int i = 0; i < m_model->columnCount(); ++i)
     {
-        m_ui->treeView->setColumnWidth(
-            i, settings.value("header" + QString::number(i)).toInt());
+        m_ui->treeView->setColumnWidth(i, settings.value("header" + QString::number(i)).toInt());
     }
     m_ui->display->doubleClicked(m_ui->treeView->currentIndex());
     settings.endGroup();
@@ -69,9 +66,8 @@ Explorer::~Explorer()
 
     for (int i = 0; i < m_model->columnCount(); ++i)
     {
-        settings.setValue("header" + QString::number(i),
-                          m_ui->treeView->columnWidth(i));
+        settings.setValue("header" + QString::number(i), m_ui->treeView->columnWidth(i));
     }
     settings.endGroup();
 }
-}
+} // namespace astro
