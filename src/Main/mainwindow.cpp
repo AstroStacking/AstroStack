@@ -20,6 +20,28 @@ MainWindow::MainWindow(QWidget* parent)
     m_treeWindow = m_mdiArea->addSubWindow(new Explorer());
     m_treeWindow->setWindowTitle(tr("Explorer"));
 
+    createActions();
+    createMenus();
+
+    restore();
+}
+
+void MainWindow::createActions()
+{
+    m_exitAct = new QAction(tr("E&xit"), this);
+    m_exitAct->setShortcuts(QKeySequence::Quit);
+    m_exitAct->setStatusTip(tr("Exit the application"));
+    connect(m_exitAct, &QAction::triggered, this, &QWidget::close);
+}
+
+void MainWindow::createMenus()
+{
+    m_fileMenu = menuBar()->addMenu(tr("&File"));
+    m_fileMenu->addAction(m_exitAct);
+}
+
+void MainWindow::restore()
+{
     QSettings settings("AstroStack", "AstroStack");
     settings.beginGroup("Main");
     if (!settings.contains("geometry"))

@@ -66,6 +66,11 @@ Explorer::~Explorer()
     settings.endGroup();
 }
 
+void Explorer::closeEvent(QCloseEvent* event)
+{
+    event->ignore();
+}
+
 void Explorer::selectImg(const QModelIndex& index)
 {
     QString file = m_model->fileInfo(index).absoluteFilePath();

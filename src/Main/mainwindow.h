@@ -17,8 +17,15 @@ public:
 protected:
     void closeEvent(QCloseEvent* event) override;
 
+    void createActions();
+    void createMenus();
+    void restore();
+
     std::unique_ptr<Ui_MainWindow> m_ui;
     QMdiArea* m_mdiArea{};
     QMdiSubWindow* m_treeWindow{};
+
+    QMenu* m_fileMenu{};
+    QAction* m_exitAct{};
 };
 } // namespace astro

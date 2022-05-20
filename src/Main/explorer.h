@@ -21,6 +21,9 @@ public:
 public slots:
     void selectImg(const QModelIndex& index);
 
+protected:
+    void closeEvent(QCloseEvent* event);
+
 private:
     std::unique_ptr<Ui::Explorer> m_ui;
     std::unique_ptr<QFileSystemModel> m_model;
