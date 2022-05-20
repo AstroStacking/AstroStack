@@ -25,7 +25,5 @@ ASTRO_add_executable(
     FOLDER Main
     SRC ${ASTRO_MAIN_SRC}
     HEADERS ${ASTRO_MAIN_HEADERS}
-    LIBRARIES AstroIO Qt6::Widgets Qt6::Charts
+    LIBRARIES ITKInputPlugin_init ITKInputPlugin AstroIO Qt6::Widgets Qt6::Charts
 )
-
-qt_import_plugins(AstroStack INCLUDE AstroIOITK)

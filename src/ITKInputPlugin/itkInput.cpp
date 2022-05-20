@@ -46,4 +46,3 @@ catch (...)
 }
 } // namespace astro
 
-Q_IMPORT_PLUGIN(ITKInputPlugin);

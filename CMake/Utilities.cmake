@@ -110,7 +110,7 @@ if(NOT ${PREFIX}_NAME)
 endif(NOT ${PREFIX}_NAME)
 
 qt_add_plugin(${${PREFIX}_NAME}
-    SHARED
+    STATIC
 )
 target_sources(${${PREFIX}_NAME} PRIVATE ${${PREFIX}_SRC} ${${PREFIX}_HEADERS} ${NATVIS_FILE})
 
