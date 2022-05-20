@@ -2,6 +2,7 @@
 #include <io.h>
 
 #include <QtWidgets/QFrame>
+#include <QtCharts/QChart>
 
 namespace Ui
 {
@@ -34,5 +35,6 @@ private:
     QChartView* m_histograms{};
     QGraphicsScene* m_scene{};
     QGraphicsPixmapItem* m_item{};
+    std::unique_ptr<QChart> m_chart;
 };
 } // namespace astro

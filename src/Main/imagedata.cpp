@@ -23,6 +23,8 @@ ImageData::ImageData(QWidget* parent)
     m_ui->graphicsView->setScene(m_scene);
 
     m_histograms = new QChartView();
+    m_chart = std::make_unique<QChart>();
+    m_histograms->setChart(m_chart.get());
     m_ui->verticalLayout->addWidget(m_histograms);
 
     QSettings settings("AstroStack", "AstroStack");
@@ -81,22 +83,20 @@ void ImageData::processItem(const QPixmap& item)
         seriesBlue->append(i, hist[2][i]);
     }
 
-    QChart* chart = new QChart();
-    chart->setBackgroundBrush(QColor(0, 0, 0));
-    chart->legend()->hide();
+    m_chart->setBackgroundBrush(QColor(0, 0, 0));
+    m_chart->legend()->hide();
     auto serie = new QAreaSeries(seriesRed);
     serie->setColor(QColor(255, 0, 0));
     serie->setBrush(QColor(255, 0, 0, 64));
-    chart->addSeries(serie);
+    m_chart->addSeries(serie);
     serie = new QAreaSeries(seriesGreen);
     serie->setColor(QColor(0, 255, 0));
     serie->setBrush(QColor(0, 255, 0, 64));
-    chart->addSeries(serie);
+    m_chart->addSeries(serie);
     serie = new QAreaSeries(seriesBlue);
     serie->setColor(QColor(0, 0, 255));
     serie->setBrush(QColor(0, 0, 255, 64));
-    chart->addSeries(serie);
-    m_histograms->setChart(chart);
+    m_chart->addSeries(serie);
 }
 
 void ImageData::handleItem(ImageTypePtr img)
@@ -117,7 +117,7 @@ void ImageData::handleItem(ImageTypePtr img)
         }
     }
     m_scene->clear();
-    m_histograms->setChart(nullptr);
+    m_chart->removeAllSeries();
     if (m_item != nullptr)
     {
         m_scene->addItem(m_item);
