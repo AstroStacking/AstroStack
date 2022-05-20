@@ -1,9 +1,7 @@
 #include "pluginfactory.h"
 
-#include <QtCore/QDir>
 #include <QtCore/QCoreApplication>
-
-#include <iostream>
+#include <QtCore/QDir>
 
 namespace astro
 {
@@ -27,24 +25,26 @@ void scanDynamicPlugins(PluginFactory::PluginContainer& container, const std::st
 {
     QDir pluginsDir = QDir(QCoreApplication::applicationDirPath());
 
-    #if defined(Q_OS_WIN)
+#if defined(Q_OS_WIN)
     if (pluginsDir.dirName().toLower() == "debug" || pluginsDir.dirName().toLower() == "release")
         pluginsDir.cdUp();
-    #elif defined(Q_OS_MAC)
-    if (pluginsDir.dirName() == "MacOS") {
+#elif defined(Q_OS_MAC)
+    if (pluginsDir.dirName() == "MacOS")
+    {
         pluginsDir.cdUp();
         pluginsDir.cdUp();
         pluginsDir.cdUp();
     }
-    #endif
+#endif
     pluginsDir.cd("plugins");
-    std::cout << pluginsDir.absolutePath().toStdString() << std::endl;
 
     const auto entryList = pluginsDir.entryList(QDir::Files);
-    for (const QString &fileName : entryList) {
+    for (const QString& fileName : entryList)
+    {
         QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
-        QObject *plugin = loader.instance();
-        if (plugin != nullptr) {
+        QObject* plugin = loader.instance();
+        if (plugin != nullptr)
+        {
             auto* obj = plugin->qt_metacast(interface.c_str());
             if (obj != nullptr)
             {
@@ -55,7 +55,7 @@ void scanDynamicPlugins(PluginFactory::PluginContainer& container, const std::st
 
     return container;
 }
-}
+} // namespace
 
 PluginFactory::PluginFactory() = default;
 
@@ -75,7 +75,6 @@ const PluginFactory::PluginContainer& PluginFactory::getPluginForInterface(const
     auto& container = m_cache[interface];
     scanStaticPlugins(container, interface);
     scanDynamicPlugins(container, interface);
-    std::cout << container.size() << std::endl;
     return container;
 }
 

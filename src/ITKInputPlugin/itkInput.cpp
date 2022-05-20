@@ -45,4 +45,3 @@ catch (...)
     return ImageTypePtr();
 }
 } // namespace astro
-

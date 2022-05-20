@@ -1,8 +1,8 @@
 #pragma once
 #include <io.h>
 
-#include <QtWidgets/QFrame>
 #include <QtCharts/QChart>
+#include <QtWidgets/QFrame>
 
 namespace Ui
 {
@@ -23,6 +23,7 @@ class ImageData : public QFrame
     template<int PIXEL_SIZE>
     QGraphicsPixmapItem* processImg(const ImageTypePtr& img);
     void processItem(const QPixmap& item);
+
 public:
     explicit ImageData(QWidget* parent = nullptr);
     ~ImageData();
