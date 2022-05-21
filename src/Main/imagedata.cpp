@@ -59,6 +59,13 @@ ImageData::ImageData(QWidget* parent)
     settings.beginGroup("ImageData");
     m_ui->splitter->restoreState(settings.value("splitter").toByteArray());
     m_ui->verticalLayout->restoreState(settings.value("verticalLayout").toByteArray());
+    QDataStream stream(settings.value("transform").toByteArray());
+    if (!stream.atEnd())
+    {
+        QTransform transform;
+        stream >> transform;
+        m_ui->graphicsView->setTransform(transform);
+    }
 }
 
 ImageData::~ImageData()
@@ -67,6 +74,12 @@ ImageData::~ImageData()
     settings.beginGroup("ImageData");
     settings.setValue("splitter", m_ui->splitter->saveState());
     settings.setValue("verticalLayout", m_ui->verticalLayout->saveState());
+    QDataStream stream;
+    QTransform transform = m_ui->graphicsView->transform();
+    stream << transform;
+    QByteArray array;
+    stream >> array;
+    settings.setValue("transform", array);
 }
 
 template<int PIXEL_SIZE>

@@ -1,6 +1,7 @@
 FILE(GLOB ASTRO_MAIN_SRC
     explorer.ui
     explorer.cpp
+    graphicsview.cpp
     imagedata.ui
     imagedata.cpp
     imagedisplay.ui
@@ -13,6 +14,7 @@ FILE(GLOB ASTRO_MAIN_SRC
 
 FILE(GLOB ASTRO_MAIN_HEADERS
     explorer.h
+    graphicsview.h
     imagedata.h
     imagedisplay.h
     mainwindow.h
