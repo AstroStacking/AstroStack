@@ -1,5 +1,5 @@
 #pragma once
-#include <input.h>
+#include <IO/input.h>
 
 namespace astro
 {

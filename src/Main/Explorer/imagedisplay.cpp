@@ -1,7 +1,7 @@
 #include "imagedisplay.h"
 #include "ui_imagedisplay.h"
 
-#include <input.h>
+#include <IO/input.h>
 
 #include <QtCharts/QAreaSeries>
 #include <QtCharts/QChartView>

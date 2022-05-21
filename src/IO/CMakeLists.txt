@@ -1,16 +1,16 @@
 FILE(GLOB ASTRO_IO_SRC
-    input.cpp
-    itkInput.cpp
-    output.cpp
-    pluginfactory.cpp
+    IO/input.cpp
+    IO/itkInput.cpp
+    IO/output.cpp
+    IO/pluginfactory.cpp
 )
 
 FILE(GLOB ASTRO_IO_HEADERS
-    input.h
-    itkInput.h
-    io.h
-    output.h
-    pluginfactory.h
+    IO/input.h
+    IO/itkInput.h
+    IO/io.h
+    IO/output.h
+    IO/pluginfactory.h
 )
 
 ASTRO_add_library(

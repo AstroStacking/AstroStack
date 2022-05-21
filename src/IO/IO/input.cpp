@@ -1,6 +1,6 @@
 #include "input.h"
 
-#include <pluginfactory.h>
+#include <IO/pluginfactory.h>
 
 #include <QtCore/QFileInfo>
 
