@@ -6,6 +6,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
 #include <QtGui/QFileSystemModel>
+#include <QtWidgets/QMenu>
 
 namespace astro
 {
@@ -26,9 +27,21 @@ Explorer::Explorer(QWidget* parent)
     m_model->setNameFilterDisables(false);
     m_ui->treeView->setModel(m_model.get());
     m_ui->treeView->setCurrentIndex(m_model->index(QDir::homePath()));
-
+    m_ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
+    
     connect(m_ui->treeView, &QTreeView::doubleClicked, this, &Explorer::selectImg);
+    connect(m_ui->treeView, &QTreeView::customContextMenuRequested, this, &Explorer::contextMenuRequested);
 
+    restore();
+}
+
+Explorer::~Explorer()
+{
+    save();
+}
+
+void Explorer::restore()
+{
     QSettings settings("AstroStack", "AstroStack");
     settings.beginGroup("Explorer");
     if (!settings.contains("geometry"))
@@ -47,7 +60,7 @@ Explorer::Explorer(QWidget* parent)
     settings.endGroup();
 }
 
-Explorer::~Explorer()
+void Explorer::save()
 {
     QSettings settings("AstroStack", "AstroStack");
     settings.beginGroup("Explorer");
@@ -75,5 +88,16 @@ void Explorer::selectImg(const QModelIndex& index)
 {
     QString file = m_model->fileInfo(index).absoluteFilePath();
     m_ui->display->display(file);
+}
+
+void Explorer::contextMenuRequested(QPoint pos)
+{
+    QModelIndex index = m_ui->treeView->indexAt(pos);
+
+    QMenu* menu = new QMenu(this);
+    menu->addAction(new QAction("Action 1", this));
+    menu->addAction(new QAction("Action 2", this));
+    menu->addAction(new QAction("Action 3", this));
+    menu->popup(m_ui->treeView->viewport()->mapToGlobal(pos));
 }
 } // namespace astro
