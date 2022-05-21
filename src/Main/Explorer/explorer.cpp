@@ -2,6 +2,8 @@
 #include "ui_explorer.h"
 
 #include <Common/imagedata.h>
+#include <HistoAdjust/histoadjust.h>
+#include <mainwindow.h>
 
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
@@ -10,9 +12,9 @@
 
 namespace astro
 {
-Explorer::Explorer(QWidget* parent)
-    : QWidget(parent)
-    , m_ui(std::make_unique<Ui::Explorer>())
+Explorer::Explorer(MainWindow* mainWindow)
+    : m_ui(std::make_unique<Ui::Explorer>())
+    , m_mainWindow(mainWindow)
 {
     m_ui->setupUi(this);
 
@@ -95,9 +97,17 @@ void Explorer::contextMenuRequested(QPoint pos)
     QModelIndex index = m_ui->treeView->indexAt(pos);
 
     QMenu* menu = new QMenu(this);
-    menu->addAction(new QAction("Action 1", this));
-    menu->addAction(new QAction("Action 2", this));
-    menu->addAction(new QAction("Action 3", this));
+    QAction* processAct = new QAction(tr("Process"), this);
+    processAct->setShortcuts(QKeySequence::Quit);
+    processAct->setStatusTip(tr("Process"));
+    connect(processAct, &QAction::triggered, this, &Explorer::openProcess);
+    menu->addAction(processAct);
     menu->popup(m_ui->treeView->viewport()->mapToGlobal(pos));
+}
+
+void Explorer::openProcess()
+{
+    QString file = m_model->fileInfo(m_ui->treeView->currentIndex()).absoluteFilePath();
+    m_mainWindow->addSubWindow(new HistoAdjust(file));
 }
 } // namespace astro

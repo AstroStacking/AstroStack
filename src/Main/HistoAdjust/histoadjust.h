@@ -15,7 +15,7 @@ class HistoAdjust : public QWidget
     Q_OBJECT
 
 public:
-    explicit HistoAdjust(QString filename, QWidget* parent);
+    explicit HistoAdjust(QString filename, QWidget* parent = nullptr);
     ~HistoAdjust();
 
 public slots:

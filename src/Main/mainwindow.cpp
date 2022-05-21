@@ -17,13 +17,21 @@ MainWindow::MainWindow(QWidget* parent)
     m_mdiArea = new QMdiArea();
     setCentralWidget(m_mdiArea);
 
-    m_treeWindow = m_mdiArea->addSubWindow(new Explorer());
+    m_treeWindow = m_mdiArea->addSubWindow(new Explorer(this));
     m_treeWindow->setWindowTitle(tr("Explorer"));
 
     createActions();
     createMenus();
 
     restore();
+}
+
+MainWindow::~MainWindow() = default;
+
+void MainWindow::addSubWindow(QWidget* window)
+{
+    m_mdiArea->addSubWindow(window);
+    window->show();
 }
 
 void MainWindow::createActions()
@@ -54,8 +62,6 @@ void MainWindow::restore()
     m_treeWindow->move(settings.value("explorerPosition").toPoint());
     settings.endGroup();
 }
-
-MainWindow::~MainWindow() = default;
 
 void MainWindow::closeEvent(QCloseEvent* event)
 {

@@ -15,6 +15,8 @@ HistoAdjust::HistoAdjust(QString filename, QWidget* parent)
     , m_ui(std::make_unique<Ui::HistoAdjust>())
 {
     m_ui->setupUi(this);
+    setWindowTitle(filename);
+
     restore();
 }
 

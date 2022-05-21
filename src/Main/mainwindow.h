@@ -14,6 +14,8 @@ public:
     MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
 
+    void addSubWindow(QWidget* window);
+
 protected:
     void closeEvent(QCloseEvent* event) override;
 

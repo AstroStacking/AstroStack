@@ -10,17 +10,20 @@ class QFileSystemModel;
 
 namespace astro
 {
+class MainWindow;
+
 class Explorer : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit Explorer(QWidget* parent = nullptr);
+    explicit Explorer(MainWindow* mainWindow);
     ~Explorer();
 
 public slots:
     void selectImg(const QModelIndex& index);
     void contextMenuRequested(QPoint pos);
+    void openProcess();
 
 protected:
     void closeEvent(QCloseEvent* event);
@@ -31,5 +34,6 @@ private:
 
     std::unique_ptr<Ui::Explorer> m_ui;
     std::unique_ptr<QFileSystemModel> m_model;
+    MainWindow* m_mainWindow;
 };
 } // namespace astro
