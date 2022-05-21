@@ -1,7 +1,7 @@
 #include "histoadjust.h"
 #include "ui_histoadjust.h"
 
-#include <imagedata.h>
+#include <Common/imagedata.h>
 
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
@@ -10,7 +10,7 @@
 
 namespace astro
 {
-HistoAdjust::HistoAdjust(QWidget* parent)
+HistoAdjust::HistoAdjust(QString filename, QWidget* parent)
     : QWidget(parent)
     , m_ui(std::make_unique<Ui::HistoAdjust>())
 {

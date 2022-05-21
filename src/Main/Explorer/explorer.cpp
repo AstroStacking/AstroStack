@@ -1,7 +1,7 @@
 #include "explorer.h"
 #include "ui_explorer.h"
 
-#include <imagedata.h>
+#include <Common/imagedata.h>
 
 #include <QtCore/QDir>
 #include <QtCore/QSettings>

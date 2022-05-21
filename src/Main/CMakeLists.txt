@@ -1,25 +1,25 @@
 FILE(GLOB ASTRO_MAIN_SRC
-    graphicsview.cpp
-    imagedata.ui
-    imagedata.cpp
-    mainwindow.ui
-    mainwindow.cpp
-    main.cpp
+    Common/graphicsview.cpp
+    Common/imagedata.ui
+    Common/imagedata.cpp
     Explorer/explorer.ui
     Explorer/explorer.cpp
     Explorer/imagedisplay.ui
     Explorer/imagedisplay.cpp
     HistoAdjust/histoadjust.ui
     HistoAdjust/histoadjust.cpp
+    mainwindow.ui
+    mainwindow.cpp
+    main.cpp
 )
 
 FILE(GLOB ASTRO_MAIN_HEADERS
-    graphicsview.h
-    imagedata.h
-    mainwindow.h
+    Common/graphicsview.h
+    Common/imagedata.h
     Explorer/explorer.h
     Explorer/imagedisplay.h
     HistoAdjust/histoadjust.h
+    mainwindow.h
 )
 
 ASTRO_add_executable(

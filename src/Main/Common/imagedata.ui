@@ -29,6 +29,14 @@
    </item>
   </layout>
  </widget>
+<customwidgets>
+ <customwidget>
+  <class>astro::GraphicsView</class>
+  <extends>QGraphicsView</extends>
+  <header location="global">Common/graphicsview.h</header>
+  <container>1</container>
+ </customwidget>
+</customwidgets>
  <resources/>
  <connections/>
 </ui>
