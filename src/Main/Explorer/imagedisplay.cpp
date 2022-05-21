@@ -1,6 +1,5 @@
 #include "imagedisplay.h"
 #include "ui_imagedisplay.h"
-#include <pluginfactory.h>
 
 #include <input.h>
 
@@ -8,7 +7,6 @@
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QValueAxis>
-#include <QtCore/QFileInfo>
 #include <QtCore/QModelIndex>
 #include <QtCore/QSettings>
 #include <QtWidgets/QGraphicsPixmapItem>
@@ -35,30 +33,9 @@ ImageDisplay::~ImageDisplay()
     settings.beginGroup("ImageDisplay");
 }
 
-ImageTypePtr ImageDisplay::loadImg(QString path)
-{
-    QFileInfo info(path);
-    QString extension = info.completeSuffix();
-
-    const auto& plugins = PluginFactory::get().getPluginsFor<InputInterface*>();
-    for (auto object : plugins)
-    {
-        auto* plugin = qobject_cast<InputInterface*>(object);
-        if (plugin->filters().count(extension))
-        {
-            ImageTypePtr img = plugin->open(path, this);
-            if (img)
-            {
-                return img;
-            }
-        }
-    }
-    return {};
-}
-
 void ImageDisplay::display(QString file)
 {
-    m_img = loadImg(file);
+    m_img = InputInterface::loadImg(file, this);
     if (m_img)
     {
         m_ui->data->handleItem(m_img);

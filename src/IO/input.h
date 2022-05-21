@@ -15,7 +15,10 @@ public:
 
     virtual QStringList filters() const = 0;
     virtual ImageTypePtr open(QString filename, QWidget* parent) const = 0;
+
+    static ImageTypePtr loadImg(QString path, QWidget* parent);
 };
+
 } // namespace astro
 
 QT_BEGIN_NAMESPACE

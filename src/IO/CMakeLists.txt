@@ -2,6 +2,7 @@ FILE(GLOB ASTRO_IO_SRC
     input.cpp
     itkInput.cpp
     output.cpp
+    pluginfactory.cpp
 )
 
 FILE(GLOB ASTRO_IO_HEADERS
@@ -9,6 +10,7 @@ FILE(GLOB ASTRO_IO_HEADERS
     itkInput.h
     io.h
     output.h
+    pluginfactory.h
 )
 
 ASTRO_add_library(

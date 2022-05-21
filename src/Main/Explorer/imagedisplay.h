@@ -19,8 +19,6 @@ class ImageDisplay : public QFrame
 {
     Q_OBJECT
 
-    ImageTypePtr loadImg(QString path);
-
 public:
     explicit ImageDisplay(QWidget* parent = nullptr);
     ~ImageDisplay();
