@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <explorer.h>
+#include <Explorer/explorer.h>
 
 #include <QtCore/QSettings>
 #include <QtWidgets/QMdiArea>

@@ -1,24 +1,24 @@
 FILE(GLOB ASTRO_MAIN_SRC
-    explorer.ui
-    explorer.cpp
     graphicsview.cpp
     imagedata.ui
     imagedata.cpp
-    imagedisplay.ui
-    imagedisplay.cpp
     mainwindow.ui
     mainwindow.cpp
     main.cpp
     pluginfactory.cpp
+    Explorer/explorer.ui
+    Explorer/explorer.cpp
+    Explorer/imagedisplay.ui
+    Explorer/imagedisplay.cpp
 )
 
 FILE(GLOB ASTRO_MAIN_HEADERS
-    explorer.h
     graphicsview.h
     imagedata.h
-    imagedisplay.h
     mainwindow.h
     pluginfactory.h
+    Explorer/explorer.h
+    Explorer/imagedisplay.h
 )
 
 ASTRO_add_executable(

@@ -20,16 +20,24 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <widget class="QTreeView" name="treeView"/>
-     <widget class="astro::ImageDisplay" name="display" native="true"/>
+     <widget class="astro::ImageDisplay" name="display">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
     </widget>
    </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>ImageData</class>
-   <extends>QWidget</extends>
-   <header>imagedata.h</header>
+   <class>astro::ImageDisplay</class>
+   <extends>QFrame</extends>
+   <header location="global">Explorer/imagedisplay.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

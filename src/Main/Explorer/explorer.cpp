@@ -28,7 +28,7 @@ Explorer::Explorer(QWidget* parent)
     m_ui->treeView->setModel(m_model.get());
     m_ui->treeView->setCurrentIndex(m_model->index(QDir::homePath()));
     m_ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
-    
+
     connect(m_ui->treeView, &QTreeView::doubleClicked, this, &Explorer::selectImg);
     connect(m_ui->treeView, &QTreeView::customContextMenuRequested, this, &Explorer::contextMenuRequested);
 
