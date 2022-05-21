@@ -23,15 +23,10 @@ ImageDisplay::ImageDisplay(QWidget* parent)
 {
     m_ui->setupUi(this);
 
-    QSettings settings("AstroStack", "AstroStack");
-    settings.beginGroup("ImageDisplay");
+    m_ui->data->restore("ImageDisplay");
 }
 
-ImageDisplay::~ImageDisplay()
-{
-    QSettings settings("AstroStack", "AstroStack");
-    settings.beginGroup("ImageDisplay");
-}
+ImageDisplay::~ImageDisplay() {}
 
 void ImageDisplay::display(QString file)
 {

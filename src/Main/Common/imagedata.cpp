@@ -54,9 +54,18 @@ ImageData::ImageData(QWidget* parent)
     m_chart = std::make_unique<QChart>();
     m_histograms->setChart(m_chart.get());
     m_ui->verticalLayout->addWidget(m_histograms);
+}
 
+ImageData::~ImageData()
+{
+    save();
+}
+
+void ImageData::restore(QString entry)
+{
+    m_entry = entry;
     QSettings settings("AstroStack", "AstroStack");
-    settings.beginGroup(parent->objectName());
+    settings.beginGroup(m_entry);
     m_ui->splitter->restoreState(settings.value("splitter").toByteArray());
     m_ui->verticalLayout->restoreState(settings.value("verticalLayout").toByteArray());
     QDataStream stream(settings.value("transform").toByteArray());
@@ -68,10 +77,10 @@ ImageData::ImageData(QWidget* parent)
     }
 }
 
-ImageData::~ImageData()
+void ImageData::save()
 {
     QSettings settings("AstroStack", "AstroStack");
-    settings.beginGroup(parent()->objectName());
+    settings.beginGroup(m_entry);
     settings.setValue("splitter", m_ui->splitter->saveState());
     settings.setValue("verticalLayout", m_ui->verticalLayout->saveState());
     QDataStream stream;

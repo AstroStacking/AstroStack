@@ -27,8 +27,17 @@ HistoAdjust::~HistoAdjust()
 
 void HistoAdjust::restore()
 {
+    m_ui->input->restore("ImageDisplayInput");
+    m_ui->output->restore("ImageDisplayOutput");
+
     QSettings settings("AstroStack", "AstroStack");
     settings.beginGroup("HistoAdjust");
+    if (!settings.contains("geometry"))
+    {
+        return;
+    }
+    restoreGeometry(settings.value("geometry").toByteArray());
+    m_ui->splitter->restoreState(settings.value("splitter").toByteArray());
     settings.endGroup();
 }
 
@@ -36,6 +45,8 @@ void HistoAdjust::save()
 {
     QSettings settings("AstroStack", "AstroStack");
     settings.beginGroup("HistoAdjust");
+    settings.setValue("geometry", saveGeometry());
+    settings.setValue("splitter", m_ui->splitter->saveState());
     settings.endGroup();
 }
 } // namespace astro
