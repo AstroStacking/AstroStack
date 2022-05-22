@@ -25,6 +25,7 @@ HistoAdjust::HistoAdjust(QString filename, QWidget* parent)
     if (m_img)
     {
         m_ui->input->handleItem(m_img);
+        m_ui->output->handleItem(m_img);
     }
     else
     {
