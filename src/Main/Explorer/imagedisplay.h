@@ -1,6 +1,7 @@
 #pragma once
 #include <IO/io.h>
 
+#include <QtCore/QFutureWatcher>
 #include <QtWidgets/QFrame>
 
 namespace Ui
@@ -9,9 +10,10 @@ class ImageDisplay;
 }
 
 class QChartView;
-class QTableWidget;
+class QProgressDialog;
 class QGraphicsScene;
 class QGraphicsPixmapItem;
+class QTableWidget;
 
 namespace astro
 {
@@ -26,7 +28,11 @@ public:
     void display(QString file);
 
 private:
+    void process(QString file, QPromise<void>& promise);
+
     std::unique_ptr<Ui::ImageDisplay> m_ui;
+    QProgressDialog* m_progressDialog{};
+    QFutureWatcher<void> m_watcher;
 
     ImageTypePtr m_img;
 };

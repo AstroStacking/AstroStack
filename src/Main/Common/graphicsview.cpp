@@ -41,8 +41,8 @@ void GraphicsView::wheelEvent(QWheelEvent* wheelEvent)
 void GraphicsView::resizeEvent(QResizeEvent* event)
 {
     QGraphicsView::resizeEvent(event);
-    if(items().empty())
-       {
+    if (items().empty())
+    {
         return;
     }
     QSize pixmapSize = static_cast<QGraphicsPixmapItem*>(items().front())->pixmap().size();

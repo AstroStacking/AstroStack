@@ -31,6 +31,12 @@ public:
 
     void handleItem(ImageTypePtr img);
 
+signals:
+    void triggerSwapItem();
+
+private slots:
+    void swapItem();
+
 private:
     void save();
 

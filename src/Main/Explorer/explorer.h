@@ -20,8 +20,12 @@ public:
     explicit Explorer(MainWindow* mainWindow);
     ~Explorer();
 
+signals:
+    void selectFile(QString file);
+
 public slots:
     void selectImg(const QModelIndex& index);
+    void selectImgFile(QString file);
     void contextMenuRequested(QPoint pos);
     void openProcess();
 

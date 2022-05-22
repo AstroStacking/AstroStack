@@ -31,6 +31,7 @@ Explorer::Explorer(MainWindow* mainWindow)
     m_ui->treeView->setCurrentIndex(m_model->index(QDir::homePath()));
     m_ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
 
+    connect(this, &Explorer::selectFile, this, &Explorer::selectImgFile);
     connect(m_ui->treeView, &QTreeView::doubleClicked, this, &Explorer::selectImg);
     connect(m_ui->treeView, &QTreeView::customContextMenuRequested, this, &Explorer::contextMenuRequested);
 
@@ -89,6 +90,11 @@ void Explorer::closeEvent(QCloseEvent* event)
 void Explorer::selectImg(const QModelIndex& index)
 {
     QString file = m_model->fileInfo(index).absoluteFilePath();
+    emit selectFile(file);
+}
+
+void Explorer::selectImgFile(QString file)
+{
     m_ui->display->display(file);
 }
 
