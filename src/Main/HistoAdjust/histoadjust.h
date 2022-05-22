@@ -1,5 +1,7 @@
 #pragma once
 
+#include <IO/io.h>
+
 #include <QtWidgets/QWidget>
 
 namespace Ui
@@ -25,5 +27,6 @@ private:
     void save();
 
     std::unique_ptr<Ui::HistoAdjust> m_ui;
+    ImageTypePtr m_img;
 };
 } // namespace astro

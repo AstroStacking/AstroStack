@@ -1,12 +1,14 @@
 #include "graphicsview.h"
 
 #include <QtGui/QWheelEvent>
+#include <QtWidgets/QGraphicsPixmapItem>
 
 namespace astro
 {
 GraphicsView::GraphicsView(QWidget* parent)
     : QGraphicsView(parent)
 {
+    QSize oldSize = size();
 }
 
 void GraphicsView::wheelEvent(QWheelEvent* wheelEvent)
@@ -27,6 +29,7 @@ void GraphicsView::wheelEvent(QWheelEvent* wheelEvent)
             factor = 0.9;
         }
         scale(factor, factor);
+        m_factor *= factor;
         setTransformationAnchor(anchor);
     }
     else
@@ -34,4 +37,22 @@ void GraphicsView::wheelEvent(QWheelEvent* wheelEvent)
         QGraphicsView::wheelEvent(wheelEvent);
     }
 }
+
+void GraphicsView::resizeEvent(QResizeEvent* event)
+{
+    QGraphicsView::resizeEvent(event);
+
+    QSize pixmapSize = static_cast<QGraphicsPixmapItem*>(items().front())->pixmap().size();
+    QSize newSize = event->size();
+    resetTransform();
+    double factor = std::min(static_cast<double>(newSize.width()) / pixmapSize.width(),
+                             static_cast<double>(newSize.height()) / pixmapSize.height());
+    scale(factor * m_factor, factor * m_factor);
+}
+
+void GraphicsView::reset()
+{
+    m_factor = 1;
+}
+
 } // namespace astro

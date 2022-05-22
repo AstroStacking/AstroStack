@@ -58,8 +58,8 @@ void Explorer::restore()
     {
         m_ui->treeView->setColumnWidth(i, settings.value("header" + QString::number(i)).toInt());
     }
-    selectImg(m_ui->treeView->currentIndex());
     settings.endGroup();
+    selectImg(m_ui->treeView->currentIndex());
 }
 
 void Explorer::save()

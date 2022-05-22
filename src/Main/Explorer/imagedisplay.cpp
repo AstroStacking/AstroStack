@@ -26,7 +26,7 @@ ImageDisplay::ImageDisplay(QWidget* parent)
     m_ui->data->restore("ImageDisplay");
 }
 
-ImageDisplay::~ImageDisplay() {}
+ImageDisplay::~ImageDisplay() = default;
 
 void ImageDisplay::display(QString file)
 {

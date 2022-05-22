@@ -175,6 +175,16 @@ void ImageData::handleItem(ImageTypePtr img)
     {
         m_scene->addItem(m_item);
         processItem(m_item->pixmap());
+
+        ImageType::RegionType region = img->GetLargestPossibleRegion();
+        ImageType::SizeType size = region.GetSize();
+
+        double factor = std::min(static_cast<double>(m_ui->graphicsView->width()) / size.GetElement(0),
+                                 static_cast<double>(m_ui->graphicsView->height()) / size.GetElement(1));
+        m_ui->graphicsView->setSceneRect(0, 0, size.GetElement(0), size.GetElement(1));
+        m_ui->graphicsView->reset();
+        m_ui->graphicsView->resetTransform();
+        m_ui->graphicsView->scale(factor, factor);
     }
 }
 } // namespace astro
