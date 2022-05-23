@@ -1,4 +1,4 @@
-#include "itkInput.h"
+#include "itkinput.h"
 
 #include <QtCore/QFileInfo>
 #include <QtWidgets/QMessageBox>

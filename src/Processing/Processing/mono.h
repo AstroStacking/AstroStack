@@ -27,7 +27,9 @@ public:
         /// Process a single image based on a promise.
         virtual ImageTypePtr process(ImageTypePtr img, QPromise<void>& promise) = 0;
     };
-    /// Return a string explaining what this plugin does
+    /// Name of the interface
+    virtual QString name() = 0;
+    /// Return a string explaining what this interface does
     virtual QString explanation() = 0;
     /// Generate a GUI to be added to the stack
     virtual GUI* generateGUI(QWidget* parent) = 0;

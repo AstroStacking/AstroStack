@@ -34,7 +34,7 @@ void ImageDisplay::display(QString file)
 {
     m_progressDialog = new QProgressDialog(tr("Loading in progress."), tr("Cancel"), 0, 2, this);
     m_progressDialog->setAttribute(Qt::WA_DeleteOnClose);
-    connect(m_progressDialog, &QProgressDialog::cancel, &m_watcher, &QFutureWatcher<void>::cancel);
+    connect(m_progressDialog, &QProgressDialog::canceled, &m_watcher, &QFutureWatcher<void>::cancel);
     connect(&m_watcher, &QFutureWatcher<void>::progressValueChanged, m_progressDialog, &QProgressDialog::setValue);
 
     m_watcher.setFuture(QtConcurrent::run([=](QPromise<void>& promise) { process(file, promise); }));

@@ -9,6 +9,8 @@ DoubleProgressBar::DoubleProgressBar(int tasks, QWidget* parent)
     m_ui->totalTasksBar->setMaximum(tasks);
     m_ui->totalTasksLabel->setText(tr("Task ") + QString::number(m_ui->totalTasksBar->value()) + "/" +
                                    QString::number(tasks));
+    
+    connect(m_ui->cancel, &QPushButton::clicked, this, &DoubleProgressBar::cancel);
 }
 
 void DoubleProgressBar::startNewTask()
