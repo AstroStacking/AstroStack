@@ -14,7 +14,7 @@ std::vector<InputInterface*> scanPlugins()
 {
     std::vector<InputInterface*> plugins;
     plugins.push_back(new ITKInputPlugin());
-    for(auto object: PluginFactory::get().getPluginsFor<InputInterface*>())
+    for (auto object : PluginFactory::get().getPluginsFor<InputInterface*>())
     {
         auto* plugin = qobject_cast<InputInterface*>(object);
         plugins.push_back(plugin);
@@ -28,7 +28,7 @@ const std::vector<InputInterface*>& getPlugins()
     return plugins;
 }
 
-}
+} // namespace
 
 InputInterface::~InputInterface() = default;
 
@@ -37,7 +37,8 @@ ImageTypePtr InputInterface::loadImg(QString path, QWidget* parent)
     QFileInfo info(path);
     QString extension = info.completeSuffix();
 
-    const auto& plugins =  getPlugins();;
+    const auto& plugins = getPlugins();
+    ;
     for (auto plugin : plugins)
     {
         if (plugin->filters().count(extension))

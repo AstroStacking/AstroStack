@@ -1,8 +1,10 @@
 FILE(GLOB ASTRO_PROCESSING_SRC
+    Processing/exponential.cpp
     Processing/mono.cpp
 )
 
 FILE(GLOB ASTRO_PROCESSING_HEADERS
+    Processing/exponential.h
     Processing/mono.h
 )
 

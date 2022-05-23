@@ -1,6 +1,6 @@
 #pragma once
-#include "itkImage.h"
-#include "itkVectorImage.h"
+#include <itkImage.h>
+#include <itkVectorImage.h>
 
 namespace astro
 {

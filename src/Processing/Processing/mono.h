@@ -2,8 +2,6 @@
 #include <IO/io.h>
 
 #include <QtCore/QPromise>
-#include <QtCore/QStringList>
-#include <QtPlugin>
 #include <QtWidgets/QWidget>
 
 namespace astro
@@ -28,11 +26,13 @@ public:
         virtual ImageTypePtr process(ImageTypePtr img, QPromise<void>& promise) = 0;
     };
     /// Name of the interface
-    virtual QString name() = 0;
+    virtual QString name() const = 0;
     /// Return a string explaining what this interface does
-    virtual QString explanation() = 0;
+    virtual QString explanation() const = 0;
     /// Generate a GUI to be added to the stack
-    virtual GUI* generateGUI(QWidget* parent) = 0;
+    virtual GUI* generateGUI(QWidget* parent) const = 0;
+
+    static const std::vector<MonoInterface*>& getPlugins();
 };
 
 } // namespace astro
