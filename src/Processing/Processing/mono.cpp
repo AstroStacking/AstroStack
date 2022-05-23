@@ -7,4 +7,6 @@ namespace astro
 
 MonoInterface::~MonoInterface() = default;
 
+MonoInterface::GUI::~GUI() = default;
+
 } // namespace astro
