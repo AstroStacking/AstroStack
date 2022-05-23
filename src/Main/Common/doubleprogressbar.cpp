@@ -1,11 +1,30 @@
 #include "doubleprogressbar.h"
 #include "ui_doubleprogressbar.h"
 
-DoubleProgressBar::DoubleProgressBar(QWidget* parent)
+DoubleProgressBar::DoubleProgressBar(int tasks, QWidget* parent)
     : QDialog(parent)
-    , ui(std::make_unique<Ui::DoubleProgressBar>())
+    , m_ui(std::make_unique<Ui::DoubleProgressBar>())
 {
-    ui->setupUi(this);
+    m_ui->setupUi(this);
+    m_ui->totalTasksBar->setMaximum(tasks);
+    m_ui->totalTasksLabel->setText(tr("Task ") + QString::number(m_ui->totalTasksBar->value()) + "/" +
+                                   QString::number(tasks));
 }
+
+void DoubleProgressBar::startNewTask()
+{
+    m_ui->totalTasksBar->setValue(m_ui->totalTasksBar->value() + 1);
+    m_ui->totalTasksLabel->setText(tr("Task ") + QString::number(m_ui->totalTasksBar->value()) + "/" +
+                                   QString::number(m_ui->totalTasksBar->maximum()));
+
+    m_ui->currentTaskLabel->setText(tr("Current Task: "));
+    m_ui->currentTaskBar->setValue(0);
+}
+
+void DoubleProgressBar::setCurrentaskAdvancement(int value)
+{
+    m_ui->currentTaskBar->setValue(value);
+}
+
 
 DoubleProgressBar::~DoubleProgressBar() = default;
