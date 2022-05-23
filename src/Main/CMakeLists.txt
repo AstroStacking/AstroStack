@@ -1,4 +1,6 @@
 FILE(GLOB ASTRO_MAIN_SRC
+    Common/doubleprogressbar.ui
+    Common/doubleprogressbar.cpp
     Common/graphicsview.cpp
     Common/imagedata.ui
     Common/imagedata.cpp
@@ -14,6 +16,7 @@ FILE(GLOB ASTRO_MAIN_SRC
 )
 
 FILE(GLOB ASTRO_MAIN_HEADERS
+    Common/doubleprogressbar.h
     Common/graphicsview.h
     Common/imagedata.h
     Explorer/explorer.h
