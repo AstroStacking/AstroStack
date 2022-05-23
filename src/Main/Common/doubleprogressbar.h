@@ -15,6 +15,9 @@ public:
     explicit DoubleProgressBar(int tasks, QWidget* parent = nullptr);
     ~DoubleProgressBar() override;
 
+signals:
+    void cancel();
+
 public slots:
     void startNewTask();
     void setCurrentaskAdvancement(int value);
