@@ -2,7 +2,7 @@
 #include <IO/io.h>
 
 #include <QtCore/QPromise>
-#include <QtWidgets/QWidget>
+#include <QtWidgets/QFrame>
 
 namespace astro
 {
@@ -17,9 +17,10 @@ public:
     /**
      QWidgets that will be displayed in the stack
      */
-    class GUI : public QWidget
+    class GUI : public QFrame
     {
     public:
+        GUI(QWidget* parent);
         virtual ~GUI();
 
         /// Process a single image based on a promise.

@@ -22,6 +22,11 @@ std::vector<MonoInterface*> scanPlugins()
 
 MonoInterface::~MonoInterface() = default;
 
+MonoInterface::GUI::GUI(QWidget* parent)
+    : QFrame(parent)
+{
+}
+
 MonoInterface::GUI::~GUI() = default;
 
 const std::vector<MonoInterface*>& MonoInterface::getPlugins()

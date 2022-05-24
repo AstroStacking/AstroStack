@@ -1,6 +1,11 @@
 #pragma once
 #include <Processing/mono.h>
 
+namespace Ui
+{
+class Exponential;
+}
+
 namespace astro
 {
 /**
@@ -20,9 +25,13 @@ public:
     class GUI : public MonoInterface::GUI
     {
     public:
+        GUI(QWidget* parent);
         ~GUI() override;
 
         ImageTypePtr process(ImageTypePtr img, QPromise<void>& promise) override;
+
+    private:
+        std::unique_ptr<Ui::Exponential> m_ui;
     };
 
     QString name() const override;

@@ -3,6 +3,8 @@
 
 #include <Common/imagedata.h>
 #include <IO/input.h>
+#include <Processing/exponential.h> // temporary
+#include <Processing/mono.h>
 
 #include <QtConcurrent/QtConcurrentRun>
 #include <QtCore/QDir>
@@ -23,6 +25,13 @@ HistoAdjust::HistoAdjust(QString filename, QWidget* parent)
 
     restore();
     loadFile(filename);
+
+    setupWorkflow();
+}
+
+HistoAdjust::~HistoAdjust()
+{
+    save();
 }
 
 void HistoAdjust::loadFile(QString file)
@@ -31,6 +40,7 @@ void HistoAdjust::loadFile(QString file)
     m_progressDialog->setAttribute(Qt::WA_DeleteOnClose);
     connect(m_progressDialog, &QProgressDialog::canceled, &m_watcher, &QFutureWatcher<void>::cancel);
     connect(&m_watcher, &QFutureWatcher<void>::progressValueChanged, m_progressDialog, &QProgressDialog::setValue);
+    connect(m_ui->execute, &QPushButton::clicked, this, &HistoAdjust::run);
 
     m_watcher.setFuture(QtConcurrent::run([=](QPromise<void>& promise) { processLoadFile(file, promise); }));
     m_progressDialog->show();
@@ -55,9 +65,20 @@ void HistoAdjust::processLoadFile(QString file, QPromise<void>& promise)
     }
 }
 
-HistoAdjust::~HistoAdjust()
+void HistoAdjust::setupWorkflow()
 {
-    save();
+    m_tasks.push_back(new Exponential());
+    m_ui->contentLayout->addWidget(m_tasks.back()->generateGUI(this));
+
+    m_ui->contentLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding));
+}
+
+void HistoAdjust::run()
+{
+    m_ui->execute->setEnabled(false);
+
+
+    m_ui->execute->setEnabled(true);
 }
 
 void HistoAdjust::restore()

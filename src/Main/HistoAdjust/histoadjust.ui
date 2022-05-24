@@ -45,10 +45,11 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>99</width>
+            <width>96</width>
             <height>214</height>
            </rect>
           </property>
+          <layout class="QVBoxLayout" name="contentLayout"/>
          </widget>
         </widget>
        </item>

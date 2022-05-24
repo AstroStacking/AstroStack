@@ -1,5 +1,6 @@
 FILE(GLOB ASTRO_PROCESSING_SRC
     Processing/exponential.cpp
+    Processing/exponential.ui
     Processing/mono.cpp
 )
 

@@ -1,4 +1,5 @@
 #include "exponential.h"
+#include "ui_exponential.h"
 
 #include <Plugin/pluginfactory.h>
 
@@ -19,7 +20,14 @@ QString Exponential::explanation() const
 
 Exponential::GUI* Exponential::generateGUI(QWidget* parent) const
 {
-    return nullptr;
+    return new GUI(parent);
+}
+
+Exponential::GUI::GUI(QWidget* parent)
+    : MonoInterface::GUI(parent)
+    , m_ui(std::make_unique<Ui::Exponential>())
+{
+    m_ui->setupUi(this);
 }
 
 Exponential::GUI::~GUI() = default;
