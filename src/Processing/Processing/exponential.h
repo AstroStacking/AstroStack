@@ -40,10 +40,12 @@ public:
 
 signals:
     void setEnableState(bool enabled);
-    
+
 private slots:
     void outputStateChanged(int state);
     void outputFileBoxOpen();
+    void setSkewValue(double val);
+    void setApproximateSkewValue(int val);
 
 private:
     std::unique_ptr<Ui::Exponential> m_ui;

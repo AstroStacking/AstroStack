@@ -3,6 +3,7 @@
 
 #include <Plugin/pluginfactory.h>
 
+#include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QFileDialog>
 
 namespace astro
@@ -34,6 +35,8 @@ ExponentialGUI::ExponentialGUI(QWidget* parent)
     connect(m_ui->saveOutput, &QCheckBox::stateChanged, this, &ExponentialGUI::outputStateChanged);
     connect(m_ui->filenameOpen, &QPushButton::clicked, this, &ExponentialGUI::outputFileBoxOpen);
     connect(this, &ExponentialGUI::setEnableState, this, &ExponentialGUI::setEnabled);
+    connect(m_ui->skew, &QDoubleSpinBox::valueChanged, this, &ExponentialGUI::setSkewValue);
+    connect(m_ui->skewSlider, &QSlider::sliderMoved, this, &ExponentialGUI::setApproximateSkewValue);
 }
 
 ExponentialGUI::~ExponentialGUI() = default;
@@ -49,16 +52,22 @@ void ExponentialGUI::outputFileBoxOpen()
     m_ui->filename->setText(QFileDialog::getSaveFileName(this, tr("Save output"), m_ui->filename->text()));
 }
 
+void ExponentialGUI::setSkewValue(double val)
+{
+    m_ui->skewSlider->setValue(std::roundl(-25 * std::log10(val)));
+}
+
+void ExponentialGUI::setApproximateSkewValue(int val)
+{
+    m_ui->skew->setValue(std::pow(10, -val / 25.));
+}
 
 ImageTypePtr ExponentialGUI::process(ImageTypePtr img, QPromise<void>& promise)
 {
     emit setEnableState(false);
 
-    if(m_ui->saveOutput->checkState() == Qt::Checked)
-    {
-        
-    }
-    
+    if (m_ui->saveOutput->checkState() == Qt::Checked) {}
+
     emit setEnableState(true);
 
     return img;
