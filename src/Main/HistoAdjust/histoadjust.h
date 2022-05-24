@@ -1,6 +1,7 @@
 #pragma once
 
 #include <IO/io.h>
+#include <Processing/mono.h>
 
 #include <QtCore/QFutureWatcher>
 #include <QtWidgets/QWidget>
@@ -15,8 +16,6 @@ class QProgressDialog;
 
 namespace astro
 {
-class MonoInterface;
-
 class HistoAdjust : public QWidget
 {
     Q_OBJECT
@@ -25,6 +24,9 @@ public:
     explicit HistoAdjust(QString filename, QWidget* parent = nullptr);
     ~HistoAdjust();
 
+signals:
+    void enable(bool enabled);
+    
 public slots:
     void run();
 
@@ -40,6 +42,6 @@ private:
     QProgressDialog* m_progressDialog{};
     QFutureWatcher<void> m_watcher;
 
-    std::vector<MonoInterface*> m_tasks;
+    std::vector<MonoInterface::GUI*> m_tasks;
 };
 } // namespace astro
