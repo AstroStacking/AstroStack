@@ -38,6 +38,9 @@ public:
 
     ImageTypePtr process(ImageTypePtr img, QPromise<void>& promise) override;
 
+signals:
+    void setEnableState(bool enabled);
+    
 private slots:
     void outputStateChanged(int state);
     void outputFileBoxOpen();

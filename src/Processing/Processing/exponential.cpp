@@ -33,6 +33,7 @@ ExponentialGUI::ExponentialGUI(QWidget* parent)
 
     connect(m_ui->saveOutput, &QCheckBox::stateChanged, this, &ExponentialGUI::outputStateChanged);
     connect(m_ui->filenameOpen, &QPushButton::clicked, this, &ExponentialGUI::outputFileBoxOpen);
+    connect(this, &ExponentialGUI::setEnableState, this, &ExponentialGUI::setEnabled);
 }
 
 ExponentialGUI::~ExponentialGUI() = default;
@@ -51,6 +52,15 @@ void ExponentialGUI::outputFileBoxOpen()
 
 ImageTypePtr ExponentialGUI::process(ImageTypePtr img, QPromise<void>& promise)
 {
+    emit setEnableState(false);
+
+    if(m_ui->saveOutput->checkState() == Qt::Checked)
+    {
+        
+    }
+    
+    emit setEnableState(true);
+
     return img;
 }
 
