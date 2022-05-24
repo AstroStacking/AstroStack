@@ -26,7 +26,7 @@ public:
 
 signals:
     void enable(bool enabled);
-    
+
 public slots:
     void run();
 

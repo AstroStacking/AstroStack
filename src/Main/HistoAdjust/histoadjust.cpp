@@ -42,7 +42,8 @@ void HistoAdjust::loadFile(QString file)
     m_progressDialog->setAttribute(Qt::WA_DeleteOnClose);
     connect(m_progressDialog, &QProgressDialog::canceled, &m_watcher, &QFutureWatcher<void>::cancel);
     connect(&m_watcher, &QFutureWatcher<void>::progressValueChanged, m_progressDialog, &QProgressDialog::setValue);
-    connect(m_ui->execute, &QPushButton::clicked, this, &HistoAdjust::run);
+    connect(&m_watcher, &QFutureWatcher<void>::finished, m_progressDialog, &QProgressDialog::close);
+
     m_watcher.setFuture(QtConcurrent::run([=](QPromise<void>& promise) { processLoadFile(file, promise); }));
     m_progressDialog->show();
 }
@@ -78,11 +79,12 @@ void HistoAdjust::run()
 {
     m_ui->execute->setEnabled(false);
 
-    m_progressDialog = new QProgressDialog(tr("Processing."), tr("Cancel"), 0, 2, this);
+    m_progressDialog = new QProgressDialog(tr("Processing."), tr("Cancel"), 0, m_tasks.size() + 1, this);
     m_progressDialog->setAttribute(Qt::WA_DeleteOnClose);
 
     connect(m_progressDialog, &QProgressDialog::canceled, &m_watcher, &QFutureWatcher<void>::cancel);
     connect(&m_watcher, &QFutureWatcher<void>::progressValueChanged, m_progressDialog, &QProgressDialog::setValue);
+    connect(&m_watcher, &QFutureWatcher<void>::finished, m_progressDialog, &QProgressDialog::close);
 
     m_watcher.setFuture(QtConcurrent::run(
             [this](QPromise<void>& promise)
@@ -93,6 +95,11 @@ void HistoAdjust::run()
                 {
                     img = task->process(img, promise);
                     promise.setProgressValue(++i);
+                    if (promise.isCanceled())
+                    {
+                        emit enable(true);
+                        return;
+                    }
                 }
                 m_ui->output->handleItem(img);
                 promise.setProgressValue(++i);

@@ -3,6 +3,8 @@
 
 #include <Plugin/pluginfactory.h>
 
+#include <QtWidgets/QFileDialog>
+
 namespace astro
 {
 
@@ -20,19 +22,34 @@ QString Exponential::explanation() const
 
 Exponential::GUI* Exponential::generateGUI(QWidget* parent) const
 {
-    return new GUI(parent);
+    return new ExponentialGUI(parent);
 }
 
-Exponential::GUI::GUI(QWidget* parent)
+ExponentialGUI::ExponentialGUI(QWidget* parent)
     : MonoInterface::GUI(parent)
     , m_ui(std::make_unique<Ui::Exponential>())
 {
     m_ui->setupUi(this);
+
+    connect(m_ui->saveOutput, &QCheckBox::stateChanged, this, &ExponentialGUI::outputStateChanged);
+    connect(m_ui->filenameOpen, &QPushButton::clicked, this, &ExponentialGUI::outputFileBoxOpen);
 }
 
-Exponential::GUI::~GUI() = default;
+ExponentialGUI::~ExponentialGUI() = default;
 
-ImageTypePtr Exponential::GUI::process(ImageTypePtr img, QPromise<void>& promise)
+void ExponentialGUI::outputStateChanged(int state)
+{
+    m_ui->filename->setEnabled(state != Qt::Unchecked);
+    m_ui->filenameOpen->setEnabled(state != Qt::Unchecked);
+}
+
+void ExponentialGUI::outputFileBoxOpen()
+{
+    m_ui->filename->setText(QFileDialog::getSaveFileName(this, tr("Save output"), m_ui->filename->text()));
+}
+
+
+ImageTypePtr ExponentialGUI::process(ImageTypePtr img, QPromise<void>& promise)
 {
     return img;
 }
