@@ -50,6 +50,7 @@ private slots:
 
 private:
     std::unique_ptr<Ui::Exponential> m_ui;
+    bool m_overwriteIfExists{true};
 };
 
 } // namespace astro

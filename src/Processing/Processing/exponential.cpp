@@ -5,6 +5,7 @@
 
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
 
 namespace astro
 {
@@ -64,6 +65,19 @@ void ExponentialGUI::setApproximateSkewValue(int val)
 
 bool ExponentialGUI::check()
 {
+    QFileInfo info(m_ui->filename->text());
+    if (!info.exists())
+    {
+        return true;
+    }
+    int result = QMessageBox::question(this, tr("Exponential"), tr("Overwrite existing file?"),
+                                       QMessageBox::Yes | QMessageBox::No | QMessageBox::Abort);
+    if (result == QMessageBox::Abort)
+    {
+        return false;
+    }
+    m_overwriteIfExists = result == QMessageBox::Yes;
+
     return true;
 }
 
