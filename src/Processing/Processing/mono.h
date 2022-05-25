@@ -25,6 +25,7 @@ public:
 
         /// Process a single image based on a promise.
         virtual ImageTypePtr process(ImageTypePtr img, QPromise<void>& promise) = 0;
+        virtual bool check() = 0;
     };
     /// Name of the interface
     virtual QString name() const = 0;

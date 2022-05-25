@@ -62,6 +62,11 @@ void ExponentialGUI::setApproximateSkewValue(int val)
     m_ui->skew->setValue(std::pow(10, -val / 25.));
 }
 
+bool ExponentialGUI::check()
+{
+    return true;
+}
+
 ImageTypePtr ExponentialGUI::process(ImageTypePtr img, QPromise<void>& promise)
 {
     emit setEnableState(false);

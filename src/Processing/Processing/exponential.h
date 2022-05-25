@@ -37,6 +37,7 @@ public:
     ~ExponentialGUI() override;
 
     ImageTypePtr process(ImageTypePtr img, QPromise<void>& promise) override;
+    bool check() override;
 
 signals:
     void setEnableState(bool enabled);

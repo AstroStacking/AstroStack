@@ -36,6 +36,8 @@ private:
     void loadFile(QString file);
     void processLoadFile(QString file, QPromise<void>& promise);
     void setupWorkflow();
+    bool check();
+    void execute();
 
     std::unique_ptr<Ui::HistoAdjust> m_ui;
     ImageTypePtr m_img;

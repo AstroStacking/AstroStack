@@ -58,7 +58,7 @@ void ImageDisplay::process(QString file, QPromise<void>& promise)
     {
         emit promise.setProgressValue(2);
         QMessageBox msgBox;
-        msgBox.setText("Could not load image " + file + ".");
+        msgBox.setText(tr("Could not load image ") + file + ".");
         msgBox.exec();
     }
     if (!promise.isCanceled())

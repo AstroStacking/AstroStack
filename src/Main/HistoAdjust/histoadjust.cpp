@@ -62,7 +62,7 @@ void HistoAdjust::processLoadFile(QString file, QPromise<void>& promise)
     else
     {
         QMessageBox msgBox;
-        msgBox.setText("Could not load image " + file + ".");
+        msgBox.setText(tr("Could not load image ") + file + ".");
         msgBox.exec();
     }
 }
@@ -76,6 +76,32 @@ void HistoAdjust::setupWorkflow()
 }
 
 void HistoAdjust::run()
+{
+    if (check())
+    {
+        execute();
+    }
+    else
+    {
+        QMessageBox msgBox;
+        msgBox.setText(tr("Failed executing workflow"));
+        msgBox.exec();
+    }
+}
+
+bool HistoAdjust::check()
+{
+    for (auto task : m_tasks)
+    {
+        if (!task->check())
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+void HistoAdjust::execute()
 {
     m_ui->execute->setEnabled(false);
 
