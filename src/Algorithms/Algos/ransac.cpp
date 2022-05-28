@@ -10,7 +10,7 @@ RANSAC::RANSAC(const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>& X,
     , m_nbSamples(nbSamples)
     , m_nbIterations(nbIterations)
 {
-    if (m_X.cols() >= m_nbSamples)
+    if (m_X.cols() <= m_nbSamples)
     {
         throw std::range_error("X need to have more samples than the number of samples per iterations");
     }
@@ -47,6 +47,18 @@ void RANSAC::iterate()
     v.resize(m_nbSamples);
 
     auto A = fit(m_X(Eigen::all, v), m_Y(Eigen::all, v));
+    auto error = A * m_X - m_Y;
+    auto reshapedError = error.reshaped();
+
+    float standardDeviation = std::sqrt(std::accumulate(reshapedError.begin(), reshapedError.end(), 0.f,
+                                                        [](float sum, float el) { return sum + el * el; }) /
+                                        (error.rows() * error.cols()));
+    int count = (error.array().abs() < standardDeviation).count();
+    if (count > m_nbInliers)
+    {
+        m_nbInliers = count;
+        m_A = A;
+    }
 }
 
 Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>
