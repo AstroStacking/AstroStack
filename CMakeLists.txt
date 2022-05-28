@@ -9,17 +9,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(ITK_NO_IO_FACTORY_REGISTER_MANAGER ON)
 
+option(ENABLE_TEST_DISCOVERY "Activate test discovery in ctest" ON)
+
 find_package(Git REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Charts)
 find_package(ITK REQUIRED COMPONENTS ITKIOImageBase ITKIOJPEG ITKIOPNG ITKIOTIFF)
+find_package(Gtest REQUIRED)
 
 set(ITK_FACTORY_LIST ImageIO)
 include(${ITK_USE_FILE})
 
-#qt_standard_project_setup()
-
-set(CMAKE_AUTOMOC TRUE)
-set(CMAKE_AUTOUIC TRUE)
+qt_standard_project_setup()
 
 # configure a header file to pass some of the CMake settings
 # to the source code
@@ -39,14 +39,14 @@ add_custom_target(CMake SOURCES ${CMAKE_OTHER_SRC})
 # The following script must only be executed at install time
 set(deploy_script "${CMAKE_CURRENT_BINARY_DIR}/deploy_AstroStack.cmake")
 
-file(GENERATE OUTPUT ${deploy_script} CONTENT "
+#file(GENERATE OUTPUT ${deploy_script} CONTENT "
 # Including the file pointed to by QT_DEPLOY_SUPPORT ensures the generated
 # deployment script has access to qt_deploy_runtime_dependencies()
-include(\"${QT_DEPLOY_SUPPORT}\")
-qt_deploy_runtime_dependencies(
-    EXECUTABLE \"${executable_path}\"
-    ADDITIONAL_EXECUTABLES \"${helper_app_path}\"
-    GENERATE_QT_CONF
-    VERBOSE
-)")
-install(SCRIPT ${deploy_script})    # Add its runtime dependencies
+#include(\"${QT_DEPLOY_SUPPORT}\")
+#qt_deploy_runtime_dependencies(
+#    EXECUTABLE \"${executable_path}\"
+#    ADDITIONAL_EXECUTABLES \"${helper_app_path}\"
+#    GENERATE_QT_CONF
+#    VERBOSE
+#)")
+#install(SCRIPT ${deploy_script})    # Add its runtime dependencies

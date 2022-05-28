@@ -31,5 +31,5 @@ ASTRO_add_executable(
     FOLDER Main
     SRC ${ASTRO_MAIN_SRC}
     HEADERS ${ASTRO_MAIN_HEADERS}
-    LIBRARIES AstroIO AstroProcessing Qt6::Widgets Qt6::Charts
+    LIBRARIES AstroAlgorithms AstroIO AstroProcessing Qt6::Widgets Qt6::Charts
 )
