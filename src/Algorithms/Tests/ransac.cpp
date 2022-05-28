@@ -24,7 +24,13 @@ TEST(RANSAC, SimpleTest)
 
     astro::RANSAC ransac(X, Y);
 
-    ASSERT_TRUE(ransac.run());
+    ransac.run();
+    
+    Eigen::MatrixXf X2(2, 1);
+    X2 << -10, 1;
+    auto Y2 = ransac.predict(X2);
+    
+    ASSERT_NEAR(-26, Y2(0), 0.0001);
 }
 
 TEST(RANSAC, Regression)
@@ -39,8 +45,6 @@ TEST(RANSAC, Regression)
             34., -77., 7.;
 
     auto result = astro::RANSAC::fit(X, Y);
-
-    std::cout << X << std::endl;
 
     ASSERT_NEAR(3, result(0), 0.0001);
     ASSERT_NEAR(4, result(1), 0.0001);
