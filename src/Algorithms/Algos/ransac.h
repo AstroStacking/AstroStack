@@ -2,6 +2,8 @@
 
 #include <eigen3/Eigen/Dense>
 
+#include <random>
+
 namespace astro
 {
 class RANSAC
@@ -9,12 +11,14 @@ class RANSAC
     const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>& m_X;
     const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>& m_Y;
 
+    std::mt19937 m_generator;
+
     Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> m_A{{3, 4}};
     int m_nbInliers{0};
 
     const int m_nbSamples;
     const int m_nbIterations;
-    
+
     void iterate();
 
 public:
@@ -31,7 +35,8 @@ public:
     ~RANSAC();
 
     void run();
-    
-    Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> predict(const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>& X) const;
+
+    Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>
+    predict(const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>& X) const;
 };
 } // namespace astro

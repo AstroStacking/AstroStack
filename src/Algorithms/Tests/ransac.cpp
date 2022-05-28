@@ -4,8 +4,8 @@
 
 TEST(RANSAC, Constructor)
 {
-    Eigen::MatrixXf X(50, 2);
-    Eigen::MatrixXf Y(50, 1);
+    Eigen::MatrixXf X(2, 50);
+    Eigen::MatrixXf Y(1, 50);
 
     astro::RANSAC ransac(X, Y);
 }
@@ -25,11 +25,11 @@ TEST(RANSAC, SimpleTest)
     astro::RANSAC ransac(X, Y);
 
     ransac.run();
-    
+
     Eigen::MatrixXf X2(2, 1);
     X2 << -10, 1;
     auto Y2 = ransac.predict(X2);
-    
+
     ASSERT_NEAR(-26, Y2(0), 0.0001);
 }
 
