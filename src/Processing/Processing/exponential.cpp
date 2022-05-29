@@ -7,6 +7,9 @@
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 
+#include <itkImageDuplicator.h>
+#include <itkImageRegionIterator.h>
+
 namespace astro
 {
 
@@ -84,6 +87,32 @@ bool ExponentialGUI::check()
 ImageTypePtr ExponentialGUI::process(ImageTypePtr img, QPromise<void>& promise)
 {
     emit setEnableState(false);
+
+    float exponent = m_ui->skew->value();
+    unsigned int nbDims = std::min(3U, img->GetNumberOfComponentsPerPixel());
+
+    using DuplicatorType = itk::ImageDuplicator<ImageType>;
+    auto duplicator = DuplicatorType::New();
+    duplicator->SetInputImage(img);
+    duplicator->Update();
+
+    img = duplicator->GetOutput();
+    using IteratorType = itk::ImageRegionIterator<ImageType>;
+
+    IteratorType it(img, img->GetRequestedRegion());
+    it.GoToBegin();
+
+    while (!it.IsAtEnd())
+    {
+        auto value = it.Get();
+        for (unsigned int i = 0; i < nbDims; ++i)
+        {
+            value.SetElement(i, std::pow(value.GetElement(i), exponent));
+        }
+        it.Set(value);
+        ++it;
+    }
+
 
     if (m_ui->saveOutput->checkState() == Qt::Checked) {}
 

@@ -29,6 +29,11 @@ MonoInterface::GUI::GUI(QWidget* parent)
 
 MonoInterface::GUI::~GUI() = default;
 
+bool MonoInterface::GUI::isActive()
+{
+    return isChecked();
+}
+
 const std::vector<MonoInterface*>& MonoInterface::getPlugins()
 {
     static std::vector<MonoInterface*> plugins = scanPlugins();

@@ -26,9 +26,11 @@ public:
 
 signals:
     void enable(bool enabled);
+    void finished();
 
 public slots:
     void run();
+    void hasFinished();
 
 private:
     void restore();

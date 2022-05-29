@@ -23,7 +23,7 @@ HistoAdjust::HistoAdjust(QString filename, QWidget* parent)
     m_ui->setupUi(this);
     setWindowTitle(filename);
     connect(m_ui->execute, &QPushButton::clicked, this, &HistoAdjust::run);
-    connect(this, &HistoAdjust::enable, m_ui->execute, &QPushButton::setEnabled);
+    connect(this, &HistoAdjust::finished, this, &HistoAdjust::hasFinished);
 
     restore();
     loadFile(filename);
@@ -103,7 +103,7 @@ bool HistoAdjust::check()
 
 void HistoAdjust::execute()
 {
-    m_ui->execute->setEnabled(false);
+    m_ui->frame->setEnabled(false);
 
     m_progressDialog = new QProgressDialog(tr("Processing."), tr("Cancel"), 0, m_tasks.size() + 1, this);
     m_progressDialog->setAttribute(Qt::WA_DeleteOnClose);
@@ -112,26 +112,41 @@ void HistoAdjust::execute()
     connect(&m_watcher, &QFutureWatcher<void>::progressValueChanged, m_progressDialog, &QProgressDialog::setValue);
     connect(&m_watcher, &QFutureWatcher<void>::finished, m_progressDialog, &QProgressDialog::close);
 
+    std::vector<MonoInterface::GUI*> activeTasks;
+    for (auto task : m_tasks)
+    {
+        if (task->isActive())
+        {
+            activeTasks.push_back(task);
+        }
+    }
+
     m_watcher.setFuture(QtConcurrent::run(
-            [this](QPromise<void>& promise)
+            [this, activeTasks = std::move(activeTasks)](QPromise<void>& promise)
             {
                 int i = 0;
                 ImageTypePtr img = m_img;
-                for (auto task : m_tasks)
+                for (auto task : activeTasks)
                 {
                     img = task->process(img, promise);
                     promise.setProgressValue(++i);
                     if (promise.isCanceled())
                     {
-                        emit enable(true);
+                        emit finished();
                         return;
                     }
                 }
                 m_ui->output->handleItem(img);
                 promise.setProgressValue(++i);
-                emit enable(true);
+                emit finished();
             }));
     m_progressDialog->show();
+}
+
+void HistoAdjust::hasFinished()
+{
+    m_ui->frame->setEnabled(true);
+    setFocus();
 }
 
 void HistoAdjust::restore()
