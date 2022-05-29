@@ -7,6 +7,7 @@ FILE(GLOB ASTRO_PROCESSING_SRC
 FILE(GLOB ASTRO_PROCESSING_HEADERS
     Processing/exponential.h
     Processing/mono.h
+    Processing/ui_mono.h
 )
 
 ASTRO_add_library(

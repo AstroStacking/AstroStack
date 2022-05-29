@@ -42,8 +42,8 @@ IndentCaseLabels: true
 IndentPPDirectives: None
 IndentWidth: 4
 KeepEmptyLinesAtTheStartOfBlocks: true
-MacroBlockBegin: 'QT_BEGIN_NAMESPACE'
-MacroBlockEnd: 'QT_END_NAMESPACE'
+#MacroBlockBegin: QT_BEGIN_NAMESPACE
+#MacroBlockEnd: QT_END_NAMESPACE
 MaxEmptyLinesToKeep: 2
 NamespaceIndentation: None
 ObjCSpaceAfterProperty: false

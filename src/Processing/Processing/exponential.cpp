@@ -1,12 +1,8 @@
 #include "exponential.h"
 #include "ui_exponential.h"
-
-#include <IO/output.h>
-#include <Plugin/pluginfactory.h>
+#include "ui_mono.h"
 
 #include <QtWidgets/QDoubleSpinBox>
-#include <QtWidgets/QFileDialog>
-#include <QtWidgets/QMessageBox>
 
 #include <itkImageDuplicator.h>
 #include <itkImageRegionIterator.h>
@@ -26,36 +22,26 @@ QString Exponential::explanation() const
     return tr("Raises the image values to the power of a parameter");
 }
 
-Exponential::GUI* Exponential::generateGUI(QWidget* parent) const
+MonoInterfaceGUI* Exponential::generateGUI(QWidget* parent) const
 {
     return new ExponentialGUI(parent);
 }
 
 ExponentialGUI::ExponentialGUI(QWidget* parent)
-    : MonoInterface::GUI(parent)
+    : MonoInterfaceGUI(parent)
     , m_ui(std::make_unique<Ui::Exponential>())
 {
-    m_ui->setupUi(this);
+    QWidget* child = new QWidget(this);
+    m_ui->setupUi(child);
+    m_monoUi->setupUi(this, child);
+    setTitle(tr("Exponential"));
 
-    connect(m_ui->saveOutput, &QCheckBox::stateChanged, this, &ExponentialGUI::outputStateChanged);
-    connect(m_ui->filenameOpen, &QPushButton::clicked, this, &ExponentialGUI::outputFileBoxOpen);
-    connect(this, &ExponentialGUI::save, this, &ExponentialGUI::saveImg);
+    setupSlots();
     connect(m_ui->skew, &QDoubleSpinBox::valueChanged, this, &ExponentialGUI::setSkewValue);
     connect(m_ui->skewSlider, &QSlider::sliderMoved, this, &ExponentialGUI::setApproximateSkewValue);
 }
 
 ExponentialGUI::~ExponentialGUI() = default;
-
-void ExponentialGUI::outputStateChanged(int state)
-{
-    m_ui->filename->setEnabled(state != Qt::Unchecked);
-    m_ui->filenameOpen->setEnabled(state != Qt::Unchecked);
-}
-
-void ExponentialGUI::outputFileBoxOpen()
-{
-    m_ui->filename->setText(QFileDialog::getSaveFileName(this, tr("Save output"), m_ui->filename->text()));
-}
 
 void ExponentialGUI::setSkewValue(double val)
 {
@@ -65,24 +51,6 @@ void ExponentialGUI::setSkewValue(double val)
 void ExponentialGUI::setApproximateSkewValue(int val)
 {
     m_ui->skew->setValue(std::pow(10, -val / 25.));
-}
-
-bool ExponentialGUI::check()
-{
-    QFileInfo info(m_ui->filename->text());
-    if (!info.exists())
-    {
-        return true;
-    }
-    int result = QMessageBox::question(this, tr("Exponential"), tr("Overwrite existing file?"),
-                                       QMessageBox::Yes | QMessageBox::No | QMessageBox::Abort);
-    if (result == QMessageBox::Abort)
-    {
-        return false;
-    }
-    m_overwriteIfExists = result == QMessageBox::Yes;
-
-    return true;
 }
 
 ImageTypePtr ExponentialGUI::process(ImageTypePtr img, QPromise<void>& promise)
@@ -116,13 +84,4 @@ ImageTypePtr ExponentialGUI::process(ImageTypePtr img, QPromise<void>& promise)
 
     return img;
 }
-
-void ExponentialGUI::saveImg(ImageTypePtr img)
-{
-    if (m_ui->saveOutput->checkState() == Qt::Checked)
-    {
-        OutputInterface::saveImg(img, m_ui->filename->text(), this);
-    }
-}
-
 } // namespace astro

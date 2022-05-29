@@ -46,6 +46,6 @@ private:
     QProgressDialog* m_progressDialog{};
     QFutureWatcher<void> m_watcher;
 
-    std::vector<MonoInterface::GUI*> m_tasks;
+    std::vector<MonoInterfaceGUI*> m_tasks;
 };
 } // namespace astro

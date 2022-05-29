@@ -23,13 +23,13 @@ public:
 
     QString explanation() const override;
 
-    GUI* generateGUI(QWidget* parent) const override;
+    MonoInterfaceGUI* generateGUI(QWidget* parent) const override;
 };
 
 /**
  QWidgets that will be displayed in the stack
  */
-class ExponentialGUI : public MonoInterface::GUI
+class ExponentialGUI : public MonoInterfaceGUI
 {
     Q_OBJECT
 public:
@@ -37,17 +37,10 @@ public:
     ~ExponentialGUI() override;
 
     ImageTypePtr process(ImageTypePtr img, QPromise<void>& promise) override;
-    bool check() override;
-
-signals:
-    void save(ImageTypePtr img);
 
 private slots:
-    void outputStateChanged(int state);
-    void outputFileBoxOpen();
     void setSkewValue(double val);
     void setApproximateSkewValue(int val);
-    void saveImg(ImageTypePtr img);
 
 private:
     std::unique_ptr<Ui::Exponential> m_ui;

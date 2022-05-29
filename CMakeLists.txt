@@ -44,7 +44,7 @@ qt_add_translations(AstroStack
 set_source_files_properties(${TRANSLATION_SRC}
     PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/translations")
 
-FILE(GLOB CMAKE_OTHER_SRC CMake/*.cmake *.in src/*.in src/*.txt *.yml *.md scripts/*.sh scripts/*.bat CMakeLists.txt)
+FILE(GLOB CMAKE_OTHER_SRC .clang-format CMake/*.cmake *.in src/*.in src/*.txt *.yml *.md scripts/*.sh scripts/*.bat CMakeLists.txt)
 SOURCE_GROUP_BY_FOLDER(CMAKE_OTHER)
 add_custom_target(CMake SOURCES ${CMAKE_OTHER_SRC})
 

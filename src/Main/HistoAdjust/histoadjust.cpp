@@ -112,7 +112,7 @@ void HistoAdjust::execute()
     connect(&m_watcher, &QFutureWatcher<void>::progressValueChanged, m_progressDialog, &QProgressDialog::setValue);
     connect(&m_watcher, &QFutureWatcher<void>::finished, m_progressDialog, &QProgressDialog::close);
 
-    std::vector<MonoInterface::GUI*> activeTasks;
+    std::vector<MonoInterfaceGUI*> activeTasks;
     for (auto task : m_tasks)
     {
         if (task->isActive())
