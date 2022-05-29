@@ -12,9 +12,9 @@ set(ITK_NO_IO_FACTORY_REGISTER_MANAGER ON)
 option(ENABLE_TEST_DISCOVERY "Activate test discovery in ctest" ON)
 
 find_package(Git REQUIRED)
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets Charts)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Charts Linguist)
 find_package(ITK REQUIRED COMPONENTS ITKIOImageBase ITKIOJPEG ITKIOPNG ITKIOTIFF)
-find_package(Gtest REQUIRED)
+find_package(GTest REQUIRED)
 
 set(ITK_FACTORY_LIST ImageIO)
 include(${ITK_USE_FILE})
@@ -32,6 +32,19 @@ include(Utilities)
 
 add_subdirectory(src)
 
+FILE(GLOB CMAKE_TS_SRC *.ts)
+SOURCE_GROUP_BY_FOLDER(CMAKE_TS_SRC)
+add_custom_target(Translations SOURCES ${CMAKE_TS_SRC})
+
+qt_add_lupdate(AstroStack TS_FILES astro_fr.ts)
+qt_add_lrelease(AstroStack
+    TS_FILES astro_fr.ts
+    QM_FILES_OUTPUT_VARIABLE qm_files)
+#qt_add_resources(AstroStack "translations"
+#    PREFIX "/i18n"
+#    BASE "${CMAKE_CURRENT_BINARY_DIR}"
+#    FILES "${qm_files}")
+    
 FILE(GLOB CMAKE_OTHER_SRC CMake/*.cmake *.in src/*.in src/*.txt *.yml *.md scripts/*.sh CMakeLists.txt)
 SOURCE_GROUP_BY_FOLDER(CMAKE_OTHER)
 add_custom_target(CMake SOURCES ${CMAKE_OTHER_SRC})

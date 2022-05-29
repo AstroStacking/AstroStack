@@ -2,7 +2,7 @@
 #include <IO/io.h>
 
 #include <QtCore/QPromise>
-#include <QtWidgets/QFrame>
+#include <QtWidgets/QGroupBox>
 
 namespace astro
 {
@@ -17,7 +17,7 @@ public:
     /**
      QWidgets that will be displayed in the stack
      */
-    class GUI : public QFrame
+    class GUI : public QGroupBox
     {
     public:
         GUI(QWidget* parent);

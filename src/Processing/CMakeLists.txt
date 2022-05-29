@@ -15,5 +15,5 @@ ASTRO_add_library(
     FOLDER Processing
     SRC ${ASTRO_PROCESSING_SRC}
     HEADERS ${ASTRO_PROCESSING_HEADERS}
-    LIBRARIES AstroPlugin AstroIO Qt6::Core Qt6::Widgets ${ITK_LIBRARIES}
+    LIBRARIES AstroAlgorithms AstroPlugin AstroIO Qt6::Core Qt6::Widgets ${ITK_LIBRARIES}
 )

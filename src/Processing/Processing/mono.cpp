@@ -23,7 +23,7 @@ std::vector<MonoInterface*> scanPlugins()
 MonoInterface::~MonoInterface() = default;
 
 MonoInterface::GUI::GUI(QWidget* parent)
-    : QFrame(parent)
+    : QGroupBox(parent)
 {
 }
 
