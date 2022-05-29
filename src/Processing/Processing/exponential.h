@@ -40,13 +40,14 @@ public:
     bool check() override;
 
 signals:
-    void setEnableState(bool enabled);
+    void save(ImageTypePtr img);
 
 private slots:
     void outputStateChanged(int state);
     void outputFileBoxOpen();
     void setSkewValue(double val);
     void setApproximateSkewValue(int val);
+    void saveImg(ImageTypePtr img);
 
 private:
     std::unique_ptr<Ui::Exponential> m_ui;

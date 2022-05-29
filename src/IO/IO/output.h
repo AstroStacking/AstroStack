@@ -12,7 +12,9 @@ public:
     virtual ~OutputInterface();
 
     virtual QStringList filters() const = 0;
-    virtual void save(const ImageType& image, QString filename, QWidget* parent) = 0;
+    virtual void save(ImageTypePtr image, QString filename, QWidget* parent) const = 0;
+
+    static void saveImg(ImageTypePtr img, QString path, QWidget* parent);
 };
 } // namespace astro
 

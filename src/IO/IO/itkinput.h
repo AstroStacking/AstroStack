@@ -9,7 +9,6 @@ class ITKInputPlugin
     , public InputInterface
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.Astro.IO.InputInterface")
     Q_INTERFACES(astro::InputInterface)
 
 public:

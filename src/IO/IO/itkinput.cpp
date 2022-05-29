@@ -65,7 +65,7 @@ try
 catch (...)
 {
     QMessageBox msgBox;
-    msgBox.setText("Could not load image " + filename + ".");
+    msgBox.setText(tr("Could not load image ") + filename + ".");
     msgBox.exec();
     return ImageTypePtr();
 }
