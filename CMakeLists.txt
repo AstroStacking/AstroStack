@@ -36,16 +36,15 @@ FILE(GLOB CMAKE_TS_SRC *.ts)
 SOURCE_GROUP_BY_FOLDER(CMAKE_TS_SRC)
 add_custom_target(Translations SOURCES ${CMAKE_TS_SRC})
 
-qt_add_lupdate(AstroStack TS_FILES astro_fr.ts)
-qt_add_lrelease(AstroStack
-    TS_FILES astro_fr.ts
-    QM_FILES_OUTPUT_VARIABLE qm_files)
-#qt_add_resources(AstroStack "translations"
-#    PREFIX "/i18n"
-#    BASE "${CMAKE_CURRENT_BINARY_DIR}"
-#    FILES "${qm_files}")
-    
-FILE(GLOB CMAKE_OTHER_SRC CMake/*.cmake *.in src/*.in src/*.txt *.yml *.md scripts/*.sh CMakeLists.txt)
+FILE(GLOB TRANSLATION_SRC *.ts)
+qt_add_translations(AstroStack
+    TS_FILES ${TRANSLATION_SRC}
+    QM_FILES_OUTPUT_VARIABLE TRANSLATION_QM
+    )
+set_source_files_properties(${TRANSLATION_SRC}
+    PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/translations")
+
+FILE(GLOB CMAKE_OTHER_SRC CMake/*.cmake *.in src/*.in src/*.txt *.yml *.md scripts/* CMakeLists.txt)
 SOURCE_GROUP_BY_FOLDER(CMAKE_OTHER)
 add_custom_target(CMake SOURCES ${CMAKE_OTHER_SRC})
 

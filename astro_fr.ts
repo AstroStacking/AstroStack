@@ -36,14 +36,6 @@
     </message>
 </context>
 <context>
-    <name>Explorer</name>
-    <message>
-        <location filename="src/Main/Explorer/explorer.ui" line="14"/>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>HistoAdjust</name>
     <message>
         <location filename="src/Main/HistoAdjust/histoadjust.ui" line="14"/>
