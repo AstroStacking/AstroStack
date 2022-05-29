@@ -1,23 +1,21 @@
 #pragma once
+
 #include <Processing/mono.h>
 
 namespace Ui
 {
-class Exponential;
+class HistoStretch;
 }
 
 namespace astro
 {
-/**
-  Raises the image values to the power of a parameter
- */
-class Exponential
+class HistoStretch
     : public QObject
     , public MonoInterface
 {
     Q_OBJECT
 public:
-    ~Exponential() override;
+    ~HistoStretch() override;
 
     QString name() const override;
 
@@ -29,21 +27,20 @@ public:
 /**
  QWidgets that will be displayed in the stack
  */
-class ExponentialGUI : public MonoInterfaceGUI
+class HistoStretchGUI : public MonoInterfaceGUI
 {
     Q_OBJECT
 public:
-    ExponentialGUI(QWidget* parent);
-    ~ExponentialGUI() override;
+    HistoStretchGUI(QWidget* parent);
+    ~HistoStretchGUI() override;
 
     ImageTypePtr process(ImageTypePtr img, QPromise<void>& promise) override;
 
 private slots:
-    void setSkewValue(double val);
-    void setApproximateSkewValue(int val);
+    //    void setSkewValue(double val);
+    //    void setApproximateSkewValue(int val);
 
 private:
-    std::unique_ptr<Ui::Exponential> m_ui;
+    std::unique_ptr<Ui::HistoStretch> m_ui;
 };
-
 } // namespace astro

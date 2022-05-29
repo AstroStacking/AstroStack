@@ -3,7 +3,8 @@
 
 #include <Common/imagedata.h>
 #include <IO/input.h>
-#include <Processing/exponential.h> // temporary
+#include <Processing/exponential.h>  // temporary
+#include <Processing/histostretch.h> // temporary
 #include <Processing/mono.h>
 
 #include <QtConcurrent/QtConcurrentRun>
@@ -70,6 +71,8 @@ void HistoAdjust::processLoadFile(QString file, QPromise<void>& promise)
 void HistoAdjust::setupWorkflow()
 {
     m_tasks.push_back(Exponential().generateGUI(this));
+    m_ui->contentLayout->addWidget(m_tasks.back());
+    m_tasks.push_back(HistoStretch().generateGUI(this));
     m_ui->contentLayout->addWidget(m_tasks.back());
 
     m_ui->contentLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding));
