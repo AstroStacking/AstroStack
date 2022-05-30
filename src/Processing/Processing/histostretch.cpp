@@ -28,14 +28,48 @@ HistoStretchGUI::HistoStretchGUI(QWidget* parent)
     QWidget* child = new QWidget(this);
     m_ui->setupUi(child);
     m_monoUi->setupUi(this, child);
-    setTitle(tr("Exponential"));
+    setTitle(tr("Histogram Stretch"));
 
     setupSlots();
-    //connect(m_ui->skew, &QDoubleSpinBox::valueChanged, this, &ExponentialGUI::setSkewValue);
-    //connect(m_ui->skewSlider, &QSlider::sliderMoved, this, &ExponentialGUI::setApproximateSkewValue);
+    connect(m_ui->red, &QDoubleSpinBox::valueChanged, this, &HistoStretchGUI::setRedValue);
+    connect(m_ui->redSlider, &QSlider::sliderMoved, this, &HistoStretchGUI::setApproximateRedValue);
+    connect(m_ui->blue, &QDoubleSpinBox::valueChanged, this, &HistoStretchGUI::setBlueValue);
+    connect(m_ui->blueSlider, &QSlider::sliderMoved, this, &HistoStretchGUI::setApproximateBlueValue);
+    connect(m_ui->green, &QDoubleSpinBox::valueChanged, this, &HistoStretchGUI::setGreenValue);
+    connect(m_ui->greenSlider, &QSlider::sliderMoved, this, &HistoStretchGUI::setApproximateGreenValue);
 }
 
 HistoStretchGUI::~HistoStretchGUI() = default;
+
+void HistoStretchGUI::setRedValue(double val)
+{
+    m_ui->redSlider->setValue(val * 100);
+}
+
+void HistoStretchGUI::setApproximateRedValue(int val)
+{
+    m_ui->red->setValue(val / 100.);
+}
+
+void HistoStretchGUI::setBlueValue(double val)
+{
+    m_ui->blueSlider->setValue(val * 100);
+}
+
+void HistoStretchGUI::setApproximateBlueValue(int val)
+{
+    m_ui->blue->setValue(val / 100.);
+}
+
+void HistoStretchGUI::setGreenValue(double val)
+{
+    m_ui->greenSlider->setValue(val * 100);
+}
+
+void HistoStretchGUI::setApproximateGreenValue(int val)
+{
+    m_ui->green->setValue(val / 100.);
+}
 
 ImageTypePtr HistoStretchGUI::process(ImageTypePtr img, QPromise<void>& promise)
 {

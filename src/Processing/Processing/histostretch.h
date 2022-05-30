@@ -37,8 +37,12 @@ public:
     ImageTypePtr process(ImageTypePtr img, QPromise<void>& promise) override;
 
 private slots:
-    //    void setSkewValue(double val);
-    //    void setApproximateSkewValue(int val);
+    void setRedValue(double val);
+    void setApproximateRedValue(int val);
+    void setGreenValue(double val);
+    void setApproximateGreenValue(int val);
+    void setBlueValue(double val);
+    void setApproximateBlueValue(int val);
 
 private:
     std::unique_ptr<Ui::HistoStretch> m_ui;
