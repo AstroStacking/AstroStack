@@ -2,6 +2,9 @@
 #include "ui_histostretch.h"
 #include "ui_mono.h"
 
+#include <itkImageDuplicator.h>
+#include <itkImageRegionIterator.h>
+
 namespace astro
 {
 HistoStretch::~HistoStretch() = default;
@@ -73,6 +76,35 @@ void HistoStretchGUI::setApproximateGreenValue(int val)
 
 ImageTypePtr HistoStretchGUI::process(ImageTypePtr img, QPromise<void>& promise)
 {
+    std::array<float, 4> shift{{static_cast<float>(m_ui->red->value()), static_cast<float>(m_ui->blue->value()),
+                                static_cast<float>(m_ui->green->value()), 1}};
+
+    using DuplicatorType = itk::ImageDuplicator<ImageType>;
+    auto duplicator = DuplicatorType::New();
+    duplicator->SetInputImage(img);
+    duplicator->Update();
+
+    img = duplicator->GetOutput();
+    using IteratorType = itk::ImageRegionIterator<ImageType>;
+
+    IteratorType it(img, img->GetRequestedRegion());
+    it.GoToBegin();
+
+    unsigned int nbDims = img->GetNumberOfComponentsPerPixel();
+
+    while (!it.IsAtEnd())
+    {
+        auto value = it.Get();
+        for (unsigned int i = 0; i < nbDims; ++i)
+        {
+            value.SetElement(i, std::max((value.GetElement(i) - shift[i]) / (1 - shift[i]), 0.f));
+        }
+        it.Set(value);
+        ++it;
+    }
+
     emit save(img);
+
+    return img;
 }
 } // namespace astro
