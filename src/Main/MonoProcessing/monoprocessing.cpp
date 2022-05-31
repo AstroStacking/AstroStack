@@ -1,5 +1,5 @@
-#include "histoadjust.h"
-#include "ui_histoadjust.h"
+#include "monoprocessing.h"
+#include "ui_monoprocessing.h"
 
 #include <Common/imagedata.h>
 #include <IO/input.h>
@@ -17,14 +17,14 @@
 
 namespace astro
 {
-HistoAdjust::HistoAdjust(QString filename, QWidget* parent)
+MonoProcessing::MonoProcessing(QString filename, QWidget* parent)
     : QWidget(parent)
-    , m_ui(std::make_unique<Ui::HistoAdjust>())
+    , m_ui(std::make_unique<Ui::MonoProcessing>())
 {
     m_ui->setupUi(this);
     setWindowTitle(filename);
-    connect(m_ui->execute, &QPushButton::clicked, this, &HistoAdjust::run);
-    connect(this, &HistoAdjust::finished, this, &HistoAdjust::hasFinished);
+    connect(m_ui->execute, &QPushButton::clicked, this, &MonoProcessing::run);
+    connect(this, &MonoProcessing::finished, this, &MonoProcessing::hasFinished);
 
     restore();
     loadFile(filename);
@@ -32,12 +32,12 @@ HistoAdjust::HistoAdjust(QString filename, QWidget* parent)
     setupWorkflow();
 }
 
-HistoAdjust::~HistoAdjust()
+MonoProcessing::~MonoProcessing()
 {
     save();
 }
 
-void HistoAdjust::loadFile(QString file)
+void MonoProcessing::loadFile(QString file)
 {
     m_progressDialog = new QProgressDialog(tr("Loading in progress."), tr("Cancel"), 0, 3, this);
     m_progressDialog->setAttribute(Qt::WA_DeleteOnClose);
@@ -49,7 +49,7 @@ void HistoAdjust::loadFile(QString file)
     m_progressDialog->show();
 }
 
-void HistoAdjust::processLoadFile(QString file, QPromise<void>& promise)
+void MonoProcessing::processLoadFile(QString file, QPromise<void>& promise)
 {
     m_img = InputInterface::loadImg(file, this);
     promise.setProgressValue(1);
@@ -68,7 +68,7 @@ void HistoAdjust::processLoadFile(QString file, QPromise<void>& promise)
     }
 }
 
-void HistoAdjust::setupWorkflow()
+void MonoProcessing::setupWorkflow()
 {
     m_tasks.push_back(Exponential().generateGUI(this));
     m_ui->contentLayout->addWidget(m_tasks.back());
@@ -78,7 +78,7 @@ void HistoAdjust::setupWorkflow()
     m_ui->contentLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding));
 }
 
-void HistoAdjust::run()
+void MonoProcessing::run()
 {
     if (check())
     {
@@ -92,7 +92,7 @@ void HistoAdjust::run()
     }
 }
 
-bool HistoAdjust::check()
+bool MonoProcessing::check()
 {
     for (auto task : m_tasks)
     {
@@ -104,7 +104,7 @@ bool HistoAdjust::check()
     return true;
 }
 
-void HistoAdjust::execute()
+void MonoProcessing::execute()
 {
     m_ui->frame->setEnabled(false);
 
@@ -146,19 +146,19 @@ void HistoAdjust::execute()
     m_progressDialog->show();
 }
 
-void HistoAdjust::hasFinished()
+void MonoProcessing::hasFinished()
 {
     m_ui->frame->setEnabled(true);
     setFocus();
 }
 
-void HistoAdjust::restore()
+void MonoProcessing::restore()
 {
     m_ui->input->restore("ImageDisplayInput");
     m_ui->output->restore("ImageDisplayOutput");
 
     QSettings settings("AstroStack", "AstroStack");
-    settings.beginGroup("HistoAdjust");
+    settings.beginGroup("MonoProcessing");
     if (!settings.contains("geometry"))
     {
         return;
@@ -168,10 +168,10 @@ void HistoAdjust::restore()
     settings.endGroup();
 }
 
-void HistoAdjust::save()
+void MonoProcessing::save()
 {
     QSettings settings("AstroStack", "AstroStack");
-    settings.beginGroup("HistoAdjust");
+    settings.beginGroup("MonoProcessing");
     settings.setValue("geometry", saveGeometry());
     settings.setValue("splitter", m_ui->splitter->saveState());
     settings.endGroup();

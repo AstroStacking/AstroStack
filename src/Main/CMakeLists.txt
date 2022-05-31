@@ -1,15 +1,15 @@
 FILE(GLOB ASTRO_MAIN_SRC
-    Common/doubleprogressbar.ui
     Common/doubleprogressbar.cpp
+    Common/doubleprogressbar.ui
     Common/graphicsview.cpp
-    Common/imagedata.ui
     Common/imagedata.cpp
-    Explorer/explorer.ui
+    Common/imagedata.ui
     Explorer/explorer.cpp
-    Explorer/imagedisplay.ui
+    Explorer/explorer.ui
     Explorer/imagedisplay.cpp
-    HistoAdjust/histoadjust.ui
-    HistoAdjust/histoadjust.cpp
+    Explorer/imagedisplay.ui
+    MonoProcessing/monoprocessing.cpp
+    MonoProcessing/monoprocessing.ui
     mainwindow.ui
     mainwindow.cpp
     main.cpp
@@ -21,7 +21,7 @@ FILE(GLOB ASTRO_MAIN_HEADERS
     Common/imagedata.h
     Explorer/explorer.h
     Explorer/imagedisplay.h
-    HistoAdjust/histoadjust.h
+    MonoProcessing/monoprocessing.h
     mainwindow.h
 )
 

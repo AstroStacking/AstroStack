@@ -2,7 +2,7 @@
 #include "ui_explorer.h"
 
 #include <Common/imagedata.h>
-#include <HistoAdjust/histoadjust.h>
+#include <MonoProcessing/monoprocessing.h>
 #include <mainwindow.h>
 
 #include <QtCore/QDir>
@@ -114,6 +114,6 @@ void Explorer::contextMenuRequested(QPoint pos)
 void Explorer::openProcess()
 {
     QString file = m_model->fileInfo(m_ui->treeView->currentIndex()).absoluteFilePath();
-    m_mainWindow->addSubWindow(new HistoAdjust(file));
+    m_mainWindow->addSubWindow(new MonoProcessing(file));
 }
 } // namespace astro

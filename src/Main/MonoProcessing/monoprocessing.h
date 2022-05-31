@@ -8,7 +8,7 @@
 
 namespace Ui
 {
-class HistoAdjust;
+class MonoProcessing;
 }
 
 class QFileSystemModel;
@@ -16,13 +16,13 @@ class QProgressDialog;
 
 namespace astro
 {
-class HistoAdjust : public QWidget
+class MonoProcessing : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit HistoAdjust(QString filename, QWidget* parent = nullptr);
-    ~HistoAdjust();
+    explicit MonoProcessing(QString filename, QWidget* parent = nullptr);
+    ~MonoProcessing();
 
 signals:
     void enable(bool enabled);
@@ -41,7 +41,7 @@ private:
     bool check();
     void execute();
 
-    std::unique_ptr<Ui::HistoAdjust> m_ui;
+    std::unique_ptr<Ui::MonoProcessing> m_ui;
     ImageTypePtr m_img;
     QProgressDialog* m_progressDialog{};
     QFutureWatcher<void> m_watcher;
