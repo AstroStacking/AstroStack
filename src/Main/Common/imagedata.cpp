@@ -1,6 +1,9 @@
 #include "imagedata.h"
 #include "ui_imagedata.h"
 
+#include <itkCastImageFilter.h>
+#include <itkMultiplyImageFilter.h>
+
 #include <QtCharts/QAreaSeries>
 #include <QtCharts/QChartView>
 #include <QtCharts/QLineSeries>
@@ -16,28 +19,28 @@ namespace astro
 {
 namespace
 {
+using OutputImageType = itk::VectorImage<uint16_t, Dimension>;
+using OutputImageTypePtr = itk::SmartPointer<OutputImageType>;
+
 template<int size>
-QRgba64 from(ImageType::PixelType pixel);
+QRgba64 from(OutputImageType::PixelType pixel);
 
 template<>
-QRgba64 from<1>(ImageType::PixelType pixel)
+QRgba64 from<1>(OutputImageType::PixelType pixel)
 {
-    return QRgba64::fromRgba64(static_cast<quint16>(pixel[0] * 65535), static_cast<quint16>(pixel[0] * 65535),
-                               static_cast<quint16>(pixel[0] * 65535), 65535);
+    return QRgba64::fromRgba64(pixel[0], pixel[0], pixel[0], 65535);
 }
 
 template<>
-QRgba64 from<3>(ImageType::PixelType pixel)
+QRgba64 from<3>(OutputImageType::PixelType pixel)
 {
-    return QRgba64::fromRgba64(static_cast<quint16>(pixel[0] * 65535), static_cast<quint16>(pixel[1] * 65535),
-                               static_cast<quint16>(pixel[2] * 65535), 65535);
+    return QRgba64::fromRgba64(pixel[0], pixel[1], pixel[2], 65535);
 }
 
 template<>
-QRgba64 from<4>(ImageType::PixelType pixel)
+QRgba64 from<4>(OutputImageType::PixelType pixel)
 {
-    return QRgba64::fromRgba64(static_cast<quint16>(pixel[0] * 65535), static_cast<quint16>(pixel[1] * 65535),
-                               static_cast<quint16>(pixel[2] * 65535), static_cast<quint16>(pixel[3] * 65535));
+    return QRgba64::fromRgba64(pixel[0], pixel[1], pixel[2], pixel[3]);
 }
 
 } // namespace
@@ -96,7 +99,18 @@ void ImageData::save()
 template<int PIXEL_SIZE>
 QGraphicsPixmapItem* ImageData::processImg(const ImageTypePtr& img)
 {
-    ImageType::RegionType region = img->GetLargestPossibleRegion();
+    using FilterType = itk::MultiplyImageFilter<ImageType, ScalarImageType, ImageType>;
+    auto filter = FilterType::New();
+    filter->SetInput(img);
+    filter->SetConstant(65535);
+    filter->Update();
+    using CastFilterType = itk::CastImageFilter<ImageType, OutputImageType>;
+    auto castFilter = CastFilterType::New();
+    castFilter->SetInput(filter->GetOutput());
+    castFilter->Update();
+    OutputImageTypePtr output = castFilter->GetOutput();
+
+    ImageType::RegionType region = output->GetLargestPossibleRegion();
     ImageType::SizeType size = region.GetSize();
     QImage image(size[0], size[1], QImage::Format_ARGB32);
     ImageType::IndexType index;
@@ -106,7 +120,7 @@ QGraphicsPixmapItem* ImageData::processImg(const ImageTypePtr& img)
         for (int i = 0; i < size[0]; ++i)
         {
             index.SetElement(0, i);
-            image.setPixelColor(i, j, from<PIXEL_SIZE>(img->GetPixel(index)));
+            image.setPixelColor(i, j, from<PIXEL_SIZE>(output->GetPixel(index)));
         }
     }
 
