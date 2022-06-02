@@ -31,6 +31,7 @@ signals:
 public slots:
     void run();
     void hasFinished();
+    void saveAs();
 
 private:
     void restore();
@@ -43,6 +44,7 @@ private:
 
     std::unique_ptr<Ui::MonoProcessing> m_ui;
     ImageTypePtr m_img;
+    ImageTypePtr m_processedImg;
     QProgressDialog* m_progressDialog{};
     QFutureWatcher<void> m_watcher;
 

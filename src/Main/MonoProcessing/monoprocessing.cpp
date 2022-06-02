@@ -3,6 +3,7 @@
 
 #include <Common/imagedata.h>
 #include <IO/input.h>
+#include <IO/output.h>
 #include <Processing/exponential.h>  // temporary
 #include <Processing/histostretch.h> // temporary
 #include <Processing/mono.h>
@@ -11,6 +12,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
 #include <QtGui/QFileSystemModel>
+#include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
@@ -23,8 +25,9 @@ MonoProcessing::MonoProcessing(QString filename, QWidget* parent)
 {
     m_ui->setupUi(this);
     setWindowTitle(filename);
-    connect(m_ui->execute, &QPushButton::clicked, this, &MonoProcessing::run);
     connect(this, &MonoProcessing::finished, this, &MonoProcessing::hasFinished);
+    connect(m_ui->execute, &QPushButton::clicked, this, &MonoProcessing::run);
+    connect(m_ui->saveAs, &QPushButton::clicked, this, &MonoProcessing::saveAs);
 
     restore();
     loadFile(filename);
@@ -51,7 +54,7 @@ void MonoProcessing::loadFile(QString file)
 
 void MonoProcessing::processLoadFile(QString file, QPromise<void>& promise)
 {
-    m_img = InputInterface::loadImg(file, this);
+    m_processedImg = m_img = InputInterface::loadImg(file, this);
     promise.setProgressValue(1);
     if (m_img)
     {
@@ -139,6 +142,7 @@ void MonoProcessing::execute()
                         return;
                     }
                 }
+                m_processedImg = img;
                 m_ui->output->handleItem(img);
                 promise.setProgressValue(++i);
                 emit finished();
@@ -150,6 +154,20 @@ void MonoProcessing::hasFinished()
 {
     m_ui->frame->setEnabled(true);
     setFocus();
+}
+
+void MonoProcessing::saveAs()
+{
+    QSettings settings("AstroStack", "AstroStack");
+    settings.beginGroup("MonoProcessing");
+    QString filename = settings.value("saveAs", "").toString();
+
+    filename = QFileDialog::getSaveFileName(this, tr("Save output"), filename);
+    if (!filename.isEmpty())
+    {
+        settings.setValue("saveAs", filename);
+        OutputInterface::saveImg(m_processedImg, filename, this);
+    }
 }
 
 void MonoProcessing::restore()

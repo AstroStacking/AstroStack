@@ -45,12 +45,12 @@ ExponentialGUI::~ExponentialGUI() = default;
 
 void ExponentialGUI::setSkewValue(double val)
 {
-    m_ui->skewSlider->setValue(std::roundl(-25 * std::log10(val)));
+    m_ui->skewSlider->setValue(100 * val);
 }
 
 void ExponentialGUI::setApproximateSkewValue(int val)
 {
-    m_ui->skew->setValue(std::pow(10, -val / 25.));
+    m_ui->skew->setValue(static_cast<int>(val / 100));
 }
 
 ImageTypePtr ExponentialGUI::process(ImageTypePtr img, QPromise<void>& promise)
