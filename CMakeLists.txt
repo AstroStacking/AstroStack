@@ -26,18 +26,8 @@ qt_standard_project_setup()
 include(Utilities)
 
 add_subdirectory(src)
-
-FILE(GLOB CMAKE_TS_SRC *.ts)
-SOURCE_GROUP_BY_FOLDER(CMAKE_TS_SRC)
-add_custom_target(Translations SOURCES ${CMAKE_TS_SRC})
-
-FILE(GLOB TRANSLATION_SRC *.ts)
-qt_add_translations(AstroStack
-    TS_FILES ${TRANSLATION_SRC}
-    QM_FILES_OUTPUT_VARIABLE TRANSLATION_QM
-    )
-set_source_files_properties(${TRANSLATION_SRC}
-    PROPERTIES OUTPUT_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/translations")
+add_subdirectory(translations)
+add_subdirectory(workflows)
 
 FILE(GLOB CMAKE_OTHER_SRC .clang-format CMake/*.cmake *.in src/*.in src/*.txt *.yml *.md scripts/*.sh scripts/*.bat CMakeLists.txt)
 SOURCE_GROUP_BY_FOLDER(CMAKE_OTHER)

@@ -1,3 +1,4 @@
+#include <QtCore/QDir>
 #include <QtCore/QPluginLoader>
 
 #include <string>
@@ -20,6 +21,8 @@ public:
     {
         return getPluginForInterface(qobject_interface_iid<T>());
     }
+    
+    static QDir getRootPath();
 
 protected:
     const PluginContainer& getPluginForInterface(const std::string& interface);

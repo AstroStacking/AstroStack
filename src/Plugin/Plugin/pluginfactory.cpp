@@ -1,7 +1,6 @@
 #include "pluginfactory.h"
 
 #include <QtCore/QCoreApplication>
-#include <QtCore/QDir>
 
 namespace astro
 {
@@ -23,19 +22,7 @@ void scanStaticPlugins(PluginFactory::PluginContainer& container, const std::str
 
 void scanDynamicPlugins(PluginFactory::PluginContainer& container, const std::string& interface)
 {
-    QDir pluginsDir = QDir(QCoreApplication::applicationDirPath());
-
-#if defined(Q_OS_WIN)
-    if (pluginsDir.dirName().toLower() == "debug" || pluginsDir.dirName().toLower() == "release")
-        pluginsDir.cdUp();
-#elif defined(Q_OS_MAC)
-    if (pluginsDir.dirName() == "MacOS")
-    {
-        pluginsDir.cdUp();
-        pluginsDir.cdUp();
-        pluginsDir.cdUp();
-    }
-#endif
+    QDir pluginsDir = PluginFactory::getRootPath();
     pluginsDir.cd("plugins");
 
     const auto entryList = pluginsDir.entryList(QDir::Files);
@@ -63,6 +50,30 @@ PluginFactory& PluginFactory::get()
 {
     static PluginFactory facility;
     return facility;
+}
+
+QDir PluginFactory::getRootPath()
+{
+    QDir rootDir = QDir(QCoreApplication::applicationDirPath());
+
+    if (rootDir.dirName().toLower() == "Debug" || rootDir.dirName().toLower() == "Release")
+    {
+        rootDir.cdUp();
+    }
+    if (rootDir.dirName().toLower() == "bin")
+    {
+        rootDir.cdUp();
+    }
+
+#if defined(Q_OS_MAC)
+    if (rootDir.dirName() == "MacOS")
+    {
+        rootDir.cdUp();
+        rootDir.cdUp();
+        rootDir.cdUp();
+    }
+#endif
+    return rootDir;
 }
 
 const PluginFactory::PluginContainer& PluginFactory::getPluginForInterface(const std::string& interface)
