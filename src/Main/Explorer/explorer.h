@@ -11,6 +11,7 @@ class QFileSystemModel;
 namespace astro
 {
 class MainWindow;
+class MonoWorkflow;
 
 class Explorer : public QWidget
 {
@@ -20,6 +21,9 @@ public:
     explicit Explorer(MainWindow* mainWindow);
     ~Explorer();
 
+    QString getSelectedFile() const;
+    void addSubWindow(QWidget* widget);
+
 signals:
     void selectFile(QString file);
 
@@ -27,17 +31,19 @@ public slots:
     void selectImg(const QModelIndex& index);
     void selectImgFile(QString file);
     void contextMenuRequested(QPoint pos);
-    void openProcess();
 
 protected:
     void closeEvent(QCloseEvent* event);
 
 private:
+    void createContextMenu();
     void restore();
     void save();
 
     std::unique_ptr<Ui::Explorer> m_ui;
     std::unique_ptr<QFileSystemModel> m_model;
-    MainWindow* m_mainWindow;
+    MainWindow* m_mainWindow{};
+    QMenu* m_menu{};
+    std::vector<std::unique_ptr<MonoWorkflow>> m_workflows;
 };
 } // namespace astro

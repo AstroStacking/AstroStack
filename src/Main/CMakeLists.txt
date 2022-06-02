@@ -10,6 +10,7 @@ FILE(GLOB ASTRO_MAIN_SRC
     Explorer/imagedisplay.ui
     MonoProcessing/monoprocessing.cpp
     MonoProcessing/monoprocessing.ui
+    MonoProcessing/monoworkflow.cpp
     mainwindow.ui
     mainwindow.cpp
     main.cpp
@@ -22,6 +23,7 @@ FILE(GLOB ASTRO_MAIN_HEADERS
     Explorer/explorer.h
     Explorer/imagedisplay.h
     MonoProcessing/monoprocessing.h
+    MonoProcessing/monoworkflow.h
     mainwindow.h
 )
 
