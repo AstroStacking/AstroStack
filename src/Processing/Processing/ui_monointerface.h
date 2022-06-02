@@ -10,7 +10,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class Ui_Mono
+class Ui_MonoInterface
 {
 public:
     QVBoxLayout* verticalLayout;
@@ -68,16 +68,16 @@ public:
 
     void retranslateUi(QGroupBox* Mono)
     {
-        Mono->setWindowTitle(QCoreApplication::translate("Mono", "Frame", nullptr));
+        Mono->setWindowTitle(QCoreApplication::translate("MonoInterface", "Frame", nullptr));
         Mono->setTitle(QString());
-        saveOutput->setText(QCoreApplication::translate("Mono", "Save output:", nullptr));
-        filenameOpen->setText(QCoreApplication::translate("Mono", "...", nullptr));
+        saveOutput->setText(QCoreApplication::translate("MonoInterface", "Save output:", nullptr));
+        filenameOpen->setText(QCoreApplication::translate("MonoInterface", "...", nullptr));
     } // retranslateUi
 };
 
 namespace Ui
 {
-class Mono : public Ui_Mono
+class MonoInterface : public Ui_MonoInterface
 {
 };
 } // namespace Ui

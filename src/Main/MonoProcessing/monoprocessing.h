@@ -1,9 +1,9 @@
 #pragma once
 
 #include <IO/io.h>
-#include <Processing/mono.h>
 
 #include <QtCore/QFutureWatcher>
+#include <QtCore/QJsonObject>
 #include <QtWidgets/QWidget>
 
 namespace Ui
@@ -16,6 +16,9 @@ class QProgressDialog;
 
 namespace astro
 {
+class MonoInterface;
+class MonoInterfaceGUI;
+
 class MonoProcessing : public QWidget
 {
     Q_OBJECT
@@ -24,7 +27,7 @@ public:
     explicit MonoProcessing(QString filename, QWidget* parent = nullptr);
     ~MonoProcessing();
 
-    void setupWorkflow();
+    void setupWorkflow(const std::vector<std::pair<MonoInterface*, QJsonObject>>& steps);
 
 signals:
     void enable(bool enabled);

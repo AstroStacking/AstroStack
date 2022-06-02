@@ -4,9 +4,7 @@
 #include <Common/imagedata.h>
 #include <IO/input.h>
 #include <IO/output.h>
-#include <Processing/exponential.h>  // temporary
-#include <Processing/histostretch.h> // temporary
-#include <Processing/mono.h>
+#include <Processing/monointerface.h>
 
 #include <QtConcurrent/QtConcurrentRun>
 #include <QtCore/QDir>
@@ -69,12 +67,14 @@ void MonoProcessing::processLoadFile(QString file, QPromise<void>& promise)
     }
 }
 
-void MonoProcessing::setupWorkflow()
+void MonoProcessing::setupWorkflow(const std::vector<std::pair<MonoInterface*, QJsonObject>>& steps)
 {
-    m_tasks.push_back(Exponential().generateGUI(this));
-    m_ui->contentLayout->addWidget(m_tasks.back());
-    m_tasks.push_back(HistoStretch().generateGUI(this));
-    m_ui->contentLayout->addWidget(m_tasks.back());
+    for (const auto& step : steps)
+    {
+        m_tasks.push_back(step.first->generateGUI(this));
+        m_tasks.back()->setup(step.second);
+        m_ui->contentLayout->addWidget(m_tasks.back());
+    }
 
     m_ui->contentLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding));
 }

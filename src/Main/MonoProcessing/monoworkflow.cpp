@@ -3,7 +3,9 @@
 #include <Explorer/explorer.h>
 #include <MonoProcessing/monoprocessing.h>
 #include <Plugin/pluginfactory.h>
+#include <Processing/monointerface.h>
 
+#include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 
 namespace astro
@@ -20,12 +22,19 @@ void MonoWorkflow::openProcess()
 
     MonoProcessing* widget = new MonoProcessing(file);
     m_explorer->addSubWindow(widget);
-    widget->setupWorkflow();
+    widget->setupWorkflow(m_steps);
+}
+
+void MonoWorkflow::addStep(MonoInterface* plugin, QJsonObject object)
+{
+    m_steps.emplace_back(plugin, object);
 }
 
 std::vector<std::unique_ptr<MonoWorkflow>> MonoWorkflow::getMonoWorkflows(Explorer* explorer)
 {
     std::vector<std::unique_ptr<MonoWorkflow>> workflows;
+
+    const std::map<QString, MonoInterface*>& plugins = MonoInterface::getPlugins();
 
     QDir directory = PluginFactory::getRootPath();
     directory.cd("workflows");
@@ -38,6 +47,16 @@ std::vector<std::unique_ptr<MonoWorkflow>> MonoWorkflow::getMonoWorkflows(Explor
         QByteArray jsonData = loadFile.readAll();
         QJsonDocument loadDoc(QJsonDocument::fromJson(jsonData));
         workflows.push_back(std::make_unique<MonoWorkflow>(loadDoc["Name"].toString(), explorer));
+        for (auto step : loadDoc["Steps"].toArray())
+        {
+            auto object = step.toObject();
+            auto plugin = plugins.find(object["Type"].toString());
+            if (plugin == plugins.end())
+            {
+                continue;
+            }
+            workflows.back()->addStep(plugin->second, object);
+        }
     }
 
     return workflows;

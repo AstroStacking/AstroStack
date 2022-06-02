@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Processing/mono.h>
+#include <Processing/monointerface.h>
 
 namespace Ui
 {

@@ -6,7 +6,7 @@
 
 namespace Ui
 {
-class Mono;
+class MonoInterface;
 }
 
 namespace astro
@@ -39,7 +39,7 @@ private slots:
     void saveImg(ImageTypePtr img);
 
 protected:
-    std::unique_ptr<Ui::Mono> m_monoUi;
+    std::unique_ptr<Ui::MonoInterface> m_monoUi;
 
 private:
     bool m_overwriteIfExists{true};
@@ -59,7 +59,7 @@ public:
     /// Generate a GUI to be added to the stack
     virtual MonoInterfaceGUI* generateGUI(QWidget* parent) const = 0;
 
-    static const std::vector<MonoInterface*>& getPlugins();
+    static const std::map<QString, MonoInterface*>& getPlugins();
 };
 } // namespace astro
 

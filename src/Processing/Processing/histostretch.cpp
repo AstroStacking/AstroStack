@@ -1,6 +1,6 @@
 #include "histostretch.h"
 #include "ui_histostretch.h"
-#include "ui_mono.h"
+#include "ui_monointerface.h"
 
 #include <itkImageDuplicator.h>
 #include <itkImageRegionIterator.h>

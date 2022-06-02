@@ -3,14 +3,14 @@ FILE(GLOB ASTRO_PROCESSING_SRC
     Processing/exponential.ui
     Processing/histostretch.cpp
     Processing/histostretch.ui
-    Processing/mono.cpp
+    Processing/monointerface.cpp
 )
 
 FILE(GLOB ASTRO_PROCESSING_HEADERS
     Processing/exponential.h
     Processing/histostretch.h
-    Processing/mono.h
-    Processing/ui_mono.h
+    Processing/monointerface.h
+    Processing/ui_monointerface.h
 )
 
 ASTRO_add_library(

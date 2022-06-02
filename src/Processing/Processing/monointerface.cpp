@@ -1,5 +1,8 @@
-#include "mono.h"
-#include "ui_mono.h"
+#include "monointerface.h"
+#include "ui_monointerface.h"
+
+#include <Processing/exponential.h>
+#include <Processing/histostretch.h>
 
 #include <IO/output.h>
 #include <Plugin/pluginfactory.h>
@@ -12,14 +15,21 @@ namespace astro
 
 namespace
 {
-std::vector<MonoInterface*> scanPlugins()
+std::map<QString, MonoInterface*> scanPlugins()
 {
-    std::vector<MonoInterface*> plugins;
-    //plugins.push_back(new ITKInputPlugin());
+    std::map<QString, MonoInterface*> plugins;
+    {
+        auto* exponential = new Exponential();
+        plugins.emplace(exponential->name(), exponential);
+    }
+    {
+        auto* histostretch = new HistoStretch();
+        plugins.emplace(histostretch->name(), histostretch);
+    }
     for (auto object : PluginFactory::get().getPluginsFor<MonoInterface*>())
     {
         auto* plugin = qobject_cast<MonoInterface*>(object);
-        plugins.push_back(plugin);
+        plugins.emplace(plugin->name(), plugin);
     }
     return plugins;
 }
@@ -28,15 +38,15 @@ std::vector<MonoInterface*> scanPlugins()
 MonoInterface::~MonoInterface() = default;
 
 
-const std::vector<MonoInterface*>& MonoInterface::getPlugins()
+const std::map<QString, MonoInterface*>& MonoInterface::getPlugins()
 {
-    static std::vector<MonoInterface*> plugins = scanPlugins();
+    static std::map<QString, MonoInterface*> plugins = scanPlugins();
     return plugins;
 }
 
 MonoInterfaceGUI::MonoInterfaceGUI(QWidget* parent)
     : QGroupBox(parent)
-    , m_monoUi(std::make_unique<Ui::Mono>())
+    , m_monoUi(std::make_unique<Ui::MonoInterface>())
 {
 }
 
