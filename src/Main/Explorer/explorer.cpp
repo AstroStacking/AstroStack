@@ -32,13 +32,13 @@ Explorer::Explorer(MainWindow* mainWindow)
     m_ui->treeView->setModel(m_model.get());
     m_ui->treeView->setCurrentIndex(m_model->index(QDir::homePath()));
     m_ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
-    
+
     connect(this, &Explorer::selectFile, this, &Explorer::selectImgFile);
     connect(m_ui->treeView, &QTreeView::doubleClicked, this, &Explorer::selectImg);
     connect(m_ui->treeView, &QTreeView::customContextMenuRequested, this, &Explorer::contextMenuRequested);
 
     restore();
-     createContextMenu();
+    createContextMenu();
 }
 
 Explorer::~Explorer()
@@ -59,10 +59,9 @@ void Explorer::addSubWindow(QWidget* widget)
 void Explorer::createContextMenu()
 {
     m_menu = new QMenu(this);
-    for(auto& workflow: m_workflows)
+    for (auto& workflow : m_workflows)
     {
         QAction* processAct = new QAction(workflow->objectName(), this);
-        processAct->setShortcuts(QKeySequence::Quit);
         processAct->setStatusTip(workflow->objectName());
         connect(processAct, &QAction::triggered, workflow.get(), &MonoWorkflow::openProcess);
         m_menu->addAction(processAct);

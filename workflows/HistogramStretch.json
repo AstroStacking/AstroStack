@@ -2,11 +2,11 @@
     "Name": "Histogram Stretch",
     "Type": "Mono",
     "Steps": [
-        "Exponential":
-            {
-            },
-        "HistoStretch":
-            {
-            }
+        {
+            "Type": "Exponential"
+        },
+        {
+            "Type": "HistoStretch"
+        }
     ]
 }

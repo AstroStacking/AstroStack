@@ -10,12 +10,13 @@ class MonoWorkflow : public QObject
 {
     Q_OBJECT
 public:
-    MonoWorkflow(Explorer* explorer);
+    MonoWorkflow(QString name, Explorer* explorer);
 public slots:
     void openProcess();
 
 private:
     Explorer* m_explorer{};
+
 public:
     static std::vector<std::unique_ptr<MonoWorkflow>> getMonoWorkflows(Explorer* explorer);
 };

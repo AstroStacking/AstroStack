@@ -56,15 +56,6 @@ QDir PluginFactory::getRootPath()
 {
     QDir rootDir = QDir(QCoreApplication::applicationDirPath());
 
-    if (rootDir.dirName().toLower() == "Debug" || rootDir.dirName().toLower() == "Release")
-    {
-        rootDir.cdUp();
-    }
-    if (rootDir.dirName().toLower() == "bin")
-    {
-        rootDir.cdUp();
-    }
-
 #if defined(Q_OS_MAC)
     if (rootDir.dirName() == "MacOS")
     {
@@ -73,6 +64,14 @@ QDir PluginFactory::getRootPath()
         rootDir.cdUp();
     }
 #endif
+    if (rootDir.dirName().toLower() == "debug" || rootDir.dirName().toLower() == "release")
+    {
+        rootDir.cdUp();
+    }
+    if (rootDir.dirName().toLower() == "bin")
+    {
+        rootDir.cdUp();
+    }
     return rootDir;
 }
 
