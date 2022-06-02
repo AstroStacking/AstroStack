@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.22)
 project(AstroStack VERSION 1.0.0 LANGUAGES C CXX)
 
+cmake_policy(SET CMP0006 NEW)
+
 SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -20,13 +22,6 @@ set(ITK_FACTORY_LIST ImageIO)
 include(${ITK_USE_FILE})
 
 qt_standard_project_setup()
-
-# configure a header file to pass some of the CMake settings
-# to the source code
-configure_file (
-  "src/config.h.in"
-  "src/config.h" @ONLY
-  )
 
 include(Utilities)
 
