@@ -45,6 +45,12 @@ private slots:
     void setApproximateBlueValue(int val);
 
 private:
+    std::array<float, 4> getLimits(const ImageTypePtr& img);
+    std::array<float, 4> getLimits1D(const ImageTypePtr& img);
+    std::array<float, 4> getLimits3D(const ImageTypePtr& img);
+
+    float getMaxHistogram(ScalarImageTypePtr img);
+
     std::unique_ptr<Ui::HistoStretch> m_ui;
 };
 } // namespace astro

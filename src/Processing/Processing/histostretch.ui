@@ -12,7 +12,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" colspan="3">
-    <widget class="QRadioButton" name="radioButton">
+    <widget class="QRadioButton" name="relative">
      <property name="text">
       <string>Relative Threshold</string>
      </property>
@@ -22,7 +22,7 @@
     </widget>
    </item>
    <item row="1" column="0" colspan="3">
-    <widget class="QRadioButton" name="radioButton_2">
+    <widget class="QRadioButton" name="absolute">
      <property name="text">
       <string>Absolute Threshold</string>
      </property>
@@ -50,7 +50,7 @@
       <double>0.010000000000000</double>
      </property>
      <property name="value">
-      <double>0.100000000000000</double>
+      <double>0.500000000000000</double>
      </property>
     </widget>
    </item>
@@ -60,7 +60,7 @@
       <number>100</number>
      </property>
      <property name="value">
-      <number>10</number>
+      <number>50</number>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -89,7 +89,7 @@
       <double>0.010000000000000</double>
      </property>
      <property name="value">
-      <double>0.100000000000000</double>
+      <double>0.500000000000000</double>
      </property>
     </widget>
    </item>
@@ -99,7 +99,7 @@
       <number>100</number>
      </property>
      <property name="value">
-      <number>10</number>
+      <number>50</number>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -128,7 +128,7 @@
       <double>0.010000000000000</double>
      </property>
      <property name="value">
-      <double>0.100000000000000</double>
+      <double>0.500000000000000</double>
      </property>
     </widget>
    </item>
@@ -138,7 +138,7 @@
       <number>100</number>
      </property>
      <property name="value">
-      <number>10</number>
+      <number>50</number>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
