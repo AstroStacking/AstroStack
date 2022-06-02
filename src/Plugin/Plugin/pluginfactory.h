@@ -21,7 +21,7 @@ public:
     {
         return getPluginForInterface(qobject_interface_iid<T>());
     }
-    
+
     static QDir getRootPath();
 
 protected:

@@ -23,6 +23,7 @@ public:
 
     /// Process a single image based on a promise.
     virtual ImageTypePtr process(ImageTypePtr img, QPromise<void>& promise) = 0;
+    virtual void setup(QJsonObject data);
     bool check();
     bool isActive();
 

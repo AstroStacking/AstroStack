@@ -31,8 +31,6 @@ MonoProcessing::MonoProcessing(QString filename, QWidget* parent)
 
     restore();
     loadFile(filename);
-
-    setupWorkflow();
 }
 
 MonoProcessing::~MonoProcessing()

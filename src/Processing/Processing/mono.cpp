@@ -40,14 +40,16 @@ MonoInterfaceGUI::MonoInterfaceGUI(QWidget* parent)
 {
 }
 
+MonoInterfaceGUI::~MonoInterfaceGUI() = default;
+
+void MonoInterfaceGUI::setup(QJsonObject data) {}
+
 void MonoInterfaceGUI::setupSlots()
 {
     connect(m_monoUi->saveOutput, &QCheckBox::stateChanged, this, &MonoInterfaceGUI::outputStateChanged);
     connect(m_monoUi->filenameOpen, &QPushButton::clicked, this, &MonoInterfaceGUI::outputFileBoxOpen);
     connect(this, &MonoInterfaceGUI::save, this, &MonoInterfaceGUI::saveImg);
 }
-
-MonoInterfaceGUI::~MonoInterfaceGUI() = default;
 
 bool MonoInterfaceGUI::isActive()
 {

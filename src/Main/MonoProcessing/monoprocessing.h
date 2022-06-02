@@ -24,6 +24,8 @@ public:
     explicit MonoProcessing(QString filename, QWidget* parent = nullptr);
     ~MonoProcessing();
 
+    void setupWorkflow();
+
 signals:
     void enable(bool enabled);
     void finished();
@@ -38,7 +40,6 @@ private:
     void save();
     void loadFile(QString file);
     void processLoadFile(QString file, QPromise<void>& promise);
-    void setupWorkflow();
     bool check();
     void execute();
 

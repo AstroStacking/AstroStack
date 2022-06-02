@@ -15,7 +15,7 @@ HistoStretch::~HistoStretch() = default;
 
 QString HistoStretch::name() const
 {
-    return "Exponential";
+    return "HistoStretch";
 }
 
 QString HistoStretch::explanation() const

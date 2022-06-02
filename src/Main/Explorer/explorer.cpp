@@ -114,6 +114,9 @@ void Explorer::contextMenuRequested(QPoint pos)
 void Explorer::openProcess()
 {
     QString file = m_model->fileInfo(m_ui->treeView->currentIndex()).absoluteFilePath();
-    m_mainWindow->addSubWindow(new MonoProcessing(file));
+    
+    MonoProcessing* widget = new MonoProcessing(file);
+    m_mainWindow->addSubWindow(widget);
+    widget->setupWorkflow();
 }
 } // namespace astro
