@@ -35,6 +35,7 @@ public:
     ~HistoStretchGUI() override;
 
     ImageTypePtr process(ImageTypePtr img, QPromise<void>& promise) override;
+    static std::vector<size_t> histogram(const ScalarImageTypePtr& img, size_t bins);
 
 private slots:
     void setRedValue(double val);

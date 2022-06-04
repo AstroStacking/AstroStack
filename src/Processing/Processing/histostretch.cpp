@@ -78,20 +78,18 @@ void HistoStretchGUI::setApproximateGreenValue(int val)
     m_ui->green->setValue(val / 100.);
 }
 
-float HistoStretchGUI::getMaxHistogram(ScalarImageTypePtr img)
+std::vector<size_t> HistoStretchGUI::histogram(const ScalarImageTypePtr& img, size_t bins)
 {
-    constexpr unsigned int BINS = 65536;
-    constexpr unsigned int MEAN_SIZE = 5;
     using ImageToHistogramFilterType = itk::Statistics::ImageToHistogramFilter<ScalarImageType>;
 
-    ImageToHistogramFilterType::HistogramType::MeasurementVectorType lowerBound(BINS);
+    ImageToHistogramFilterType::HistogramType::MeasurementVectorType lowerBound(bins);
     lowerBound.Fill(0);
 
-    ImageToHistogramFilterType::HistogramType::MeasurementVectorType upperBound(BINS);
+    ImageToHistogramFilterType::HistogramType::MeasurementVectorType upperBound(bins);
     upperBound.Fill(1);
 
     ImageToHistogramFilterType::HistogramType::SizeType size(1);
-    size.Fill(BINS);
+    size.Fill(bins);
 
     auto imageToHistogramFilter = ImageToHistogramFilterType::New();
     imageToHistogramFilter->SetInput(img);
@@ -101,12 +99,20 @@ float HistoStretchGUI::getMaxHistogram(ScalarImageTypePtr img)
     imageToHistogramFilter->Update();
     ImageToHistogramFilterType::HistogramType* histogram = imageToHistogramFilter->GetOutput();
 
-    std::vector<size_t> hist(BINS, 0);
+    std::vector<size_t> hist(bins, 0);
 
     for (size_t i = 0; i < histogram->GetSize()[0]; ++i)
     {
         hist[i] = histogram->GetFrequency(i);
     }
+    return hist;
+}
+
+float HistoStretchGUI::getMaxHistogram(ScalarImageTypePtr img)
+{
+    constexpr unsigned int BINS = 65536;
+    constexpr unsigned int MEAN_SIZE = 5;
+    std::vector<size_t> hist = histogram(img, BINS);
     std::vector<double> histFilt(BINS, 0);
     for (size_t i = MEAN_SIZE; i < BINS - MEAN_SIZE / 2; ++i)
     {
