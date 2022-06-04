@@ -20,7 +20,7 @@ QString HistoStretch::name() const
 
 QString HistoStretch::explanation() const
 {
-    return tr("Raises the image values to the power of a parameter");
+    return tr("Stretches the histogram to maximise low light contrast");
 }
 
 MonoInterfaceGUI* HistoStretch::generateGUI(QWidget* parent) const
