@@ -40,6 +40,7 @@ private slots:
 
 protected:
     std::unique_ptr<Ui::MonoInterface> m_monoUi;
+    QString m_name;
 
 private:
     bool m_overwriteIfExists{true};

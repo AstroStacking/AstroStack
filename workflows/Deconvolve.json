@@ -1,0 +1,9 @@
+{
+    "Name": "Deconvolve",
+    "Type": "Mono",
+    "Steps": [
+        {
+            "Type": "RLDeconvolution"
+        }
+    ]
+}

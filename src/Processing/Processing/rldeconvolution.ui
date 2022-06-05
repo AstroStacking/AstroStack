@@ -37,6 +37,9 @@
        <property name="singleStep">
         <number>2</number>
        </property>
+       <property name="value">
+        <number>3</number>
+       </property>
       </widget>
      </item>
     </layout>
@@ -75,6 +78,9 @@
       <widget class="QSpinBox" name="iterations">
        <property name="minimum">
         <number>1</number>
+       </property>
+       <property name="value">
+        <number>10</number>
        </property>
       </widget>
      </item>

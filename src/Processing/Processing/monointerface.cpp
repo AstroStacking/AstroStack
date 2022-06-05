@@ -3,6 +3,7 @@
 
 #include <Processing/exponential.h>
 #include <Processing/histostretch.h>
+#include <Processing/rldeconvolution.h>
 
 #include <IO/output.h>
 #include <Plugin/pluginfactory.h>
@@ -25,6 +26,10 @@ std::map<QString, MonoInterface*> scanPlugins()
     {
         auto* histostretch = new HistoStretch();
         plugins.emplace(histostretch->name(), histostretch);
+    }
+    {
+        auto* rldeconvolution = new RLDeconvolution();
+        plugins.emplace(rldeconvolution->name(), rldeconvolution);
     }
     for (auto object : PluginFactory::get().getPluginsFor<MonoInterface*>())
     {
@@ -52,7 +57,10 @@ MonoInterfaceGUI::MonoInterfaceGUI(QWidget* parent)
 
 MonoInterfaceGUI::~MonoInterfaceGUI() = default;
 
-void MonoInterfaceGUI::setup(QJsonObject data) {}
+void MonoInterfaceGUI::setup(QJsonObject data)
+{
+    m_name = data["Name"].toString();
+}
 
 void MonoInterfaceGUI::setupSlots()
 {
@@ -83,7 +91,7 @@ bool MonoInterfaceGUI::check()
     {
         return true;
     }
-    int result = QMessageBox::question(this, tr("Exponential"), tr("Overwrite existing file?"),
+    int result = QMessageBox::question(this, m_name, tr("Overwrite existing file?"),
                                        QMessageBox::Yes | QMessageBox::No | QMessageBox::Abort);
     if (result == QMessageBox::Abort)
     {
