@@ -46,6 +46,10 @@ std::vector<std::unique_ptr<MonoWorkflow>> MonoWorkflow::getMonoWorkflows(Explor
         loadFile.open(QIODevice::ReadOnly);
         QByteArray jsonData = loadFile.readAll();
         QJsonDocument loadDoc(QJsonDocument::fromJson(jsonData));
+        if (loadDoc["Type"].toString() != "Mono")
+        {
+            continue;
+        }
         workflows.push_back(std::make_unique<MonoWorkflow>(loadDoc["Name"].toString(), explorer));
         for (auto step : loadDoc["Steps"].toArray())
         {
