@@ -1,4 +1,5 @@
 FILE(GLOB TESTS_ALGORITHMS_SRC
+    affinemodel.cpp
     ransac.cpp
 )
 

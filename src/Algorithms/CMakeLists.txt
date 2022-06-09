@@ -1,8 +1,11 @@
 FILE(GLOB ASTRO_ALGORITHMS_SRC
-    Algos/ransac.cpp
+    Algos/affinemodel.cpp
+    Algos/model.cpp
 )
 
 FILE(GLOB ASTRO_ALGORITHMS_HEADERS
+    Algos/affinemodel.h
+    Algos/model.h
     Algos/ransac.h
 )
 
