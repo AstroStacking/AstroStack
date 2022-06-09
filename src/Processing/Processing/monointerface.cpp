@@ -98,8 +98,37 @@ bool MonoInterfaceGUI::check()
         return false;
     }
     m_overwriteIfExists = result == QMessageBox::Yes;
+    if(!m_overwriteIfExists)
+    {
+        QFileInfo info(m_monoUi->filename->text());
+        QString basename = info.completeBaseName();
+        QRegularExpression regex("(.*)_(\\d+)$");
+        auto match = regex.match(basename);
+        if(match.hasMatch())
+        {
+            setNextFilename(info, match.captured(1), match.captured(2).toLong());
+        }
+        else
+        {
+            setNextFilename(info, basename, 1);
+        }
+    }
 
     return true;
+}
+
+void MonoInterfaceGUI::setNextFilename(QFileInfo info, QString basename, long inc)
+{
+    while(true)
+    {
+        QString potentialFilename = info.dir().filePath(basename + "_" + QString::number(inc) + "." + info.completeSuffix());
+        if(!QFileInfo(potentialFilename).exists())
+        {
+            m_monoUi->filename->setText(potentialFilename);
+            break;
+        }
+        ++inc;
+    }
 }
 
 void MonoInterfaceGUI::saveImg(ImageTypePtr img)

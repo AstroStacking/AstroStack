@@ -1,6 +1,7 @@
 #pragma once
 #include <IO/io.h>
 
+#include <QtCore/QFileInfo>
 #include <QtCore/QPromise>
 #include <QtWidgets/QGroupBox>
 
@@ -24,10 +25,13 @@ public:
     /// Process a single image based on a promise.
     virtual ImageTypePtr process(ImageTypePtr img, QPromise<void>& promise) = 0;
     virtual void setup(QJsonObject data);
+
     bool check();
     bool isActive();
 
 protected:
+    void setNextFilename(QFileInfo info, QString basename, long inc);
+
     void setupSlots();
 
 signals:
