@@ -24,6 +24,8 @@ ImageDisplay::ImageDisplay(QWidget* parent)
     , m_ui(std::make_unique<Ui::ImageDisplay>())
 {
     m_ui->setupUi(this);
+    
+    connect(this, &ImageDisplay::signalBadFile, this, &ImageDisplay::msgBadFile);
 
     m_ui->data->restore("ImageDisplay");
 }
@@ -57,13 +59,17 @@ void ImageDisplay::process(QString file, QPromise<void>& promise)
     else
     {
         emit promise.setProgressValue(2);
-        QMessageBox msgBox;
-        msgBox.setText(tr("Could not load image ") + file + ".");
-        msgBox.exec();
+        emit signalBadFile(file);
     }
-    if (!promise.isCanceled())
-    {
-        emit m_progressDialog->finished(2);
-    }
+    emit m_progressDialog->finished(2);
 }
+
+void ImageDisplay::msgBadFile(QString file)
+{
+    QMessageBox msgBox;
+    msgBox.setText(tr("Could not load image ") + file + ".");
+    msgBox.exec();
+    m_progressDialog->deleteLater();
+}
+
 } // namespace astro

@@ -27,6 +27,12 @@ public:
 
     void display(QString file);
 
+signals:
+    void signalBadFile(QString file);
+
+public slots:
+    void msgBadFile(QString file);
+
 private:
     void process(QString file, QPromise<void>& promise);
 
