@@ -59,10 +59,10 @@ endif(NOT ${PREFIX}_NAME)
 
 qt_add_library(${${PREFIX}_NAME}
     SHARED
-        ${${PREFIX}_SRC} ${${PREFIX}_HEADERS} ${NATVIS_FILE}
+        ${${PREFIX}_SRC} ${${PREFIX}_HEADERS}
 )
 
-target_compile_definitions(${${PREFIX}_NAME} PRIVATE ${${PREFIX}_DEFINITIONS})
+target_compile_definitions(${${PREFIX}_NAME} PRIVATE ${${PREFIX}_DEFINITIONS} -DBUILD_${PREFIX})
 target_include_directories(${${PREFIX}_NAME} PRIVATE ${${PREFIX}_INCLUDE})
 target_include_directories(${${PREFIX}_NAME} BEFORE PRIVATE ${PROJECT_SOURCE_DIR}/src)
 target_include_directories(${${PREFIX}_NAME} PUBLIC
@@ -116,7 +116,7 @@ endif(NOT ${PREFIX}_NAME)
 qt_add_plugin(${${PREFIX}_NAME}
     STATIC
 )
-target_sources(${${PREFIX}_NAME} PRIVATE ${${PREFIX}_SRC} ${${PREFIX}_HEADERS} ${NATVIS_FILE})
+target_sources(${${PREFIX}_NAME} PRIVATE ${${PREFIX}_SRC} ${${PREFIX}_HEADERS})
 
 target_compile_definitions(${${PREFIX}_NAME} PRIVATE ${${PREFIX}_DEFINITIONS})
 target_include_directories(${${PREFIX}_NAME} PRIVATE ${${PREFIX}_INCLUDE})
@@ -174,7 +174,7 @@ add_definitions(${${PREFIX}_DEFINITIONS})
 include_directories(${PROJECT_SOURCE_DIR} ${${PREFIX}_INCLUDE})
 
 qt_add_executable(${${PREFIX}_NAME}
-  ${${PREFIX}_SRC} ${${PREFIX}_HEADERS} ${NATVIS_FILE}
+  ${${PREFIX}_SRC} ${${PREFIX}_HEADERS}
 )
 
 if(${PREFIX}_FOLDER)

@@ -1,3 +1,5 @@
+#include <Plugin/config.h>
+
 #include <QtCore/QDir>
 #include <QtCore/QPluginLoader>
 
@@ -7,12 +9,13 @@
 
 namespace astro
 {
-class PluginFactory
+class ASTRO_PLUGIN_EXPORT PluginFactory
 {
     PluginFactory();
+    ~PluginFactory();
 
 public:
-    static PluginFactory& get();
+      static PluginFactory& get();
 
     using PluginContainer = std::vector<QObject*>;
 

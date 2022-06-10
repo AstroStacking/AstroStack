@@ -55,6 +55,5 @@ catch (...)
     QMessageBox msgBox;
     msgBox.setText(tr("Could not save image ") + filename + ".");
     msgBox.exec();
-    return ImageTypePtr();
 }
 } // namespace astro

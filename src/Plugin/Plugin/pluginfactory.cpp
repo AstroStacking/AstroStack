@@ -17,7 +17,6 @@ void scanStaticPlugins(PluginFactory::PluginContainer& container, const std::str
             container.push_back(plugin);
         }
     }
-    return container;
 }
 
 void scanDynamicPlugins(PluginFactory::PluginContainer& container, const std::string& interface)
@@ -39,12 +38,12 @@ void scanDynamicPlugins(PluginFactory::PluginContainer& container, const std::st
             }
         }
     }
-
-    return container;
 }
 } // namespace
 
 PluginFactory::PluginFactory() = default;
+
+PluginFactory::~PluginFactory() = default;
 
 PluginFactory& PluginFactory::get()
 {

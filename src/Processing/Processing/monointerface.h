@@ -1,4 +1,6 @@
 #pragma once
+#include <Processing/config.h>
+
 #include <IO/io.h>
 
 #include <QtCore/QFileInfo>
@@ -19,15 +21,15 @@ class MonoInterfaceGUI : public QGroupBox
 {
     Q_OBJECT
 public:
-    MonoInterfaceGUI(QWidget* parent);
-    virtual ~MonoInterfaceGUI();
+    ASTRO_PROCESSING_EXPORT MonoInterfaceGUI(QWidget* parent);
+    ASTRO_PROCESSING_EXPORT virtual ~MonoInterfaceGUI();
 
     /// Process a single image based on a promise.
     virtual ImageTypePtr process(ImageTypePtr img, QPromise<void>& promise) = 0;
-    virtual void setup(QJsonObject data);
+    ASTRO_PROCESSING_EXPORT virtual void setup(QJsonObject data);
 
-    bool check();
-    bool isActive();
+    ASTRO_PROCESSING_EXPORT bool check();
+    ASTRO_PROCESSING_EXPORT bool isActive();
 
 protected:
     void setNextFilename(QFileInfo info, QString basename, long inc);
@@ -53,9 +55,10 @@ private:
 /**
   Interface to process one image at a time
  */
-class MonoInterface
+class ASTRO_PROCESSING_EXPORT MonoInterface
 {
 public:
+    MonoInterface();
     virtual ~MonoInterface();
     /// Name of the interface
     virtual QString name() const = 0;

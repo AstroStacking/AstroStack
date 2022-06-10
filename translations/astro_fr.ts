@@ -78,28 +78,19 @@
     </message>
 </context>
 <context>
-    <name>astro::Explorer</name>
-    <message>
-        <location filename="../src/Main/Explorer/explorer.cpp" line="106"/>
-        <location filename="../src/Main/Explorer/explorer.cpp" line="108"/>
-        <source>Process</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>astro::ImageDisplay</name>
     <message>
-        <location filename="../src/Main/Explorer/imagedisplay.cpp" line="35"/>
+        <location filename="../src/Main/Explorer/imagedisplay.cpp" line="37"/>
         <source>Loading in progress.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Main/Explorer/imagedisplay.cpp" line="35"/>
+        <location filename="../src/Main/Explorer/imagedisplay.cpp" line="37"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Main/Explorer/imagedisplay.cpp" line="61"/>
+        <location filename="../src/Main/Explorer/imagedisplay.cpp" line="70"/>
         <source>Could not load image </source>
         <translation type="unfinished"></translation>
     </message>
@@ -130,33 +121,33 @@
 <context>
     <name>astro::MonoProcessing</name>
     <message>
-        <location filename="../src/Main/MonoProcessing/monoprocessing.cpp" line="45"/>
+        <location filename="../src/Main/MonoProcessing/monoprocessing.cpp" line="41"/>
         <source>Loading in progress.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Main/MonoProcessing/monoprocessing.cpp" line="45"/>
-        <location filename="../src/Main/MonoProcessing/monoprocessing.cpp" line="114"/>
+        <location filename="../src/Main/MonoProcessing/monoprocessing.cpp" line="41"/>
+        <location filename="../src/Main/MonoProcessing/monoprocessing.cpp" line="112"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Main/MonoProcessing/monoprocessing.cpp" line="69"/>
+        <location filename="../src/Main/MonoProcessing/monoprocessing.cpp" line="65"/>
         <source>Could not load image </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Main/MonoProcessing/monoprocessing.cpp" line="93"/>
+        <location filename="../src/Main/MonoProcessing/monoprocessing.cpp" line="91"/>
         <source>Failed executing workflow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Main/MonoProcessing/monoprocessing.cpp" line="114"/>
+        <location filename="../src/Main/MonoProcessing/monoprocessing.cpp" line="112"/>
         <source>Processing.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Main/MonoProcessing/monoprocessing.cpp" line="165"/>
+        <location filename="../src/Main/MonoProcessing/monoprocessing.cpp" line="163"/>
         <source>Save output</source>
         <translation type="unfinished"></translation>
     </message>

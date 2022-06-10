@@ -30,6 +30,7 @@ const std::vector<InputInterface*>& getPlugins()
 
 } // namespace
 
+InputInterface::InputInterface() = default;
 InputInterface::~InputInterface() = default;
 
 ImageTypePtr InputInterface::loadImg(QString path, QWidget* parent)

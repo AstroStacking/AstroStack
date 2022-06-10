@@ -1,7 +1,9 @@
 #pragma once
 
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
+#include <Eigen/Core>
 
+#include <numeric>
 #include <random>
 
 namespace astro
@@ -33,8 +35,8 @@ class RANSAC
 
         Model model = m_initialModel;
 
-        Matrix Xp = m_X(Eigen::all, v);
-        Matrix Yp = m_Y(Eigen::all, v);
+        Matrix Xp = m_X(Eigen::placeholders::all, v);
+        Matrix Yp = m_Y(Eigen::placeholders::all, v);
 
         model.fit(Xp, Yp);
         auto errorp = model.predict(Xp) - Yp;

@@ -40,8 +40,8 @@ std::map<QString, MonoInterface*> scanPlugins()
 }
 } // namespace
 
+MonoInterface::MonoInterface() = default;
 MonoInterface::~MonoInterface() = default;
-
 
 const std::map<QString, MonoInterface*>& MonoInterface::getPlugins()
 {

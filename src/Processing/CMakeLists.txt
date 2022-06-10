@@ -9,6 +9,7 @@ FILE(GLOB ASTRO_PROCESSING_SRC
 )
 
 FILE(GLOB ASTRO_PROCESSING_HEADERS
+    Processing/config.h
     Processing/exponential.h
     Processing/histostretch.h
     Processing/monointerface.h

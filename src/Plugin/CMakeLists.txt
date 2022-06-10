@@ -3,6 +3,7 @@ FILE(GLOB ASTRO_PLUGIN_SRC
 )
 
 FILE(GLOB ASTRO_PLUGIN_HEADERS
+    Plugin/config.h
     Plugin/pluginfactory.h
 )
 

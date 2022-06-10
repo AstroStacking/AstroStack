@@ -6,6 +6,7 @@ FILE(GLOB ASTRO_IO_SRC
 )
 
 FILE(GLOB ASTRO_IO_HEADERS
+    IO/config.h
     IO/input.h
     IO/itkinput.h
     IO/itkoutput.h

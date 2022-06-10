@@ -1,4 +1,5 @@
 #pragma once
+#include <IO/config.h>
 #include <IO/io.h>
 
 #include <QtWidgets/QWidget>
@@ -6,9 +7,10 @@
 namespace astro
 {
 
-class OutputInterface
+class ASTRO_IO_EXPORT OutputInterface
 {
 public:
+    OutputInterface();
     virtual ~OutputInterface();
 
     virtual QStringList filters() const = 0;

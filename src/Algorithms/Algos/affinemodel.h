@@ -1,15 +1,22 @@
 #pragma once
 
-#include <eigen3/Eigen/Dense>
+#include <Algos/config.h>
+
+#include <Eigen/Dense>
 
 namespace astro
 {
-class AffineModel
+class ASTRO_ALGORITHMS_EXPORT AffineModel
 {
     Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> m_A;
 
 public:
-    Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> getData() const { return m_A; }
+    AffineModel();
+    AffineModel(const AffineModel&);
+    ~AffineModel();
+    AffineModel& operator=(const AffineModel&);
+
+    Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> getData() const;
 
     void fit(const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>& X,
              const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>& Y);

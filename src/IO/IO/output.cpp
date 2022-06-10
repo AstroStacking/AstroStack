@@ -30,6 +30,7 @@ const std::vector<OutputInterface*>& getPlugins()
 
 } // namespace
 
+OutputInterface::OutputInterface() = default;
 OutputInterface::~OutputInterface() = default;
 
 void OutputInterface::saveImg(ImageTypePtr img, QString path, QWidget* parent)

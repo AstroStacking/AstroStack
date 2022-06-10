@@ -1,4 +1,5 @@
 #pragma once
+#include <IO/config.h>
 #include <IO/io.h>
 
 #include <QtCore/QStringList>
@@ -9,9 +10,10 @@ namespace astro
 /**
  Interface to read images
  */
-class InputInterface
+class ASTRO_IO_EXPORT InputInterface
 {
 public:
+    InputInterface();
     virtual ~InputInterface();
     /// List of supported extensions
     virtual QStringList filters() const = 0;

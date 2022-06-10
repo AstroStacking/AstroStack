@@ -16,6 +16,7 @@ option(ENABLE_TEST_DISCOVERY "Activate test discovery in ctest" ON)
 find_package(Git REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Charts Linguist)
 find_package(ITK REQUIRED COMPONENTS ITKIOImageBase ITKIOJPEG ITKIOPNG ITKIOTIFF ITKStatistics ITKFFT)
+find_package(Eigen3 REQUIRED)
 find_package(GTest REQUIRED)
 
 set(ITK_FACTORY_LIST ImageIO)
