@@ -13,3 +13,13 @@ add_custom_target(
             ${CMAKE_WORKFLOWS_SRC}
             ${CMAKE_BINARY_DIR}/src/Main/workflows/)
 add_dependencies(AstroStack CopyWorkflows)
+
+if(APPLE)
+INSTALL(FILES ${CMAKE_WORKFLOWS_SRC}
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_PROJECT_NAME}.app/workflows/
+)
+else()
+INSTALL(FILES ${CMAKE_WORKFLOWS_SRC}
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/workflows/
+)
+endif()
