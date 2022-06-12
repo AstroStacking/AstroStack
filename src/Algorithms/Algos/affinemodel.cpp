@@ -5,9 +5,9 @@ namespace astro
 AffineModel::AffineModel() = default;
 AffineModel::AffineModel(const AffineModel&) = default;
 AffineModel::~AffineModel() = default;
-AffineModel& AffineModel::operator = (const AffineModel&) = default;
+AffineModel& AffineModel::operator=(const AffineModel&) = default;
 
-    Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> AffineModel::getData() const
+Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic> AffineModel::getData() const
 {
     return m_A;
 }

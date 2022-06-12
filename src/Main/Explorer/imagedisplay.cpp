@@ -24,7 +24,7 @@ ImageDisplay::ImageDisplay(QWidget* parent)
     , m_ui(std::make_unique<Ui::ImageDisplay>())
 {
     m_ui->setupUi(this);
-    
+
     connect(this, &ImageDisplay::signalBadFile, this, &ImageDisplay::msgBadFile);
 
     m_ui->data->restore("ImageDisplay");

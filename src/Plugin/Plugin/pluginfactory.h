@@ -15,7 +15,7 @@ class ASTRO_PLUGIN_EXPORT PluginFactory
     ~PluginFactory();
 
 public:
-      static PluginFactory& get();
+    static PluginFactory& get();
 
     using PluginContainer = std::vector<QObject*>;
 
