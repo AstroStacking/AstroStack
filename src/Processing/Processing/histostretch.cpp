@@ -108,7 +108,7 @@ std::vector<size_t> HistoStretchGUI::histogram(const ScalarImageTypePtr& img, si
     return hist;
 }
 
-float HistoStretchGUI::getMaxHistogram(ScalarImageTypePtr img)
+float HistoStretchGUI::getMaxHistogram(ScalarImageTypePtr img, double ratio)
 {
     constexpr unsigned int BINS = 65536;
     constexpr unsigned int MEAN_SIZE = 5;
@@ -121,7 +121,12 @@ float HistoStretchGUI::getMaxHistogram(ScalarImageTypePtr img)
                       MEAN_SIZE;
     }
 
-    return (std::max_element(histFilt.begin(), histFilt.end()) - histFilt.begin()) / static_cast<float>(BINS);
+    auto maxElement = std::max_element(histFilt.begin(), histFilt.end());
+    double limit = ratio * *maxElement;
+    auto justBelow = std::find_if(std::vector<double>::reverse_iterator(maxElement), histFilt.rend(),
+                                  [=](double el) { return el < limit; });
+
+    return (justBelow.base() - histFilt.begin()) / static_cast<float>(BINS);
 }
 
 std::array<float, 4> HistoStretchGUI::getLimits1D(const ImageTypePtr& img)
@@ -132,9 +137,9 @@ std::array<float, 4> HistoStretchGUI::getLimits1D(const ImageTypePtr& img)
     indexSelectionFilter->SetInput(img);
     indexSelectionFilter->Update();
 
-    float r = getMaxHistogram(indexSelectionFilter->GetOutput());
-    return {{r * static_cast<float>(m_ui->red->value()), r * static_cast<float>(m_ui->green->value()),
-             r * static_cast<float>(m_ui->blue->value()), 1}};
+    return {{getMaxHistogram(indexSelectionFilter->GetOutput(), m_ui->red->value()),
+             getMaxHistogram(indexSelectionFilter->GetOutput(), m_ui->green->value()),
+             getMaxHistogram(indexSelectionFilter->GetOutput(), m_ui->blue->value()), 1}};
 }
 
 std::array<float, 4> HistoStretchGUI::getLimits3D(const ImageTypePtr& img)
@@ -153,9 +158,9 @@ std::array<float, 4> HistoStretchGUI::getLimits3D(const ImageTypePtr& img)
     indexSelectionFilter2->SetInput(img);
     indexSelectionFilter2->Update();
 
-    return {{getMaxHistogram(indexSelectionFilter0->GetOutput()) * static_cast<float>(m_ui->red->value()),
-             getMaxHistogram(indexSelectionFilter1->GetOutput()) * static_cast<float>(m_ui->green->value()),
-             getMaxHistogram(indexSelectionFilter2->GetOutput()) * static_cast<float>(m_ui->blue->value()), 1}};
+    return {{getMaxHistogram(indexSelectionFilter0->GetOutput(), m_ui->red->value()),
+             getMaxHistogram(indexSelectionFilter1->GetOutput(), m_ui->green->value()),
+             getMaxHistogram(indexSelectionFilter2->GetOutput(), m_ui->blue->value()), 1}};
 }
 
 std::array<float, 4> HistoStretchGUI::getLimits(const ImageTypePtr& img)
