@@ -29,7 +29,7 @@ public:
     ~ImageData();
     void restore(QString entry);
 
-    void handleItem(ImageTypePtr img);
+    void handleItem(const AstroImage& img);
 
 signals:
     void triggerSwapItem();

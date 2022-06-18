@@ -51,7 +51,7 @@ void ImageDisplay::process(QString file, QPromise<void>& promise)
     {
         return;
     }
-    if (m_img)
+    if (m_img.isValid())
     {
         m_ui->data->handleItem(m_img);
         emit promise.setProgressValue(2);

@@ -33,7 +33,7 @@ const std::vector<OutputInterface*>& getPlugins()
 OutputInterface::OutputInterface() = default;
 OutputInterface::~OutputInterface() = default;
 
-void OutputInterface::saveImg(ImageTypePtr img, QString path, QWidget* parent)
+void OutputInterface::saveImg(const AstroImage& img, QString path, QWidget* parent)
 {
     QFileInfo info(path);
     QString extension = info.completeSuffix();
@@ -43,7 +43,7 @@ void OutputInterface::saveImg(ImageTypePtr img, QString path, QWidget* parent)
     {
         if (plugin->filters().count(extension))
         {
-            plugin->save(img, path, parent);
+            plugin->save(img.getImg(), path, parent);
             return;
         }
     }

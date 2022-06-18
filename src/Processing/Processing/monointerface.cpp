@@ -132,7 +132,7 @@ void MonoInterfaceGUI::setNextFilename(QFileInfo info, QString basename, long in
     }
 }
 
-void MonoInterfaceGUI::saveImg(ImageTypePtr img)
+void MonoInterfaceGUI::saveImg(const AstroImage& img)
 {
     QFileInfo info(m_monoUi->filename->text());
     if (m_monoUi->saveOutput->checkState() == Qt::Checked && (!info.exists() || m_overwriteIfExists))

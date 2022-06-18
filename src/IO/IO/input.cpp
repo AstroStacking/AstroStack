@@ -33,13 +33,12 @@ const std::vector<InputInterface*>& getPlugins()
 InputInterface::InputInterface() = default;
 InputInterface::~InputInterface() = default;
 
-ImageTypePtr InputInterface::loadImg(QString path, QWidget* parent)
+AstroImage InputInterface::loadImg(QString path, QWidget* parent)
 {
     QFileInfo info(path);
     QString extension = info.completeSuffix();
 
     const auto& plugins = getPlugins();
-    ;
     for (auto plugin : plugins)
     {
         if (plugin->filters().count(extension))
@@ -47,7 +46,10 @@ ImageTypePtr InputInterface::loadImg(QString path, QWidget* parent)
             ImageTypePtr img = plugin->open(path, parent);
             if (img)
             {
-                return img;
+                /*Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(path.toStdString());
+                assert(image.get() != 0);
+                image->readMetadata();*/
+                return AstroImage(img);
             }
         }
     }

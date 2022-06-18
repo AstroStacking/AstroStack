@@ -47,8 +47,8 @@ private:
     void execute();
 
     std::unique_ptr<Ui::MonoProcessing> m_ui;
-    ImageTypePtr m_img;
-    ImageTypePtr m_processedImg;
+    AstroImage m_img;
+    AstroImage m_processedImg;
     QProgressDialog* m_progressDialog{};
     QFutureWatcher<void> m_watcher;
 

@@ -40,6 +40,6 @@ private:
     QProgressDialog* m_progressDialog{};
     QFutureWatcher<void> m_watcher;
 
-    ImageTypePtr m_img;
+    AstroImage m_img;
 };
 } // namespace astro

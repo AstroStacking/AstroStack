@@ -21,7 +21,7 @@ public:
     virtual ImageTypePtr open(QString filename, QWidget* parent) const = 0;
 
     /// Load an image based on the extension
-    static ImageTypePtr loadImg(QString path, QWidget* parent);
+    static AstroImage loadImg(QString path, QWidget* parent);
 };
 
 } // namespace astro

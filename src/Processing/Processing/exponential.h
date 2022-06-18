@@ -36,7 +36,7 @@ public:
     ExponentialGUI(QWidget* parent);
     ~ExponentialGUI() override;
 
-    ImageTypePtr process(ImageTypePtr img, QPromise<void>& promise) override;
+    AstroImage process(AstroImage img, QPromise<void>& promise) override;
 
 private slots:
     void setSkewValue(double val);

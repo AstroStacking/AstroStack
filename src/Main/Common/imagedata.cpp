@@ -168,18 +168,18 @@ void ImageData::processItem(const QPixmap& item)
     m_chart->addSeries(serie);
 }
 
-void ImageData::handleItem(ImageTypePtr img)
+void ImageData::handleItem(const AstroImage& img)
 {
-    switch (img->GetNumberOfComponentsPerPixel())
+    switch (img.getImg()->GetNumberOfComponentsPerPixel())
     {
         case 1:
-            m_item = processImg<1>(img);
+            m_item = processImg<1>(img.getImg());
             break;
         case 3:
-            m_item = processImg<3>(img);
+            m_item = processImg<3>(img.getImg());
             break;
         case 4:
-            m_item = processImg<4>(img);
+            m_item = processImg<4>(img.getImg());
             break;
         default:
         {

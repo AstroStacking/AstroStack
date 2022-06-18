@@ -52,7 +52,7 @@ void MonoProcessing::processLoadFile(QString file, QPromise<void>& promise)
 {
     m_processedImg = m_img = InputInterface::loadImg(file, this);
     promise.setProgressValue(1);
-    if (m_img)
+    if (m_img.isValid())
     {
         m_ui->input->handleItem(m_img);
         promise.setProgressValue(2);
@@ -129,7 +129,7 @@ void MonoProcessing::execute()
             [this, activeTasks = std::move(activeTasks)](QPromise<void>& promise)
             {
                 int i = 0;
-                ImageTypePtr img = m_img;
+                AstroImage img = m_img;
                 for (auto task : activeTasks)
                 {
                     img = task->process(img, promise);
@@ -141,7 +141,7 @@ void MonoProcessing::execute()
                     }
                 }
                 m_processedImg = img;
-                m_ui->output->handleItem(img);
+                m_ui->output->handleItem(m_processedImg);
                 promise.setProgressValue(++i);
                 emit finished();
             }));

@@ -177,22 +177,22 @@ std::array<float, 4> HistoStretchGUI::getLimits(const ImageTypePtr& img)
              static_cast<float>(m_ui->green->value()), 1}};
 }
 
-ImageTypePtr HistoStretchGUI::process(ImageTypePtr img, QPromise<void>& promise)
+AstroImage HistoStretchGUI::process(AstroImage img, QPromise<void>& promise)
 {
-    std::array<float, 4> shift = getLimits(img);
+    std::array<float, 4> shift = getLimits(img.getImg());
 
     using DuplicatorType = itk::ImageDuplicator<ImageType>;
     auto duplicator = DuplicatorType::New();
-    duplicator->SetInputImage(img);
+    duplicator->SetInputImage(img.getImg());
     duplicator->Update();
 
-    img = duplicator->GetOutput();
+    img.setImg(duplicator->GetOutput());
     using IteratorType = itk::ImageRegionIterator<ImageType>;
 
-    IteratorType it(img, img->GetRequestedRegion());
+    IteratorType it(img.getImg(), img.getImg()->GetRequestedRegion());
     it.GoToBegin();
 
-    unsigned int nbDims = img->GetNumberOfComponentsPerPixel();
+    unsigned int nbDims = img.getImg()->GetNumberOfComponentsPerPixel();
 
     while (!it.IsAtEnd())
     {

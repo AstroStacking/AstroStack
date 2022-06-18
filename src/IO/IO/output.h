@@ -16,7 +16,7 @@ public:
     virtual QStringList filters() const = 0;
     virtual void save(ImageTypePtr image, QString filename, QWidget* parent) const = 0;
 
-    static void saveImg(ImageTypePtr img, QString path, QWidget* parent);
+    static void saveImg(const AstroImage& img, QString path, QWidget* parent);
 };
 } // namespace astro
 

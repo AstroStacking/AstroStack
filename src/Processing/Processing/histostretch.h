@@ -34,7 +34,7 @@ public:
     HistoStretchGUI(QWidget* parent);
     ~HistoStretchGUI() override;
 
-    ImageTypePtr process(ImageTypePtr img, QPromise<void>& promise) override;
+    AstroImage process(AstroImage img, QPromise<void>& promise) override;
     static std::vector<size_t> histogram(const ScalarImageTypePtr& img, size_t bins);
 
 private slots:

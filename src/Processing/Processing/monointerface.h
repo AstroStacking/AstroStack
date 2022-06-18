@@ -25,7 +25,7 @@ public:
     ASTRO_PROCESSING_EXPORT virtual ~MonoInterfaceGUI();
 
     /// Process a single image based on a promise.
-    virtual ImageTypePtr process(ImageTypePtr img, QPromise<void>& promise) = 0;
+    virtual AstroImage process(AstroImage img, QPromise<void>& promise) = 0;
     ASTRO_PROCESSING_EXPORT virtual void setup(QJsonObject data);
 
     ASTRO_PROCESSING_EXPORT bool check();
@@ -37,12 +37,12 @@ protected:
     void setupSlots();
 
 signals:
-    void save(ImageTypePtr img);
+    void save(const AstroImage& img);
 
 private slots:
     void outputStateChanged(int state);
     void outputFileBoxOpen();
-    void saveImg(ImageTypePtr img);
+    void saveImg(const AstroImage& img);
 
 protected:
     std::unique_ptr<Ui::MonoInterface> m_monoUi;

@@ -53,20 +53,20 @@ void ExponentialGUI::setApproximateSkewValue(int val)
     m_ui->skew->setValue(static_cast<int>(val / 100));
 }
 
-ImageTypePtr ExponentialGUI::process(ImageTypePtr img, QPromise<void>& promise)
+AstroImage ExponentialGUI::process(AstroImage img, QPromise<void>& promise)
 {
     float exponent = m_ui->skew->value();
-    unsigned int nbDims = std::min(3U, img->GetNumberOfComponentsPerPixel());
+    unsigned int nbDims = std::min(3U, img.getImg()->GetNumberOfComponentsPerPixel());
 
     using DuplicatorType = itk::ImageDuplicator<ImageType>;
     auto duplicator = DuplicatorType::New();
-    duplicator->SetInputImage(img);
+    duplicator->SetInputImage(img.getImg());
     duplicator->Update();
 
-    img = duplicator->GetOutput();
+    img.setImg(duplicator->GetOutput());
     using IteratorType = itk::ImageRegionIterator<ImageType>;
 
-    IteratorType it(img, img->GetRequestedRegion());
+    IteratorType it(img.getImg(), img.getImg()->GetRequestedRegion());
     it.GoToBegin();
 
     while (!it.IsAtEnd())

@@ -1,5 +1,6 @@
 FILE(GLOB ASTRO_IO_SRC
     IO/input.cpp
+    IO/io.cpp
     IO/itkinput.cpp
     IO/itkoutput.cpp
     IO/output.cpp
@@ -8,9 +9,9 @@ FILE(GLOB ASTRO_IO_SRC
 FILE(GLOB ASTRO_IO_HEADERS
     IO/config.h
     IO/input.h
+    IO/io.h
     IO/itkinput.h
     IO/itkoutput.h
-    IO/io.h
     IO/output.h
 )
 

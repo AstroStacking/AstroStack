@@ -34,7 +34,7 @@ public:
     RLDeconvolutionGUI(QWidget* parent);
     ~RLDeconvolutionGUI() override;
 
-    ImageTypePtr process(ImageTypePtr img, QPromise<void>& promise) override;
+    AstroImage process(AstroImage img, QPromise<void>& promise) override;
 
 private:
     std::unique_ptr<Ui::RLDeconvolution> m_ui;
