@@ -22,9 +22,9 @@ Currently only processing one photo at a time is possible. The future stacking p
 
 ### Processing plugins
 
-* [Exponential](Processing/Processing/exponential.md)
-* [Histogram Stretch]((Processing/Processing/histostretch.md)
-* [Richardson Lucy Deconvolve]((Processing/Processing/rldeconvolution.md)
+* [Exponential](src/Processing/Processing/exponential.md)
+* [Histogram Stretch](src/Processing/Processing/histostretch.md)
+* [Richardson Lucy Deconvolve](src/Processing/Processing/rldeconvolution.md)
 
 ### Processing workflows
 
