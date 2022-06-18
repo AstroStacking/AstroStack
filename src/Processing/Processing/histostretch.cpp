@@ -39,11 +39,11 @@ HistoStretchGUI::HistoStretchGUI(QWidget* parent)
 
     setupSlots();
     connect(m_ui->red, &QDoubleSpinBox::valueChanged, this, &HistoStretchGUI::setRedValue);
-    connect(m_ui->redSlider, &QSlider::sliderMoved, this, &HistoStretchGUI::setApproximateRedValue);
+    connect(m_ui->redSlider, &QSlider::valueChanged, this, &HistoStretchGUI::setApproximateRedValue);
     connect(m_ui->blue, &QDoubleSpinBox::valueChanged, this, &HistoStretchGUI::setBlueValue);
-    connect(m_ui->blueSlider, &QSlider::sliderMoved, this, &HistoStretchGUI::setApproximateBlueValue);
+    connect(m_ui->blueSlider, &QSlider::valueChanged, this, &HistoStretchGUI::setApproximateBlueValue);
     connect(m_ui->green, &QDoubleSpinBox::valueChanged, this, &HistoStretchGUI::setGreenValue);
-    connect(m_ui->greenSlider, &QSlider::sliderMoved, this, &HistoStretchGUI::setApproximateGreenValue);
+    connect(m_ui->greenSlider, &QSlider::valueChanged, this, &HistoStretchGUI::setApproximateGreenValue);
 }
 
 HistoStretchGUI::~HistoStretchGUI() = default;

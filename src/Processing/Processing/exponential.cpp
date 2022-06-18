@@ -38,19 +38,19 @@ ExponentialGUI::ExponentialGUI(QWidget* parent)
 
     setupSlots();
     connect(m_ui->skew, &QDoubleSpinBox::valueChanged, this, &ExponentialGUI::setSkewValue);
-    connect(m_ui->skewSlider, &QSlider::sliderMoved, this, &ExponentialGUI::setApproximateSkewValue);
+    connect(m_ui->skewSlider, &QSlider::valueChanged, this, &ExponentialGUI::setApproximateSkewValue);
 }
 
 ExponentialGUI::~ExponentialGUI() = default;
 
 void ExponentialGUI::setSkewValue(double val)
 {
-    m_ui->skewSlider->setValue(100 * val);
+    m_ui->skewSlider->setValue(static_cast<int>(100 * val));
 }
 
 void ExponentialGUI::setApproximateSkewValue(int val)
 {
-    m_ui->skew->setValue(static_cast<int>(val / 100));
+    m_ui->skew->setValue(val / 100.);
 }
 
 AstroImage ExponentialGUI::process(AstroImage img, QPromise<void>& promise)
