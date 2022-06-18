@@ -33,7 +33,7 @@ A right click on an image will open a contextual menu with possible workflows.
 The current shipped ones are:
 
 * [Deconvolve](workflows/Deconvolve.md)
-* [Histo Stretch](workflows/HistoStretech.md)
+* [Histogram Stretch](workflows/HistoStretech.md)
 
 ## Changelog
 ### 0.1.0
