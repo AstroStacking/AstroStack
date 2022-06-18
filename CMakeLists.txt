@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
-project(AstroStack VERSION 1.0.0 LANGUAGES C CXX)
-
-cmake_policy(SET CMP0006 NEW)
+set(ASTROSTACK_VERSION 0.1.0)
+project(AstroStack VERSION ${ASTROSTACK_VERSION} LANGUAGES C CXX)
 
 SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -30,7 +29,7 @@ add_subdirectory(src)
 add_subdirectory(translations)
 add_subdirectory(workflows)
 
-FILE(GLOB CMAKE_OTHER_SRC .clang-format CMake/*.cmake *.in src/*.in src/*.txt *.yml *.md scripts/*.sh scripts/*.bat CMakeLists.txt)
+FILE(GLOB CMAKE_OTHER_SRC .clang-format *.py CMake/*.cmake *.in src/*.in src/*.txt *.yml *.md scripts/*.sh scripts/*.bat CMakeLists.txt)
 SOURCE_GROUP_BY_FOLDER(CMAKE_OTHER)
 add_custom_target(CMake SOURCES ${CMAKE_OTHER_SRC})
 

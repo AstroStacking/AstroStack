@@ -20,18 +20,31 @@ Installation process should install all AstroStack libraries and plugins at the 
 
 Currently only processing one photo at a time is possible. The future stacking process will be based on the Python code prototype in [the Stack project](https://github.com/AstroStacking/Stack).
 
-### Processing one photo
+### Processing plugins
+
+* [Exponential](Processing/Processing/exponential.md)
+* [Histogram Stretch]((Processing/Processing/histostretch.md)
+* [Richardson Lucy Deconvolve]((Processing/Processing/rldeconvolution.md)
+
+### Processing workflows
 
 Several workflows for single photos are possible.
 A right click on an image will open a contextual menu with possible workflows.
 The current shipped ones are:
 
-* Deconvolve:
-  * Deconvolves and image based on the ITK Richardson Lucy deconvolution algorithm
+* [Deconvolve](workflows/Deconvolve.md)
+* [Histo Stretch](workflows/HistoStretech.md)
 
-* History Stretch
-  * Applies a point transform by taking the power of each pixel values (smaller than 1)
-  * Stretches the histogram, selecting the maximum of the histogram of each channel and removing smaller values below xx% of the max.
+## Changelog
+### 0.1.0
+
+* Display an image and its histogram
+* Explorer UI
+* Support for mono photo processing
+* Mono processing:
+  * Stretch histogram
+  * Exponential transform of an image
+  * Richardson Lucy deconvolution
 
 ## Support
 

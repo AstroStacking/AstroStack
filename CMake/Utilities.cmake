@@ -22,7 +22,7 @@ function(SOURCE_GROUP_BY_FOLDER target)
 
   SET(last_dir "")
   SET(files "")
-  FOREACH(file ${${target}_SRC} ${${target}_HEADERS})
+  FOREACH(file ${${target}_SRC} ${${target}_HEADERS}  ${${target}_DOC})
     file(RELATIVE_PATH relative_file "${CMAKE_CURRENT_SOURCE_DIR}" ${file})
     GET_FILENAME_COMPONENT(dir "${relative_file}" PATH)
     IF (NOT "${dir}" STREQUAL "${last_dir}")
@@ -43,7 +43,7 @@ function(ASTRO_add_library PREFIX)
 
 set(FLAGS )
 set(SINGLEVALUES NAME FOLDER)
-set(MULTIVALUES SRC HEADERS DEFINITIONS INCLUDE LIBRARIES)
+set(MULTIVALUES SRC HEADERS DOC DEFINITIONS INCLUDE LIBRARIES)
 
 cmake_parse_arguments(${PREFIX}
                  "${FLAGS}"
@@ -59,7 +59,7 @@ endif(NOT ${PREFIX}_NAME)
 
 qt_add_library(${${PREFIX}_NAME}
     SHARED
-        ${${PREFIX}_SRC} ${${PREFIX}_HEADERS}
+        ${${PREFIX}_SRC} ${${PREFIX}_HEADERS} ${${PREFIX}_DOC}
 )
 
 target_compile_definitions(${${PREFIX}_NAME} PRIVATE ${${PREFIX}_DEFINITIONS} -DBUILD_${PREFIX})
@@ -99,7 +99,7 @@ function(ASTRO_add_plugin PREFIX)
 
 set(FLAGS )
 set(SINGLEVALUES NAME FOLDER)
-set(MULTIVALUES SRC HEADERS DEFINITIONS INCLUDE LIBRARIES)
+set(MULTIVALUES SRC HEADERS DOC DEFINITIONS INCLUDE LIBRARIES)
 
 cmake_parse_arguments(${PREFIX}
                  "${FLAGS}"
@@ -116,7 +116,7 @@ endif(NOT ${PREFIX}_NAME)
 qt_add_plugin(${${PREFIX}_NAME}
     STATIC
 )
-target_sources(${${PREFIX}_NAME} PRIVATE ${${PREFIX}_SRC} ${${PREFIX}_HEADERS})
+target_sources(${${PREFIX}_NAME} PRIVATE ${${PREFIX}_SRC} ${${PREFIX}_HEADERS} ${${PREFIX}_DOC})
 
 target_compile_definitions(${${PREFIX}_NAME} PRIVATE ${${PREFIX}_DEFINITIONS})
 target_include_directories(${${PREFIX}_NAME} PRIVATE ${${PREFIX}_INCLUDE})
@@ -155,7 +155,7 @@ function(ASTRO_add_executable PREFIX)
 
 set(FLAGS INSTALL)
 set(SINGLEVALUES NAME FOLDER)
-set(MULTIVALUES SRC HEADERS DEFINITIONS INCLUDE LIBRARIES)
+set(MULTIVALUES SRC HEADERS DOC DEFINITIONS INCLUDE LIBRARIES)
 
 cmake_parse_arguments(${PREFIX}
                  "${FLAGS}"
@@ -174,7 +174,7 @@ add_definitions(${${PREFIX}_DEFINITIONS})
 include_directories(${PROJECT_SOURCE_DIR} ${${PREFIX}_INCLUDE})
 
 qt_add_executable(${${PREFIX}_NAME}
-  ${${PREFIX}_SRC} ${${PREFIX}_HEADERS}
+  ${${PREFIX}_SRC} ${${PREFIX}_HEADERS} ${${PREFIX}_DOC}
 )
 
 if(${PREFIX}_FOLDER)
