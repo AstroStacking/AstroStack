@@ -19,6 +19,9 @@ namespace astro
 {
 namespace
 {
+constexpr size_t HISTO_BINS = 256;
+constexpr size_t BIN_FACTOR = 256 / HISTO_BINS;
+
 using OutputImageType = itk::VectorImage<uint16_t, Dimension>;
 using OutputImageTypePtr = itk::SmartPointer<OutputImageType>;
 
@@ -130,15 +133,15 @@ QGraphicsPixmapItem* ImageData::processImg(const ImageTypePtr& img)
 void ImageData::processItem(const QPixmap& item)
 {
     QImage img = item.toImage();
-    std::array<std::array<int, 64>, 3> hist{};
+    std::array<std::array<int, HISTO_BINS>, 3> hist{};
     for (int i = 0; i < img.width(); ++i)
     {
         for (int j = 0; j < img.height(); ++j)
         {
             auto pixel = img.pixel(i, j);
-            ++hist[0][qRed(pixel) / 4];
-            ++hist[1][qGreen(pixel) / 4];
-            ++hist[2][qBlue(pixel) / 4];
+            ++hist[0][qRed(pixel) / BIN_FACTOR];
+            ++hist[1][qGreen(pixel) / BIN_FACTOR];
+            ++hist[2][qBlue(pixel) / BIN_FACTOR];
         }
     }
 

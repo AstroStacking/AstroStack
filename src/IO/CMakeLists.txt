@@ -15,11 +15,16 @@ FILE(GLOB ASTRO_IO_HEADERS
     IO/output.h
 )
 
+SET(ASTRO_IO_LIBS Qt6::Core Qt6::Widgets ${ITK_LIBRARIES})
+if(EXIV2_FOUND)
+    LIST(APPEND ASTRO_IO_LIBS exiv2lib)
+endif()
+
 ASTRO_add_library(
     AstroIO
     NAME AstroIO
     FOLDER IO
     SRC ${ASTRO_IO_SRC}
     HEADERS ${ASTRO_IO_HEADERS}
-    LIBRARIES AstroPlugin Qt6::Core Qt6::Widgets ${ITK_LIBRARIES}
+    LIBRARIES AstroPlugin ${ASTRO_IO_LIBS}
 )

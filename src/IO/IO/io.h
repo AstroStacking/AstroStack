@@ -1,11 +1,15 @@
 #pragma once
 
+#include <config.h>
+
 #include <IO/config.h>
 
 #include <itkImage.h>
 #include <itkVectorImage.h>
 
-//#include <exiv2/exiv2.hpp>
+#if ASTRO_HAVE_EXIV2
+#include <exiv2/exiv2.hpp>
+#endif
 
 namespace astro
 {
@@ -19,15 +23,22 @@ using ScalarImageTypePtr = itk::SmartPointer<ScalarImageType>;
 class ASTRO_IO_EXPORT AstroImage
 {
     ImageTypePtr m_img;
-    //Exiv2::ExifData m_data;
-
+#if ASTRO_HAVE_EXIV2
+    Exiv2::ExifData m_data;
+#endif
 public:
     AstroImage();
-    explicit AstroImage(ImageTypePtr img /*, Exiv2::ExifData data*/);
-
+    explicit AstroImage(ImageTypePtr img
+#if ASTRO_HAVE_EXIV2
+                        ,
+                        Exiv2::ExifData data
+#endif
+    );
     bool isValid() const;
     void setImg(ImageTypePtr img);
     const ImageTypePtr& getImg() const;
-    //const Exiv2::ExifData& getExif() const {return m_data;}
+#if ASTRO_HAVE_EXIV2
+    const Exiv2::ExifData& getExif() const;
+#endif
 };
 } // namespace astro

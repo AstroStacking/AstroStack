@@ -16,8 +16,21 @@ find_package(Git REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Charts Linguist)
 find_package(ITK REQUIRED COMPONENTS ITKIOImageBase ITKIOJPEG ITKIOPNG ITKIOTIFF ITKStatistics ITKFFT)
 find_package(Eigen3 REQUIRED)
-#find_package(Exiv2 REQUIRED)
 find_package(GTest REQUIRED)
+
+find_package(Exiv2)
+if(TARGET exiv2lib)
+    SET(EXIV2_FOUND 1)
+else()
+    SET(EXIV2_FOUND 0)
+endif()
+
+configure_file (
+  "src/config.h.in"
+  "src/config.h" @ONLY
+  )
+
+include_directories(${CMAKE_BINARY_DIR}/src)
 
 set(ITK_FACTORY_LIST ImageIO)
 include(${ITK_USE_FILE})
@@ -30,7 +43,7 @@ add_subdirectory(src)
 add_subdirectory(translations)
 add_subdirectory(workflows)
 
-FILE(GLOB CMAKE_OTHER_SRC .clang-format *.py CMake/*.cmake *.in src/*.in src/*.txt *.yml *.md scripts/*.sh scripts/*.bat CMakeLists.txt)
+FILE(GLOB CMAKE_OTHER_SRC .clang-format *.py CMake/*.cmake src/*.in src/*.in src/*.txt *.yml *.md scripts/*.sh scripts/*.bat CMakeLists.txt)
 SOURCE_GROUP_BY_FOLDER(CMAKE_OTHER)
 add_custom_target(CMake SOURCES ${CMAKE_OTHER_SRC})
 

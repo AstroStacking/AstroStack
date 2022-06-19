@@ -110,7 +110,7 @@ std::vector<size_t> HistoStretchGUI::histogram(const ScalarImageTypePtr& img, si
 
 float HistoStretchGUI::getMaxHistogram(ScalarImageTypePtr img, double ratio)
 {
-    constexpr unsigned int BINS = 65536;
+    constexpr unsigned int BINS = 256;
     constexpr unsigned int MEAN_SIZE = 5;
     std::vector<size_t> hist = histogram(img, BINS);
     std::vector<double> histFilt(BINS, 0);
