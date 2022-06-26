@@ -23,7 +23,14 @@ def update_changelog(new_version):
     if line.startswith("## Changelog"):
       sys.stdout.write("### %s\n\n" % new_version)
 
+def update_wininstaller(new_version):
+  for line in fileinput.input(scriptpath + "/installer/AstroStack.iss", inplace=1):
+    if "AppVersion" in line:
+      line="AppVersion=" + FullVersionStr + "\n"
+    sys.stdout.write(line)
+
 if __name__ == "__main__":
   update_cmakelist(sys.argv[1])
   #update_doxygen(sys.argv[1])
   update_changelog(sys.argv[1])
+  update_wininstaller(sys.argv[1])
