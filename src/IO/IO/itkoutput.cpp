@@ -27,7 +27,7 @@ ITKOutputPlugin::~ITKOutputPlugin() = default;
 
 QStringList ITKOutputPlugin::filters() const
 {
-    return {"jpg", "png", "tif"};
+    return {"jpg", "png", "tif", "tiff"};
 }
 
 void ITKOutputPlugin::save(ImageTypePtr img, QString filename, QWidget* parent) const

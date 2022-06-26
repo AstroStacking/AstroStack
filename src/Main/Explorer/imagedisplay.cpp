@@ -69,7 +69,7 @@ void ImageDisplay::msgBadFile(QString file)
     QMessageBox msgBox;
     msgBox.setText(tr("Could not load image ") + file + ".");
     msgBox.exec();
-    m_progressDialog->deleteLater();
+    m_progressDialog->close();
 }
 
 } // namespace astro

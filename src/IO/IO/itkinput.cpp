@@ -30,7 +30,7 @@ ITKInputPlugin::~ITKInputPlugin() = default;
 
 QStringList ITKInputPlugin::filters() const
 {
-    return {"jpg", "png", "tif"};
+    return {"jpg", "png", "tif", "tiff"};
 }
 
 ImageTypePtr ITKInputPlugin::open(QString filename, QWidget* parent) const

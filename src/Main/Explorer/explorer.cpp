@@ -23,9 +23,11 @@ Explorer::Explorer(MainWindow* mainWindow)
     m_model = std::make_unique<QFileSystemModel>();
     m_model->setRootPath(QDir::rootPath());
     QStringList filters;
+    // TODO plugins to filters
     filters << "*.png";
     filters << "*.jpg";
     filters << "*.tif";
+    filters << "*.tiff";
 
     m_model->setNameFilters(filters);
     m_model->setNameFilterDisables(false);
@@ -114,7 +116,12 @@ void Explorer::closeEvent(QCloseEvent* event)
 
 void Explorer::selectImg(const QModelIndex& index)
 {
-    QString file = m_model->fileInfo(index).absoluteFilePath();
+    QFileInfo info = m_model->fileInfo(index);
+    if (!info.isFile())
+    {
+        return;
+    }
+    QString file = info.absoluteFilePath();
     emit selectFile(file);
 }
 
