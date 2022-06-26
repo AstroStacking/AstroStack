@@ -22,10 +22,10 @@ Name: "workflows"; Description: "AstroStack workflows"; Types: full custom;
 Name: "manual"; Description: "User guide"; Types: full custom; Flags: fixed
 
 [Files]
-Source: ".\AstroStack\bin\AstroStack.exe"; DestDir: "{cf}\bin\"; Components:AstroStack; Flags: ignoreversion;
-Source: ".\AstroStack\bin\*.dll"; DestDir: "{cf}\bin\"; Components:AstroStack; Flags: ignoreversion;
-Source: ".\AstroStack\bin\plugins\*"; DestDir: "{cf}\bin\plugins\"; Components:AstroStack; Flags: ignoreversion recursesubdirs;
-Source: ".\AstroStack\workflows\*.json"; DestDir: "{cf32}\workflows\";  Components:workflows; Flags: ignoreversion;
+Source: ".\AstroStack\bin\AstroStack.exe"; DestDir: "{app}\bin\"; Components:AstroStack; Flags: ignoreversion;
+Source: ".\AstroStack\bin\*.dll"; DestDir: "{app}\bin\"; Components:AstroStack; Flags: ignoreversion;
+Source: ".\AstroStack\bin\plugins\*"; DestDir: "{app}\bin\plugins\"; Components:AstroStack; Flags: ignoreversion recursesubdirs;
+Source: ".\AstroStack\workflows\*.json"; DestDir: "{app}\workflows\";  Components:workflows; Flags: ignoreversion;
 ;Source: "..\manual\AstroStack.pdf"; DestDir: "{app}"
 
 [Icons]
