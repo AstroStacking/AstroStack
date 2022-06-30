@@ -2,16 +2,12 @@
 
 #include <cstddef>
 
+#include <Algos/optim/state.h>
+
 namespace optim
 {
 namespace criteria
 {
-enum class StopReason
-{
-    NOT_STOPPED,
-    ITERATION_MAX_REACHED
-};
-
 class Iteration
 {
     size_t m_iterationMax;
@@ -22,13 +18,12 @@ public:
     {
     }
 
-    template<typename State>
     bool operator()(State& state) const
     {
-        bool result = state.iteration() >= m_iterationMax;
+        bool result = state.getCurrentIteration() >= m_iterationMax;
         if (result)
         {
-            state.setStopReason(StopReason::ITERATION_MAX_REACHED);
+            state.setStatus(Status::ITERATION_MAX_REACHED);
         }
         return result;
     }
