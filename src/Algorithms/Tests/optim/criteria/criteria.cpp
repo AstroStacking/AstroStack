@@ -23,3 +23,21 @@ TEST(Criteria, Iteration)
     ASSERT_TRUE(iteration(state));
     ASSERT_EQ(state.getStatus(), optim::Status::ITERATION_MAX_REACHED);
 }
+
+TEST(Criteria, Monotony)
+{
+    optim::State state;
+
+    optim::criteria::Monotony monotony(0.1);
+    ASSERT_FALSE(monotony(state));
+    ASSERT_EQ(state.getStatus(), optim::Status::NOT_STOPPED);
+    state.setCurrentValue(1);
+    ASSERT_FALSE(monotony(state));
+    ASSERT_EQ(state.getStatus(), optim::Status::NOT_STOPPED);
+    state.setCurrentValue(1);
+    ASSERT_FALSE(monotony(state));
+    ASSERT_EQ(state.getStatus(), optim::Status::NOT_STOPPED);
+    state.setCurrentValue(1.1);
+    ASSERT_TRUE(monotony(state));
+    ASSERT_EQ(state.getStatus(), optim::Status::NON_MONOTONOUS);
+}

@@ -28,5 +28,26 @@ public:
         return result;
     }
 };
+
+class Monotony
+{
+    double m_ftol;
+
+public:
+    explicit Monotony(double ftol)
+        : m_ftol(ftol)
+    {
+    }
+
+    bool operator()(State& state) const
+    {
+        bool result = state.getCurrentValue() >= state.getPreviousValue() * (1 + m_ftol);
+        if (result)
+        {
+            state.setStatus(Status::NON_MONOTONOUS);
+        }
+        return result;
+    }
+};
 } // namespace criteria
 } // namespace optim
