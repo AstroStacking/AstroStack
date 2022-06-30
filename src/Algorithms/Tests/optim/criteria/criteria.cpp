@@ -41,3 +41,29 @@ TEST(Criteria, Monotony)
     ASSERT_TRUE(monotony(state));
     ASSERT_EQ(state.getStatus(), optim::Status::NON_MONOTONOUS);
 }
+
+TEST(Criteria, RelativeValue)
+{
+    optim::State state;
+
+    optim::criteria::RelativeValue relative(0.1);
+    state.setCurrentValue(10);
+    ASSERT_FALSE(relative(state));
+    ASSERT_EQ(state.getStatus(), optim::Status::NOT_STOPPED);
+    state.setCurrentValue(11);
+    ASSERT_TRUE(relative(state));
+    ASSERT_EQ(state.getStatus(), optim::Status::SMALL_DELTA_F_F);
+}
+
+TEST(Criteria, AbsoluteValue)
+{
+    optim::State state;
+
+    optim::criteria::AbsoluteValue absolute(0.1);
+    state.setCurrentValue(1);
+    ASSERT_FALSE(absolute(state));
+    ASSERT_EQ(state.getStatus(), optim::Status::NOT_STOPPED);
+    state.setCurrentValue(.9);
+    ASSERT_TRUE(absolute(state));
+    ASSERT_EQ(state.getStatus(), optim::Status::SMALL_DELTA_F);
+}
