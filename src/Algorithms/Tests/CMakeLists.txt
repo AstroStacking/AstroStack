@@ -1,6 +1,7 @@
 FILE(GLOB TESTS_ALGORITHMS_SRC
     affinemodel.cpp
     ransac.cpp
+    optim/criteria/criteria.cpp
 )
 
 ASTRO_add_test(
