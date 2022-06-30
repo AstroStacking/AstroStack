@@ -9,6 +9,7 @@ FILE(GLOB ASTRO_ALGORITHMS_HEADERS
     Algos/model.h
     Algos/ransac.h
     Algos/optim/state.h
+    Algos/optim/criteria/composite.h
     Algos/optim/criteria/criteria.h
 )
 

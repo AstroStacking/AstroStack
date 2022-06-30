@@ -2,6 +2,7 @@ FILE(GLOB TESTS_ALGORITHMS_SRC
     affinemodel.cpp
     ransac.cpp
     optim/state.cpp
+    optim/criteria/composite.cpp
     optim/criteria/criteria.cpp
 )
 
