@@ -4,6 +4,7 @@ FILE(GLOB TESTS_ALGORITHMS_SRC
     optim/state.cpp
     optim/criteria/composite.cpp
     optim/criteria/criteria.cpp
+    optim/line_search/simple.cpp
 )
 
 ASTRO_add_test(

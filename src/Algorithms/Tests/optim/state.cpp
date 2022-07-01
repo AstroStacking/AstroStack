@@ -9,6 +9,8 @@ TEST(State, Init)
     ASSERT_EQ(state.getStatus(), optim::Status::NOT_STOPPED);
     ASSERT_EQ(state.getCurrentValue(), std::numeric_limits<double>::max());
     ASSERT_EQ(state.getPreviousValue(), std::numeric_limits<double>::max());
+    ASSERT_EQ(state.getDirection(), Eigen::VectorXd());
+    ASSERT_TRUE(std::isnan(state.getStep()));
 }
 
 TEST(State, IncreaseIteration)
@@ -38,4 +40,22 @@ TEST(State, ChangeValue)
     state.setCurrentValue(2);
     ASSERT_EQ(state.getCurrentValue(), 2);
     ASSERT_EQ(state.getPreviousValue(), 1);
+}
+
+TEST(State, ChangeDirection)
+{
+    optim::State state;
+    ASSERT_EQ(state.getDirection(), Eigen::VectorXd());
+    Eigen::VectorXd direction(2);
+    direction << 1, 2;
+    state.setDirection(direction);
+    ASSERT_EQ(state.getDirection(), direction);
+}
+
+TEST(State, ChangeStep)
+{
+    optim::State state;
+    ASSERT_TRUE(std::isnan(state.getStep()));
+    state.setStep(1);
+    ASSERT_EQ(state.getStep(), 1);
 }

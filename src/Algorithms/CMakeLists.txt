@@ -11,6 +11,7 @@ FILE(GLOB ASTRO_ALGORITHMS_HEADERS
     Algos/optim/state.h
     Algos/optim/criteria/composite.h
     Algos/optim/criteria/criteria.h
+    Algos/optim/line_search/simple.h
 )
 
 ASTRO_add_library(
