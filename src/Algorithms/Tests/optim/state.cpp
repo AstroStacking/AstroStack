@@ -11,6 +11,7 @@ TEST(State, Init)
     ASSERT_EQ(state.getPreviousValue(), std::numeric_limits<double>::max());
     ASSERT_EQ(state.getDirection(), Eigen::VectorXd());
     ASSERT_TRUE(std::isnan(state.getStep()));
+    ASSERT_TRUE(std::isnan(state.getInitialStep()));
 }
 
 TEST(State, IncreaseIteration)
@@ -58,4 +59,14 @@ TEST(State, ChangeStep)
     ASSERT_TRUE(std::isnan(state.getStep()));
     state.setStep(1);
     ASSERT_EQ(state.getStep(), 1);
+}
+
+TEST(State, ChangeInitialStep)
+{
+    optim::State state;
+    ASSERT_TRUE(std::isnan(state.getInitialStep()));
+    state.setInitialStep(1);
+    ASSERT_EQ(state.getInitialStep(), 1);
+    state.resetInitialStep();
+    ASSERT_TRUE(std::isnan(state.getInitialStep()));
 }
