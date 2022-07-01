@@ -1,6 +1,8 @@
 FILE(GLOB TESTS_ALGORITHMS_SRC
     affinemodel.cpp
     ransac.cpp
+    optim/powell.cpp
+    optim/quadratic.cpp
     optim/rosenbrock.cpp
     optim/state.cpp
     optim/criteria/composite.cpp
@@ -9,6 +11,8 @@ FILE(GLOB TESTS_ALGORITHMS_SRC
 )
 
 FILE(GLOB TESTS_ALGORITHMS_HEADERS
+    optim/powell.h
+    optim/quadratic.h
     optim/rosenbrock.h
 )
 
