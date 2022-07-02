@@ -13,6 +13,8 @@ TEST(State, Init)
     ASSERT_TRUE(std::isnan(state.getInitialStep()));
     ASSERT_EQ(state.getDirection(), Eigen::VectorXd());
     ASSERT_EQ(state.getGradient(), Eigen::VectorXd());
+    ASSERT_EQ(state.getPreviousPoint(), Eigen::VectorXd());
+    ASSERT_EQ(state.getCurrentPoint(), Eigen::VectorXd());
 }
 
 TEST(State, IncreaseIteration)
@@ -80,4 +82,21 @@ TEST(State, ChangeGradient)
     gradient << 1, 2;
     state.setGradient(gradient);
     ASSERT_EQ(state.getGradient(), gradient);
+}
+
+TEST(State, ChangeCurrentPoint)
+{
+    optim::State state;
+    ASSERT_EQ(state.getPreviousPoint(), Eigen::VectorXd());
+    ASSERT_EQ(state.getCurrentPoint(), Eigen::VectorXd());
+    Eigen::VectorXd point(2);
+    point << 1, 2;
+    state.setCurrentPoint(point);
+    ASSERT_EQ(state.getCurrentPoint(), point);
+    ASSERT_EQ(state.getPreviousPoint(), Eigen::VectorXd());
+    Eigen::VectorXd newPoint(2);
+    newPoint << 2, 1;
+    state.setCurrentPoint(newPoint);
+    ASSERT_EQ(state.getCurrentPoint(), newPoint);
+    ASSERT_EQ(state.getPreviousPoint(), point);
 }

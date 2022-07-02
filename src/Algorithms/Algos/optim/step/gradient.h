@@ -16,7 +16,7 @@ public:
     {
         Eigen::VectorXd gradient = fun.gradient(x);
         state.setGradient(gradient);
-        return gradient;
+        return -gradient;
     }
 };
 } // namespace step
