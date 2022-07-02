@@ -97,6 +97,8 @@ inline std::ostream& operator<<(std::ostream& stream, const State& state)
     stream << "\n\tIteration: " << state.getCurrentIteration();
     stream << "\n\tValue: " << state.getCurrentValue();
     stream << "\n\tPoint: " << state.getCurrentPoint().transpose();
+    stream << "\n\tGradient: " << state.getGradient().transpose();
+    stream << "\n\tDirection: " << state.getDirection().transpose();
 
     return stream;
 }

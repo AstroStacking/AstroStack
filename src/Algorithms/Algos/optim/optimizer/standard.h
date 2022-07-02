@@ -40,11 +40,9 @@ public:
 
         do
         {
-            std::cout << m_state << std::endl;
             iterate();
             m_state.increaseIteration();
         } while (!m_criterion(m_state));
-        std::cout << m_state << std::endl;
         return m_state.getCurrentPoint();
     }
 

@@ -18,7 +18,7 @@ Eigen::MatrixXd Rosenbrock::hessian(const Eigen::VectorXd& x) const
 {
     Eigen::MatrixXd mat(x.size(), x.size());
 
-    mat << 1200. * x(0) * x(0) - 400. * x(1) + 2., -400 * x(1), -400 * x(1), 200;
+    mat << 1200. * x(0) * x(0) - 400. * x(1) + 2., -400 * x(0), -400 * x(0), 200;
 
     return mat;
 }
@@ -61,11 +61,11 @@ TEST(Rosenbrock, Hessian)
     ASSERT_TRUE(function.hessian(x).isApprox(result));
 
     x << 1, 0;
-    result << 1202, 0, 0, 200;
+    result << 1202, -400, -400, 200;
     ASSERT_TRUE(function.hessian(x).isApprox(result));
 
     x << 0, 1;
-    result << -398, -400, -400, 200;
+    result << -398, 0, 0, 200;
     ASSERT_TRUE(function.hessian(x).isApprox(result));
 
     x << 1, 1;
