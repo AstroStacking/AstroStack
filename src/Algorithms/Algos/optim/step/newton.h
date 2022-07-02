@@ -6,6 +6,7 @@ namespace optim
 {
 namespace step
 {
+/// Computes a direction based on the Newton method
 class Newton
 {
 public:

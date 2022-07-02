@@ -6,6 +6,7 @@ namespace optim
 {
 namespace line_search
 {
+/// Just takes a step in the direction computed by a step
 class Simple
 {
     double m_length;

@@ -8,6 +8,7 @@ namespace optim
 {
 namespace optimizer
 {
+/// Standard optimizer based on a criterionm line search and step
 template<typename Function, typename Criterion, typename LineSearch, typename Step>
 class Standard
 {
