@@ -8,6 +8,7 @@ FILE(GLOB TESTS_ALGORITHMS_SRC
     optim/criteria/composite.cpp
     optim/criteria/criteria.cpp
     optim/line_search/simple.cpp
+    optim/step/gradient.cpp
 )
 
 FILE(GLOB TESTS_ALGORITHMS_HEADERS

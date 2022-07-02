@@ -9,9 +9,10 @@ TEST(State, Init)
     ASSERT_EQ(state.getStatus(), optim::Status::NOT_STOPPED);
     ASSERT_EQ(state.getCurrentValue(), std::numeric_limits<double>::max());
     ASSERT_EQ(state.getPreviousValue(), std::numeric_limits<double>::max());
-    ASSERT_EQ(state.getDirection(), Eigen::VectorXd());
     ASSERT_TRUE(std::isnan(state.getStep()));
     ASSERT_TRUE(std::isnan(state.getInitialStep()));
+    ASSERT_EQ(state.getDirection(), Eigen::VectorXd());
+    ASSERT_EQ(state.getGradient(), Eigen::VectorXd());
 }
 
 TEST(State, IncreaseIteration)
@@ -43,16 +44,6 @@ TEST(State, ChangeValue)
     ASSERT_EQ(state.getPreviousValue(), 1);
 }
 
-TEST(State, ChangeDirection)
-{
-    optim::State state;
-    ASSERT_EQ(state.getDirection(), Eigen::VectorXd());
-    Eigen::VectorXd direction(2);
-    direction << 1, 2;
-    state.setDirection(direction);
-    ASSERT_EQ(state.getDirection(), direction);
-}
-
 TEST(State, ChangeStep)
 {
     optim::State state;
@@ -69,4 +60,24 @@ TEST(State, ChangeInitialStep)
     ASSERT_EQ(state.getInitialStep(), 1);
     state.resetInitialStep();
     ASSERT_TRUE(std::isnan(state.getInitialStep()));
+}
+
+TEST(State, ChangeDirection)
+{
+    optim::State state;
+    ASSERT_EQ(state.getDirection(), Eigen::VectorXd());
+    Eigen::VectorXd direction(2);
+    direction << 1, 2;
+    state.setDirection(direction);
+    ASSERT_EQ(state.getDirection(), direction);
+}
+
+TEST(State, ChangeGradient)
+{
+    optim::State state;
+    ASSERT_EQ(state.getGradient(), Eigen::VectorXd());
+    Eigen::VectorXd gradient(2);
+    gradient << 1, 2;
+    state.setGradient(gradient);
+    ASSERT_EQ(state.getGradient(), gradient);
 }

@@ -2,12 +2,12 @@
 
 #include <gtest/gtest.h>
 
-double Quadratic::operator()(const Eigen::VectorXd& x)
+double Quadratic::operator()(const Eigen::VectorXd& x) const
 {
     return std::pow(x(0) + 2 * x(1) - 7, 2) + std::pow(2 * x(0) + x(1) - 5, 2);
 }
 
-Eigen::VectorXd Quadratic::gradient(const Eigen::VectorXd& x)
+Eigen::VectorXd Quadratic::gradient(const Eigen::VectorXd& x) const
 {
     Eigen::VectorXd grad(x.size());
     grad << 2 * (x(0) + 2 * x(1) - 7) + 4 * (2 * x(0) + x(1) - 5),
@@ -15,7 +15,7 @@ Eigen::VectorXd Quadratic::gradient(const Eigen::VectorXd& x)
     return grad;
 }
 
-Eigen::MatrixXd Quadratic::hessian(const Eigen::VectorXd& x)
+Eigen::MatrixXd Quadratic::hessian(const Eigen::VectorXd& x) const
 {
     Eigen::MatrixXd mat(x.size(), x.size());
 

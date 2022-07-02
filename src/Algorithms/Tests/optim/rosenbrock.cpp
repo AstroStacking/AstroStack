@@ -2,19 +2,19 @@
 
 #include <gtest/gtest.h>
 
-double Rosenbrock::operator()(const Eigen::VectorXd& x)
+double Rosenbrock::operator()(const Eigen::VectorXd& x) const
 {
     return 100.0 * std::pow((x(1) - x(0) * x(0)), 2) + std::pow(1. - x(0), 2);
 }
 
-Eigen::VectorXd Rosenbrock::gradient(const Eigen::VectorXd& x)
+Eigen::VectorXd Rosenbrock::gradient(const Eigen::VectorXd& x) const
 {
     Eigen::VectorXd grad(x.size());
     grad << -400 * x(0) * (x(1) - x(0) * x(0)) - 2 * (1 - x(0)), 200 * (x(1) - x(0) * x(0));
     return grad;
 }
 
-Eigen::MatrixXd Rosenbrock::hessian(const Eigen::VectorXd& x)
+Eigen::MatrixXd Rosenbrock::hessian(const Eigen::VectorXd& x) const
 {
     Eigen::MatrixXd mat(x.size(), x.size());
 

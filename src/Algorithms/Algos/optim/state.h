@@ -32,6 +32,7 @@ class State
     double m_initialStep{std::numeric_limits<double>::quiet_NaN()};
 
     Eigen::VectorXd m_direction;
+    Eigen::VectorXd m_gradient;
 
 public:
     void increaseIteration() { ++m_iteration; }
@@ -39,9 +40,10 @@ public:
     Status getStatus() const { return m_status; }
     double getPreviousValue() const { return m_prevValue; }
     double getCurrentValue() const { return m_currentValue; }
-    Eigen::VectorXd getDirection() const { return m_direction; }
     double getStep() const { return m_step; }
     double getInitialStep() const { return m_initialStep; }
+    Eigen::VectorXd getDirection() const { return m_direction; }
+    Eigen::VectorXd getGradient() const { return m_gradient; }
 
     void setStatus(Status status) { m_status = status; }
     void setCurrentValue(double value)
@@ -49,9 +51,10 @@ public:
         m_prevValue = m_currentValue;
         m_currentValue = value;
     }
-    void setDirection(const Eigen::VectorXd& direction) { m_direction = direction; }
     void setStep(double step) { m_step = step; }
     void setInitialStep(double step) { m_initialStep = step; }
     void resetInitialStep() { m_initialStep = std::numeric_limits<double>::quiet_NaN(); }
+    void setDirection(const Eigen::VectorXd& direction) { m_direction = direction; }
+    void setGradient(const Eigen::VectorXd& gradient) { m_gradient = gradient; }
 };
 } // namespace optim
