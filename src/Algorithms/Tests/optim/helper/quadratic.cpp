@@ -2,6 +2,8 @@
 
 #include <gtest/gtest.h>
 
+#include <unsupported/Eigen/CXX11/Tensor>
+
 namespace
 {
 class Function
@@ -13,6 +15,11 @@ public:
     }
 
     Eigen::MatrixXd gradient(const Eigen::MatrixXd& X, const Eigen::VectorXd& parameters) const { return X; }
+
+    Eigen::Tensor<double, 4> hessian(const Eigen::MatrixXd& X, const Eigen::VectorXd& parameters) const
+    {
+        return Eigen::Tensor<double, 4>(X.cols(), parameters.cols(), parameters.rows(), parameters.rows());
+    }
 };
 } // namespace
 
@@ -54,4 +61,9 @@ TEST(Quadratic, Use)
 
     ASSERT_EQ(0, helper(params));
     ASSERT_TRUE(helper.gradient(params).isMuchSmallerThan(Eigen::VectorXd(2)));
+
+    Eigen::VectorXd zeros(2);
+
+    ASSERT_NE(0, helper(zeros));
+    ASSERT_TRUE((helper.hessian(zeros).colPivHouseholderQr().solve(helper.gradient(zeros)) + params).isMuchSmallerThan(0.1));
 }
