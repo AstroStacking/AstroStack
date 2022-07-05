@@ -12,18 +12,24 @@ public:
     std::vector<Eigen::VectorXd> operator()(const Eigen::MatrixXd& X, const Eigen::VectorXd& parameters) const
     {
         std::vector<Eigen::VectorXd> result;
-        for(auto row : X.colwise())
+        for(auto col : X.colwise())
         {
-            result.emplace_back(row.transpose() * parameters);
+            result.emplace_back(col.transpose() * parameters);
         }
         return result;
     }
 
-    /*std::vector<Eigen::VectorXd> gradient(const Eigen::MatrixXd& X, const Eigen::VectorXd& parameters) const
+    std::vector<Eigen::MatrixXd> gradient(const Eigen::MatrixXd& X, const Eigen::VectorXd& parameters) const
     {
+        std::vector<Eigen::MatrixXd> result;
+        for(auto col : X.colwise())
+        {
+            result.emplace_back(col);
+        }
+        return result;
     }
 
-    std::vector<Eigen::MatrixXd> hessian(const Eigen::MatrixXd& X, const Eigen::VectorXd& parameters) const
+    /*std::vector<Eigen::MatrixXd> hessian(const Eigen::MatrixXd& X, const Eigen::VectorXd& parameters) const
     {
     }*/
 };
@@ -69,8 +75,8 @@ TEST(Quadratic, Use)
 
     optim::helper::Quadratic<Function> helper(fun, X, Y);
 
-    ASSERT_EQ(0, helper(params));
-    //ASSERT_TRUE(helper.gradient(params).isMuchSmallerThan(Eigen::VectorXd(2)));
+    ASSERT_DOUBLE_EQ(0, helper(params));
+    ASSERT_TRUE(helper.gradient(params).isMuchSmallerThan(Eigen::VectorXd(2)));
 
     Eigen::VectorXd zeros(2);
 

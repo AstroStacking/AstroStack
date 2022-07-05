@@ -40,12 +40,15 @@ public:
 
     Eigen::VectorXd gradient(const Eigen::VectorXd& parameters) const
     {
-        Eigen::array<Eigen::IndexPair<int>, 1> contractionDims = {Eigen::IndexPair<int>(1, 1)};
-        Eigen::MatrixXd diff = m_fun(m_X, parameters) - m_Y;
-        Eigen::TensorMap<Eigen::Tensor<double, 3>> diffView(diff.data(), m_Y.rows(), m_Y.cols(), 1);
+        auto result = m_fun(m_X, parameters);
+        auto resultGradient = m_fun.gradient(m_X, parameters);
 
-        Eigen::Tensor<double, 4> data = 2 * m_fun.gradient(m_X, parameters).contract(diffView, contractionDims);
-        return Eigen::Map<Eigen::VectorXd>(data.data(), parameters.size());
+        Eigen::VectorXd accu(parameters.size());
+        for(size_t i = 0; i < result.size(); ++i)
+        {
+            accu = accu - 2 * (resultGradient[i] * (m_Y.col(i) - result[i]).transpose()).rowwise().sum();
+        }
+        return accu;
     }
 
     Eigen::MatrixXd firstHessian(const Eigen::VectorXd& parameters) const
