@@ -28,34 +28,53 @@ public:
 
     double operator()(const Eigen::VectorXd& parameters) const
     {
-        return Eigen::pow((m_fun(m_X, parameters) - m_Y).array(), 2).sum();
+        auto result = m_fun(m_X, parameters);
+        Eigen::VectorXd accu(result.front().size());
+        for(size_t i = 0; i < result.size(); ++i)
+        {
+            accu = accu + Eigen::pow((m_Y.col(i) - result[i]).array(), 2).matrix();
+        }
+
+        return accu.sum();
     }
 
     Eigen::VectorXd gradient(const Eigen::VectorXd& parameters) const
     {
-        return 2 * (m_fun.gradient(m_X, parameters) * (m_fun(m_X, parameters) - m_Y).transpose());
+        Eigen::array<Eigen::IndexPair<int>, 1> contractionDims = {Eigen::IndexPair<int>(1, 1)};
+        Eigen::MatrixXd diff = m_fun(m_X, parameters) - m_Y;
+        Eigen::TensorMap<Eigen::Tensor<double, 3>> diffView(diff.data(), m_Y.rows(), m_Y.cols(), 1);
+
+        Eigen::Tensor<double, 4> data = 2 * m_fun.gradient(m_X, parameters).contract(diffView, contractionDims);
+        return Eigen::Map<Eigen::VectorXd>(data.data(), parameters.size());
+    }
+
+    Eigen::MatrixXd firstHessian(const Eigen::VectorXd& parameters) const
+    {
+        Eigen::MatrixXd diff = m_Y - m_fun(m_X, parameters);
+        Eigen::TensorMap<Eigen::Tensor<double, 4>> diffView(diff.data(), m_Y.rows(), m_Y.cols(), 1, 1);
+        Eigen::array<long, 4> bcast = {1, 1, parameters.size(), parameters.size()};
+        Eigen::Tensor<double, 4> full = diffView.broadcast(bcast);
+
+        Eigen::array<Eigen::IndexPair<int>, 1> contractionDims = {Eigen::IndexPair<int>(0, 0)};
+        Eigen::Tensor<double, 3> data =
+                2 * m_fun.hessian(m_X, parameters).contract(full, contractionDims).sum(Eigen::array<long, 2>({0, 1}));
+        return Eigen::Map<Eigen::MatrixXd>(data.data(), parameters.size(), parameters.size());
+    }
+
+    Eigen::MatrixXd secondHessian(const Eigen::VectorXd& parameters) const
+    {
+        Eigen::Tensor<double, 3> gradient = m_fun.gradient(m_X, parameters);
+        Eigen::array<Eigen::IndexPair<int>, 2> contractionDims = {Eigen::IndexPair<int>(0, 0),
+                                                                  Eigen::IndexPair<int>(1, 1)};
+
+        Eigen::Tensor<double, 2> data = 2 * gradient.contract(gradient, contractionDims);
+        std::cout << data << std::endl;
+        return Eigen::Map<Eigen::MatrixXd>(data.data(), parameters.size(), parameters.size());
     }
 
     Eigen::MatrixXd hessian(const Eigen::VectorXd& parameters) const
     {
-        Eigen::MatrixXd diff = m_Y - m_fun(m_X, parameters);
-        Eigen::TensorMap<Eigen::Tensor<double, 4>> diffView(diff.data(), m_Y.cols(), m_Y.rows(), 1, 1);
-        Eigen::array<long, 4> bcast = {1, 1, parameters.size(), parameters.size()};
-        Eigen::Tensor<double, 4> full = diffView.broadcast(bcast);
-
-        Eigen::array<Eigen::IndexPair<int>, 2> contractionDims = {Eigen::IndexPair<int>(0, 0), Eigen::IndexPair<int>(1, 1)};
-        std::array<long, 2> offset = {0, 0};
-        std::array<long, 2> extent = {parameters.size(), parameters.size()};
-        Eigen::Tensor<double, 2> first =
-                -2 * m_fun.hessian(m_X, parameters).contract(full, contractionDims).slice(offset, extent);
-        Eigen::Map<Eigen::MatrixXd> extr(first.data(), parameters.size(), parameters.size());
-
-        Eigen::MatrixXd gradient = m_fun.gradient(m_X, parameters);
-        std::cout << m_Y - m_fun(m_X, parameters) << std::endl;
-        std::cout << extr << std::endl;
-        std::cout << 2 * gradient * gradient.transpose() << std::endl;
-        std::cout << (extr + 2 * gradient * gradient.transpose()) << std::endl;
-        return extr + 2 * gradient * gradient.transpose();
+        return firstHessian(parameters) + secondHessian(parameters);
     }
 };
 } // namespace helper
