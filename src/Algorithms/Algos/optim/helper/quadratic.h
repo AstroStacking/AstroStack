@@ -53,31 +53,38 @@ public:
 
     Eigen::MatrixXd firstHessian(const Eigen::VectorXd& parameters) const
     {
-        Eigen::MatrixXd diff = m_Y - m_fun(m_X, parameters);
-        Eigen::TensorMap<Eigen::Tensor<double, 4>> diffView(diff.data(), m_Y.rows(), m_Y.cols(), 1, 1);
-        Eigen::array<long, 4> bcast = {1, 1, parameters.size(), parameters.size()};
-        Eigen::Tensor<double, 4> full = diffView.broadcast(bcast);
+        auto result = m_fun(m_X, parameters);
+        auto resultHessian = m_fun.hessian(m_X, parameters);
+        
+        Eigen::MatrixXd accu(parameters.size(), parameters.size());
+        for(size_t i = 0; i < result.size(); ++i)
+        {
+            Eigen::VectorXd diff = (m_Y.col(i) - result[i]);
+            
+            for(size_t j = 0; j < diff.size(); ++j)
+            {
+                accu = resultHessian[i][j] * diff(j);
+            }
+        }
 
-        Eigen::array<Eigen::IndexPair<int>, 1> contractionDims = {Eigen::IndexPair<int>(0, 0)};
-        Eigen::Tensor<double, 3> data =
-                2 * m_fun.hessian(m_X, parameters).contract(full, contractionDims).sum(Eigen::array<long, 2>({0, 1}));
-        return Eigen::Map<Eigen::MatrixXd>(data.data(), parameters.size(), parameters.size());
+        return accu;
     }
 
     Eigen::MatrixXd secondHessian(const Eigen::VectorXd& parameters) const
     {
-        Eigen::Tensor<double, 3> gradient = m_fun.gradient(m_X, parameters);
-        Eigen::array<Eigen::IndexPair<int>, 2> contractionDims = {Eigen::IndexPair<int>(0, 0),
-                                                                  Eigen::IndexPair<int>(1, 1)};
+        auto resultGradient = m_fun.gradient(m_X, parameters);
 
-        Eigen::Tensor<double, 2> data = 2 * gradient.contract(gradient, contractionDims);
-        std::cout << data << std::endl;
-        return Eigen::Map<Eigen::MatrixXd>(data.data(), parameters.size(), parameters.size());
+        Eigen::MatrixXd accu(parameters.size(), parameters.size());
+        for(size_t i = 0; i < resultGradient.size(); ++i)
+        {
+            accu = accu + resultGradient[i] * resultGradient[i].transpose();
+        }
+        return accu;
     }
 
     Eigen::MatrixXd hessian(const Eigen::VectorXd& parameters) const
     {
-        return firstHessian(parameters) + secondHessian(parameters);
+        return 2 * (firstHessian(parameters) + secondHessian(parameters));
     }
 };
 } // namespace helper

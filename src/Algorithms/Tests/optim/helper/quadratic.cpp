@@ -29,9 +29,10 @@ public:
         return result;
     }
 
-    /*std::vector<Eigen::MatrixXd> hessian(const Eigen::MatrixXd& X, const Eigen::VectorXd& parameters) const
+    std::vector<std::vector<Eigen::MatrixXd>> hessian(const Eigen::MatrixXd& X, const Eigen::VectorXd& parameters) const
     {
-    }*/
+        return std::vector<std::vector<Eigen::MatrixXd>>(X.cols(), std::vector<Eigen::MatrixXd>(1 /*nb dims in Y*/, Eigen::MatrixXd(parameters.size(), parameters.size())));
+    }
 };
 } // namespace
 
@@ -81,6 +82,6 @@ TEST(Quadratic, Use)
     Eigen::VectorXd zeros(2);
 
     ASSERT_NE(0, helper(zeros));
-    //ASSERT_TRUE((helper.hessian(zeros).colPivHouseholderQr().solve(helper.gradient(zeros)) + params)
-    //                    .isMuchSmallerThan(0.1));
+    ASSERT_TRUE((helper.hessian(zeros).colPivHouseholderQr().solve(helper.gradient(zeros)) + params)
+                        .isMuchSmallerThan(0.1));
 }
