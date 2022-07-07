@@ -11,7 +11,7 @@ namespace astro
 template<class Model>
 class RANSAC
 {
-    using Matrix = Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>;
+    using Matrix = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>;
     const Matrix& m_X;
     const Matrix& m_Y;
 
@@ -60,8 +60,8 @@ public:
     static constexpr int DEFAULT_NB_SAMPLES = 100;
     static constexpr int DEFAULT_NB_ITERATIONS = 100;
 
-    RANSAC(Model&& model, const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>& X,
-           const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>& Y, int nbSamples = DEFAULT_NB_SAMPLES,
+    RANSAC(Model&& model, const Matrix& X,
+           const Matrix& Y, int nbSamples = DEFAULT_NB_SAMPLES,
            int nbIterations = DEFAULT_NB_ITERATIONS)
         : m_X(X)
         , m_Y(Y)
@@ -88,8 +88,8 @@ public:
             iterate();
         }
     }
-    Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>
-    predict(const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>& X) const
+    Matrix
+    predict(const Matrix& X) const
     {
         return m_finalModel.predict(X);
     }
