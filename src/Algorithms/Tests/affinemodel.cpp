@@ -1,6 +1,28 @@
-#include <Algos/affinemodel.h>
+#include "affinemodel.h"
 
 #include <gtest/gtest.h>
+
+AffineModel::AffineModel() = default;
+AffineModel::AffineModel(const AffineModel&) = default;
+AffineModel::~AffineModel() = default;
+AffineModel& AffineModel::operator=(const AffineModel&) = default;
+
+Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> AffineModel::getData() const
+{
+    return m_A;
+}
+
+void AffineModel::fit(const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>& X,
+                      const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>& Y)
+{
+    m_A = Y * X.transpose() * (X * X.transpose()).inverse();
+}
+
+Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>
+AffineModel::predict(const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>& X) const
+{
+    return m_A * X;
+}
 
 TEST(AffineModel, Regression)
 {
@@ -13,7 +35,7 @@ TEST(AffineModel, Regression)
             -122., 136., 40., 142., -113., 43., -98., -125., -116., -2., 64., -119., -44., -35., 82., 13., -107., -20.,
             34., -77., 7.;
 
-    astro::AffineModel model;
+    AffineModel model;
 
     model.fit(X, Y);
     auto result = model.getData();

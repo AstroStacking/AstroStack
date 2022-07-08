@@ -15,6 +15,7 @@ FILE(GLOB TESTS_ALGORITHMS_SRC
 )
 
 FILE(GLOB TESTS_ALGORITHMS_HEADERS
+    affinemodel.h
     optim/powell.h
     optim/quadratic.h
     optim/rosenbrock.h

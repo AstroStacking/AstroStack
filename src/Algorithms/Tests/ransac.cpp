@@ -1,4 +1,5 @@
-#include <Algos/affinemodel.h>
+#include <affinemodel.h>
+
 #include <Algos/ransac.h>
 
 #include <gtest/gtest.h>
@@ -15,7 +16,7 @@ TEST(RANSAC, Constructor)
             -122., 136., 40., 142., -113., 43., -98., -125., -116., -2., 64., -119., -44., -35., 82., 13., -107., -20.,
             34., -77., 7., -11., 70., 15., 4., 8., 1., 10., -4., 3., -5.;
 
-    astro::RANSAC ransac(astro::AffineModel(), X, Y, 20);
+    astro::RANSAC ransac(AffineModel(), X, Y, 20);
 }
 
 TEST(RANSAC, SimpleTest)
@@ -30,7 +31,7 @@ TEST(RANSAC, SimpleTest)
             -122., 136., 40., 142., -113., 43., -98., -125., -116., -2., 64., -119., -44., -35., 82., 13., -107., -20.,
             34., -77., 7., -11., 70., 15., 4., 8.;
 
-    astro::RANSAC ransac(astro::AffineModel(), X, Y, 10, 2000);
+    astro::RANSAC ransac(AffineModel(), X, Y, 10, 2000);
 
     ransac.run();
 

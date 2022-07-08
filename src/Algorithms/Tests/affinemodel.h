@@ -1,12 +1,8 @@
 #pragma once
 
-#include <Algos/config.h>
-
 #include <Eigen/Dense>
 
-namespace astro
-{
-class ASTRO_ALGORITHMS_EXPORT AffineModel
+class AffineModel
 {
     Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic> m_A;
 
@@ -24,4 +20,3 @@ public:
     Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>
     predict(const Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>& X) const;
 };
-} // namespace astro
