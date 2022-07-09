@@ -117,3 +117,91 @@ TEST(ConjugateGradient, DYConjugate)
     ASSERT_NE(state.getData("conjugate_coefficient"), 0);
     ASSERT_LT(fun(x + 0.01 * newStep), fun(x));
 }
+
+TEST(ConjugateGradient, FRConjugate)
+{
+    optim::State state;
+    optim::step::ConjugateGradient<optim::step::FRConjugate> gradient;
+    Function fun;
+
+    Eigen::VectorXd x(2);
+    x << 0, 0;
+    auto step = gradient(x, state, fun);
+    ASSERT_EQ(step, -fun.gradient(x));
+    ASSERT_EQ(state.getGradient(), fun.gradient(x));
+    ASSERT_EQ(state.getData("conjugate_coefficient"), 0);
+
+    x = ARTIFICIAL_FIRST_STEP * step;
+    state.setDirection(x);
+    auto newStep = gradient(x, state, fun);
+    ASSERT_NE(newStep, -fun.gradient(x));
+    ASSERT_EQ(state.getGradient(), fun.gradient(x));
+    ASSERT_NE(state.getData("conjugate_coefficient"), 0);
+    ASSERT_LT(fun(x + 0.01 * newStep), fun(x));
+}
+
+TEST(ConjugateGradient, PRPConjugate)
+{
+    optim::State state;
+    optim::step::ConjugateGradient<optim::step::PRPConjugate> gradient;
+    Function fun;
+
+    Eigen::VectorXd x(2);
+    x << 0, 0;
+    auto step = gradient(x, state, fun);
+    ASSERT_EQ(step, -fun.gradient(x));
+    ASSERT_EQ(state.getGradient(), fun.gradient(x));
+    ASSERT_EQ(state.getData("conjugate_coefficient"), 0);
+
+    x = ARTIFICIAL_FIRST_STEP * step;
+    state.setDirection(x);
+    auto newStep = gradient(x, state, fun);
+    ASSERT_NE(newStep, -fun.gradient(x));
+    ASSERT_EQ(state.getGradient(), fun.gradient(x));
+    ASSERT_NE(state.getData("conjugate_coefficient"), 0);
+    ASSERT_LT(fun(x + 0.01 * newStep), fun(x));
+}
+
+TEST(ConjugateGradient, FRPRPConjugate)
+{
+    optim::State state;
+    optim::step::ConjugateGradient<optim::step::FRPRPConjugate> gradient;
+    Function fun;
+
+    Eigen::VectorXd x(2);
+    x << 0, 0;
+    auto step = gradient(x, state, fun);
+    ASSERT_EQ(step, -fun.gradient(x));
+    ASSERT_EQ(state.getGradient(), fun.gradient(x));
+    ASSERT_EQ(state.getData("conjugate_coefficient"), 0);
+
+    x = ARTIFICIAL_FIRST_STEP * step;
+    state.setDirection(x);
+    auto newStep = gradient(x, state, fun);
+    ASSERT_NE(newStep, -fun.gradient(x));
+    ASSERT_EQ(state.getGradient(), fun.gradient(x));
+    ASSERT_NE(state.getData("conjugate_coefficient"), 0);
+    ASSERT_LT(fun(x + 0.01 * newStep), fun(x));
+}
+
+TEST(ConjugateGradient, HZConjugate)
+{
+    optim::State state;
+    optim::step::ConjugateGradient<optim::step::HZConjugate> gradient;
+    Function fun;
+
+    Eigen::VectorXd x(2);
+    x << 0, 0;
+    auto step = gradient(x, state, fun);
+    ASSERT_EQ(step, -fun.gradient(x));
+    ASSERT_EQ(state.getGradient(), fun.gradient(x));
+    ASSERT_EQ(state.getData("conjugate_coefficient"), 0);
+
+    x = ARTIFICIAL_FIRST_STEP * step;
+    state.setDirection(x);
+    auto newStep = gradient(x, state, fun);
+    ASSERT_NE(newStep, -fun.gradient(x));
+    ASSERT_EQ(state.getGradient(), fun.gradient(x));
+    ASSERT_NE(state.getData("conjugate_coefficient"), 0);
+    ASSERT_LT(fun(x + 0.01 * newStep), fun(x));
+}
