@@ -8,6 +8,7 @@ FILE(GLOB TESTS_ALGORITHMS_SRC
     optim/criteria/composite.cpp
     optim/criteria/criteria.cpp
     optim/helper/quadratic.cpp
+    optim/line_search/backtracking.cpp
     optim/line_search/damped.cpp
     optim/line_search/simple.cpp
     optim/optimizer/standard.cpp
