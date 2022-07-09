@@ -60,8 +60,7 @@ public:
     static constexpr int DEFAULT_NB_SAMPLES = 100;
     static constexpr int DEFAULT_NB_ITERATIONS = 100;
 
-    RANSAC(Model&& model, const Matrix& X,
-           const Matrix& Y, int nbSamples = DEFAULT_NB_SAMPLES,
+    RANSAC(Model&& model, const Matrix& X, const Matrix& Y, int nbSamples = DEFAULT_NB_SAMPLES,
            int nbIterations = DEFAULT_NB_ITERATIONS)
         : m_X(X)
         , m_Y(Y)
@@ -88,10 +87,6 @@ public:
             iterate();
         }
     }
-    Matrix
-    predict(const Matrix& X) const
-    {
-        return m_finalModel.predict(X);
-    }
+    Matrix predict(const Matrix& X) const { return m_finalModel.predict(X); }
 };
 } // namespace astro

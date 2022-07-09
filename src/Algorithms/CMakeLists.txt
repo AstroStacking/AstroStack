@@ -12,6 +12,7 @@ FILE(GLOB ASTRO_ALGORITHMS_HEADERS
     Algos/optim/line_search/simple.h
     Algos/optim/helper/quadratic.h
     Algos/optim/optimizer/standard.h
+    Algos/optim/step/conjugate_gradient.h
     Algos/optim/step/gradient.h
     Algos/optim/step/newton.h
 )

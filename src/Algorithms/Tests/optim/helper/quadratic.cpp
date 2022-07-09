@@ -12,7 +12,7 @@ public:
     std::vector<Eigen::VectorXd> operator()(const Eigen::MatrixXd& X, const Eigen::VectorXd& parameters) const
     {
         std::vector<Eigen::VectorXd> result;
-        for(auto col : X.colwise())
+        for (auto col : X.colwise())
         {
             result.emplace_back(col.transpose() * parameters);
         }
@@ -22,7 +22,7 @@ public:
     std::vector<Eigen::MatrixXd> gradient(const Eigen::MatrixXd& X, const Eigen::VectorXd& parameters) const
     {
         std::vector<Eigen::MatrixXd> result;
-        for(auto col : X.colwise())
+        for (auto col : X.colwise())
         {
             result.emplace_back(col);
         }
@@ -31,7 +31,9 @@ public:
 
     std::vector<std::vector<Eigen::MatrixXd>> hessian(const Eigen::MatrixXd& X, const Eigen::VectorXd& parameters) const
     {
-        return std::vector<std::vector<Eigen::MatrixXd>>(X.cols(), std::vector<Eigen::MatrixXd>(1 /*nb dims in Y*/, Eigen::MatrixXd(parameters.size(), parameters.size())));
+        return std::vector<std::vector<Eigen::MatrixXd>>(
+                X.cols(), std::vector<Eigen::MatrixXd>(1 /*nb dims in Y*/,
+                                                       Eigen::MatrixXd(parameters.size(), parameters.size())));
     }
 };
 } // namespace
@@ -52,7 +54,7 @@ TEST(Quadratic, HelperCreation)
 
     Function fun;
     auto result = fun(X, params);
-    for(size_t i = 0; i < result.size(); ++i)
+    for (size_t i = 0; i < result.size(); ++i)
     {
         ASSERT_EQ(Y.col(i), result[i]);
     }

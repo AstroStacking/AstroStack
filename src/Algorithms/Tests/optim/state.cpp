@@ -100,3 +100,11 @@ TEST(State, ChangeCurrentPoint)
     ASSERT_EQ(state.getCurrentPoint(), newPoint);
     ASSERT_EQ(state.getPreviousPoint(), point);
 }
+
+TEST(State, ChangeData)
+{
+    optim::State state;
+    state.setData("foo", 1);
+    ASSERT_EQ(state.getData("foo"), 1);
+    ASSERT_THROW(state.getData("bar"), std::exception);
+}

@@ -10,6 +10,7 @@ FILE(GLOB TESTS_ALGORITHMS_SRC
     optim/helper/quadratic.cpp
     optim/line_search/simple.cpp
     optim/optimizer/standard.cpp
+    optim/step/conjugate_gradient.cpp
     optim/step/gradient.cpp
     optim/step/newton.cpp
 )

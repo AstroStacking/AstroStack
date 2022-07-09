@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <limits>
 #include <ostream>
+#include <unordered_map>
 
 namespace optim
 {
@@ -60,6 +61,8 @@ class State
     Eigen::VectorXd m_prevPoint;
     Eigen::VectorXd m_currentPoint;
 
+    std::unordered_map<std::string, double> m_miscellaneousData;
+
 public:
     void increaseIteration() { ++m_iteration; }
     size_t getCurrentIteration() const { return m_iteration; }
@@ -72,6 +75,7 @@ public:
     Eigen::VectorXd getGradient() const { return m_gradient; }
     Eigen::VectorXd getPreviousPoint() const { return m_prevPoint; }
     Eigen::VectorXd getCurrentPoint() const { return m_currentPoint; }
+    double getData(const std::string& name) const { return m_miscellaneousData.at(name); }
 
     void setStatus(Status status) { m_status = status; }
     void setCurrentValue(double value)
@@ -89,6 +93,7 @@ public:
     void resetInitialStep() { m_initialStep = std::numeric_limits<double>::quiet_NaN(); }
     void setDirection(const Eigen::VectorXd& direction) { m_direction = direction; }
     void setGradient(const Eigen::VectorXd& gradient) { m_gradient = gradient; }
+    void setData(const std::string& name, double value) { m_miscellaneousData[name] = value; }
 };
 
 inline std::ostream& operator<<(std::ostream& stream, const State& state)

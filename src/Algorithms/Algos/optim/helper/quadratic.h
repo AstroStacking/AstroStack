@@ -30,7 +30,7 @@ public:
     {
         auto result = m_fun(m_X, parameters);
         Eigen::VectorXd accu(result.front().size());
-        for(size_t i = 0; i < result.size(); ++i)
+        for (size_t i = 0; i < result.size(); ++i)
         {
             accu = accu + Eigen::pow((m_Y.col(i) - result[i]).array(), 2).matrix();
         }
@@ -44,7 +44,7 @@ public:
         auto resultGradient = m_fun.gradient(m_X, parameters);
 
         Eigen::VectorXd accu(parameters.size());
-        for(size_t i = 0; i < result.size(); ++i)
+        for (size_t i = 0; i < result.size(); ++i)
         {
             accu = accu - 2 * (resultGradient[i] * (m_Y.col(i) - result[i]).transpose()).rowwise().sum();
         }
@@ -55,13 +55,13 @@ public:
     {
         auto result = m_fun(m_X, parameters);
         auto resultHessian = m_fun.hessian(m_X, parameters);
-        
+
         Eigen::MatrixXd accu(parameters.size(), parameters.size());
-        for(size_t i = 0; i < result.size(); ++i)
+        for (size_t i = 0; i < result.size(); ++i)
         {
             Eigen::VectorXd diff = (m_Y.col(i) - result[i]);
-            
-            for(size_t j = 0; j < diff.size(); ++j)
+
+            for (size_t j = 0; j < diff.size(); ++j)
             {
                 accu = resultHessian[i][j] * diff(j);
             }
@@ -75,7 +75,7 @@ public:
         auto resultGradient = m_fun.gradient(m_X, parameters);
 
         Eigen::MatrixXd accu(parameters.size(), parameters.size());
-        for(size_t i = 0; i < resultGradient.size(); ++i)
+        for (size_t i = 0; i < resultGradient.size(); ++i)
         {
             accu = accu + resultGradient[i] * resultGradient[i].transpose();
         }
