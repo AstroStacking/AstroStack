@@ -33,7 +33,7 @@ public:
     {
         return std::vector<std::vector<Eigen::MatrixXd>>(
                 X.cols(), std::vector<Eigen::MatrixXd>(1 /*nb dims in Y*/,
-                                                       Eigen::MatrixXd(parameters.size(), parameters.size())));
+                                                       Eigen::MatrixXd::Zero(parameters.size(), parameters.size())));
     }
 };
 } // namespace
