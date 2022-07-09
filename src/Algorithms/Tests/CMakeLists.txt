@@ -10,6 +10,7 @@ FILE(GLOB TESTS_ALGORITHMS_SRC
     optim/helper/quadratic.cpp
     optim/line_search/backtracking.cpp
     optim/line_search/damped.cpp
+    optim/line_search/golden_section.cpp
     optim/line_search/simple.cpp
     optim/optimizer/standard.cpp
     optim/step/conjugate_gradient.cpp

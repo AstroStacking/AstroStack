@@ -11,6 +11,7 @@ FILE(GLOB ASTRO_ALGORITHMS_HEADERS
     Algos/optim/criteria/criteria.h
     Algos/optim/line_search/backtracking.h
     Algos/optim/line_search/damped.h
+    Algos/optim/line_search/golden_section.h
     Algos/optim/line_search/simple.h
     Algos/optim/helper/quadratic.h
     Algos/optim/optimizer/standard.h
