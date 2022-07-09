@@ -21,7 +21,7 @@ class Standard
     void iterate()
     {
         m_state.setDirection(m_step(m_state.getCurrentPoint(), m_state, m_fun));
-        m_state.setCurrentPoint(m_linesearch(m_state.getCurrentPoint(), m_state));
+        m_state.setCurrentPoint(m_linesearch(m_state.getCurrentPoint(), m_fun, m_state));
         m_state.setCurrentValue(m_fun(m_state.getCurrentPoint()));
     }
 

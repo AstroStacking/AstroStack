@@ -1,9 +1,13 @@
 #include <Algos/optim/line_search/simple.h>
 
+#include <optim/simple.h>
+
 #include <gtest/gtest.h>
 
-TEST(LineSearch, Simple)
+TEST(LineSearchSimple, Simple)
 {
+    Simple fun;
+
     const double size = .1;
     optim::State state;
     optim::line_search::Simple lineSearch(size);
@@ -15,11 +19,12 @@ TEST(LineSearch, Simple)
     origin << 10, 22;
 
     Eigen::VectorXd result = origin + size * direction;
-    ASSERT_EQ(result, lineSearch(origin, state));
+    ASSERT_EQ(result, lineSearch(origin, fun, state));
 }
 
-TEST(LineSearch, SimpleSpecificStep)
+TEST(LineSearchSimple, SimpleSpecificStep)
 {
+    Simple fun;
     const double size = .1;
     optim::State state;
     state.setInitialStep(1);
@@ -32,5 +37,5 @@ TEST(LineSearch, SimpleSpecificStep)
     origin << 10, 22;
 
     Eigen::VectorXd result = origin + direction;
-    ASSERT_EQ(result, lineSearch(origin, state));
+    ASSERT_EQ(result, lineSearch(origin, fun, state));
 }

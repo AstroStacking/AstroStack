@@ -8,6 +8,7 @@ FILE(GLOB TESTS_ALGORITHMS_SRC
     optim/criteria/composite.cpp
     optim/criteria/criteria.cpp
     optim/helper/quadratic.cpp
+    optim/line_search/damped.cpp
     optim/line_search/simple.cpp
     optim/optimizer/standard.cpp
     optim/step/conjugate_gradient.cpp
@@ -20,6 +21,7 @@ FILE(GLOB TESTS_ALGORITHMS_HEADERS
     optim/powell.h
     optim/quadratic.h
     optim/rosenbrock.h
+    optim/simple.h
 )
 
 ASTRO_add_test(

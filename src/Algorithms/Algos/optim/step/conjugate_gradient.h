@@ -100,11 +100,11 @@ public:
     {
         double beta = PRPConjugate::conjugate(newGradient, oldGradient, direction);
         double betafr = FRConjugate::conjugate(newGradient, oldGradient, direction);
-        if(beta < -betafr)
+        if (beta < -betafr)
         {
             beta = -betafr;
         }
-        else if(beta > betafr)
+        else if (beta > betafr)
         {
             beta = betafr;
         }
@@ -120,7 +120,9 @@ public:
                             const Eigen::VectorXd& direction)
     {
         auto yk = (newGradient - oldGradient);
-        return static_cast<double>((yk - (2 * yk.norm() / static_cast<double>(yk.transpose() * direction)) * direction).transpose() * newGradient) /
+        return static_cast<double>((yk - (2 * yk.norm() / static_cast<double>(yk.transpose() * direction)) * direction)
+                                           .transpose() *
+                                   newGradient) /
                static_cast<double>(yk.transpose() * direction);
     }
 };

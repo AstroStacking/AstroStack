@@ -4,7 +4,7 @@
 
 #include <optim/powell.h>
 
-TEST(Gradient, Powell)
+TEST(GradientStep, Powell)
 {
     optim::State state;
     optim::step::Gradient gradient;

@@ -4,7 +4,7 @@
 
 #include <optim/powell.h>
 
-TEST(Newton, Powell)
+TEST(NewtonStep, Powell)
 {
     optim::State state;
     optim::step::Newton newton;

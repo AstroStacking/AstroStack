@@ -2,25 +2,11 @@
 
 #include <gtest/gtest.h>
 
-#include <optim/powell.h>
+#include <optim/simple.h>
 
 namespace
 {
-class Function
-{
-public:
-    double operator()(const Eigen::VectorXd& X) const { return std::pow(X(0) - 2, 2) + std::pow(2 * X(1) + 4, 2); }
-
-    Eigen::VectorXd gradient(const Eigen::VectorXd& X) const
-    {
-        Eigen::VectorXd result(2);
-        result << 2. * (X(0) - 2), 4 * (2 * X(1) + 4);
-
-        return result;
-    }
-};
-
-class Simple
+class Dud
 {
 public:
     static double conjugate(const Eigen::VectorXd& newGradient, const Eigen::VectorXd& oldGradient,
@@ -34,11 +20,11 @@ constexpr double ARTIFICIAL_FIRST_STEP = 0.178571428571;
 
 } // namespace
 
-TEST(ConjugateGradient, Simple)
+TEST(ConjugateGradientStep, Simple)
 {
     optim::State state;
-    optim::step::ConjugateGradient<Simple> gradient;
-    Function fun;
+    optim::step::ConjugateGradient<Dud> gradient;
+    Simple fun;
 
     Eigen::VectorXd x(2);
     x << 0, 0;
@@ -52,11 +38,11 @@ TEST(ConjugateGradient, Simple)
     ASSERT_EQ(state.getData("conjugate_coefficient"), 0);
 }
 
-TEST(ConjugateGradient, CWConjugate)
+TEST(ConjugateGradientStep, CWConjugate)
 {
     optim::State state;
     optim::step::ConjugateGradient<optim::step::CWConjugate> gradient;
-    Function fun;
+    Simple fun;
 
     Eigen::VectorXd x(2);
     x << 0, 0;
@@ -74,11 +60,11 @@ TEST(ConjugateGradient, CWConjugate)
     ASSERT_LT(fun(x + 0.01 * newStep), fun(x));
 }
 
-TEST(ConjugateGradient, DConjugate)
+TEST(ConjugateGradientStep, DConjugate)
 {
     optim::State state;
     optim::step::ConjugateGradient<optim::step::DConjugate> gradient;
-    Function fun;
+    Simple fun;
 
     Eigen::VectorXd x(2);
     x << 0, 0;
@@ -96,11 +82,11 @@ TEST(ConjugateGradient, DConjugate)
     ASSERT_LT(fun(x + 0.001 * newStep), fun(x));
 }
 
-TEST(ConjugateGradient, DYConjugate)
+TEST(ConjugateGradientStep, DYConjugate)
 {
     optim::State state;
     optim::step::ConjugateGradient<optim::step::DYConjugate> gradient;
-    Function fun;
+    Simple fun;
 
     Eigen::VectorXd x(2);
     x << 0, 0;
@@ -118,11 +104,11 @@ TEST(ConjugateGradient, DYConjugate)
     ASSERT_LT(fun(x + 0.01 * newStep), fun(x));
 }
 
-TEST(ConjugateGradient, FRConjugate)
+TEST(ConjugateGradientStep, FRConjugate)
 {
     optim::State state;
     optim::step::ConjugateGradient<optim::step::FRConjugate> gradient;
-    Function fun;
+    Simple fun;
 
     Eigen::VectorXd x(2);
     x << 0, 0;
@@ -140,11 +126,11 @@ TEST(ConjugateGradient, FRConjugate)
     ASSERT_LT(fun(x + 0.01 * newStep), fun(x));
 }
 
-TEST(ConjugateGradient, PRPConjugate)
+TEST(ConjugateGradientStep, PRPConjugate)
 {
     optim::State state;
     optim::step::ConjugateGradient<optim::step::PRPConjugate> gradient;
-    Function fun;
+    Simple fun;
 
     Eigen::VectorXd x(2);
     x << 0, 0;
@@ -162,11 +148,11 @@ TEST(ConjugateGradient, PRPConjugate)
     ASSERT_LT(fun(x + 0.01 * newStep), fun(x));
 }
 
-TEST(ConjugateGradient, FRPRPConjugate)
+TEST(ConjugateGradientStep, FRPRPConjugate)
 {
     optim::State state;
     optim::step::ConjugateGradient<optim::step::FRPRPConjugate> gradient;
-    Function fun;
+    Simple fun;
 
     Eigen::VectorXd x(2);
     x << 0, 0;
@@ -184,11 +170,11 @@ TEST(ConjugateGradient, FRPRPConjugate)
     ASSERT_LT(fun(x + 0.01 * newStep), fun(x));
 }
 
-TEST(ConjugateGradient, HZConjugate)
+TEST(ConjugateGradientStep, HZConjugate)
 {
     optim::State state;
     optim::step::ConjugateGradient<optim::step::HZConjugate> gradient;
-    Function fun;
+    Simple fun;
 
     Eigen::VectorXd x(2);
     x << 0, 0;
