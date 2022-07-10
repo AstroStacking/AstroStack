@@ -11,6 +11,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(ITK_NO_IO_FACTORY_REGISTER_MANAGER ON)
 
 option(ENABLE_TEST_DISCOVERY "Activate test discovery in ctest" ON)
+option(ENABLE_EXIV2 "Enable exiv2 support" OFF)
 
 find_package(Git REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Charts Linguist)
@@ -18,7 +19,9 @@ find_package(ITK REQUIRED COMPONENTS ITKIOImageBase ITKIOJPEG ITKIOPNG ITKIOTIFF
 find_package(Eigen3 REQUIRED)
 find_package(GTest REQUIRED)
 
-find_package(Exiv2)
+if(ENABLE_EXIV2)
+    find_package(Exiv2)
+endif()
 if(TARGET exiv2lib)
     SET(EXIV2_FOUND 1)
 else()
