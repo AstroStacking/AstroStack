@@ -15,7 +15,7 @@ class RANSAC
     const Matrix& m_X;
     const Matrix& m_Y;
 
-    std::mt19937 m_generator;
+    std::mt19937_64 m_generator;
 
     Model m_initialModel;
 
@@ -61,10 +61,10 @@ public:
     static constexpr int DEFAULT_NB_ITERATIONS = 100;
 
     RANSAC(Model&& model, const Matrix& X, const Matrix& Y, int nbSamples = DEFAULT_NB_SAMPLES,
-           int nbIterations = DEFAULT_NB_ITERATIONS)
+           int nbIterations = DEFAULT_NB_ITERATIONS, int_fast64_t seed = std::random_device()())
         : m_X(X)
         , m_Y(Y)
-        , m_generator(std::random_device()())
+        , m_generator(seed)
         , m_initialModel(std::move(model))
         , m_nbSamples(nbSamples)
         , m_nbIterations(nbIterations)

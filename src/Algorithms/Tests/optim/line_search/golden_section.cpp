@@ -56,5 +56,5 @@ TEST(LineSearchGoldenSection, Gradient)
     Eigen::VectorXd direction(2);
     direction << 1.0588, -2.1176;
     ASSERT_TRUE(lineSearch(origin, fun, state).isApprox(direction, 0.001));
-    ASSERT_NEAR(state.getStep(), 1.0588/4, 0.0001);
+    ASSERT_NEAR(state.getStep(), 1.0588 / 4, 0.0001);
 }
