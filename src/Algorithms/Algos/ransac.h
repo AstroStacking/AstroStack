@@ -21,6 +21,7 @@ class RANSAC
 
     int m_nbInliers{0};
     Model m_finalModel;
+    std::vector<int> m_seeds;
 
     const int m_nbSamples;
     const int m_nbIterations;
@@ -53,6 +54,7 @@ class RANSAC
         {
             m_nbInliers = count;
             m_finalModel = model;
+            m_seeds = std::move(v);
         }
     }
 
@@ -87,6 +89,8 @@ public:
             iterate();
         }
     }
+
     Matrix predict(const Matrix& X) const { return m_finalModel.predict(X); }
+    const std::vector<int>& getBestSeeds() const { return m_seeds; }
 };
 } // namespace astro

@@ -39,4 +39,5 @@ TEST(RANSAC, SimpleTest)
     auto Y2 = ransac.predict(X2);
 
     ASSERT_NEAR(-26, Y2(0), 0.0001);
+    ASSERT_EQ(ransac.getBestSeeds().size(), 10);
 }
