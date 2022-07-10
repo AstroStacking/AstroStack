@@ -12,10 +12,10 @@ class Newton
 public:
     Newton() = default;
 
-    template<typename Function>
-    Eigen::VectorXd operator()(const Eigen::VectorXd& x, State& state, const Function& fun) const
+    template<typename Function, typename State>
+    typename State::Vector operator()(const typename State::Vector& x, State& state, const Function& fun) const
     {
-        Eigen::VectorXd gradient = fun.gradient(x);
+        typename State::Vector gradient = fun.gradient(x);
         state.setGradient(gradient);
         return -fun.hessian(x).colPivHouseholderQr().solve(gradient);
     }

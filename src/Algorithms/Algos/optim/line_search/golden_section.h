@@ -20,8 +20,8 @@ public:
     {
     }
 
-    template<typename Function>
-    Eigen::VectorXd operator()(const Eigen::VectorXd& x, const Function& fun, State& state) const
+    template<typename Function, typename State>
+    typename State::Vector operator()(const typename State::Vector& x, const Function& fun, State& state) const
     {
         const auto& direction = state.getDirection();
 

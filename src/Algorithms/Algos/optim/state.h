@@ -46,8 +46,13 @@ inline std::ostream& operator<<(std::ostream& stream, const Status& status)
     return stream;
 }
 
+template<int Size = Eigen::Dynamic>
 class State
 {
+public:
+    using Matrix = Eigen::Matrix<double, Size, Size>;
+    using Vector = Eigen::Matrix<double, Size, 1>;
+private:
     size_t m_iteration{};
     Status m_status{Status::NOT_STOPPED};
 
@@ -56,10 +61,10 @@ class State
     double m_step{std::numeric_limits<double>::quiet_NaN()};
     double m_initialStep{std::numeric_limits<double>::quiet_NaN()};
 
-    Eigen::VectorXd m_direction;
-    Eigen::VectorXd m_gradient;
-    Eigen::VectorXd m_prevPoint;
-    Eigen::VectorXd m_currentPoint;
+    Vector m_direction;
+    Vector m_gradient;
+    Vector m_prevPoint;
+    Vector m_currentPoint;
 
     std::unordered_map<std::string, double> m_miscellaneousData;
 
@@ -71,10 +76,10 @@ public:
     double getCurrentValue() const { return m_currentValue; }
     double getStep() const { return m_step; }
     double getInitialStep() const { return m_initialStep; }
-    Eigen::VectorXd getDirection() const { return m_direction; }
-    Eigen::VectorXd getGradient() const { return m_gradient; }
-    Eigen::VectorXd getPreviousPoint() const { return m_prevPoint; }
-    Eigen::VectorXd getCurrentPoint() const { return m_currentPoint; }
+    Vector getDirection() const { return m_direction; }
+    Vector getGradient() const { return m_gradient; }
+    Vector getPreviousPoint() const { return m_prevPoint; }
+    Vector getCurrentPoint() const { return m_currentPoint; }
     double getData(const std::string& name) const { return m_miscellaneousData.at(name); }
 
     void setStatus(Status status) { m_status = status; }
@@ -83,7 +88,7 @@ public:
         m_prevValue = m_currentValue;
         m_currentValue = value;
     }
-    void setCurrentPoint(const Eigen::VectorXd& point)
+    void setCurrentPoint(const Vector& point)
     {
         m_prevPoint = m_currentPoint;
         m_currentPoint = point;
@@ -91,12 +96,13 @@ public:
     void setStep(double step) { m_step = step; }
     void setInitialStep(double step) { m_initialStep = step; }
     void resetInitialStep() { m_initialStep = std::numeric_limits<double>::quiet_NaN(); }
-    void setDirection(const Eigen::VectorXd& direction) { m_direction = direction; }
-    void setGradient(const Eigen::VectorXd& gradient) { m_gradient = gradient; }
+    void setDirection(const Vector& direction) { m_direction = direction; }
+    void setGradient(const Vector& gradient) { m_gradient = gradient; }
     void setData(const std::string& name, double value) { m_miscellaneousData[name] = value; }
 };
 
-inline std::ostream& operator<<(std::ostream& stream, const State& state)
+template<int Size>
+inline std::ostream& operator<<(std::ostream& stream, const State<Size>& state)
 {
     stream << "Status " << state.getStatus();
     stream << "\n\tIteration: " << state.getCurrentIteration();

@@ -19,6 +19,7 @@ public:
     {
     }
 
+    template<typename State>
     bool operator()(State& state) const
     {
         bool result = state.getCurrentIteration() >= m_iterationMax;
@@ -40,6 +41,7 @@ public:
     {
     }
 
+    template<typename State>
     bool operator()(State& state) const
     {
         bool result = state.getCurrentValue() >= state.getPreviousValue() * (1 + m_ftol);
@@ -61,6 +63,7 @@ public:
     {
     }
 
+    template<typename State>
     bool operator()(State& state) const
     {
         bool result = std::abs(state.getCurrentValue() - state.getPreviousValue()) /
@@ -85,6 +88,7 @@ public:
     {
     }
 
+    template<typename State>
     bool operator()(State& state) const
     {
         bool result = std::abs(state.getCurrentValue() - state.getPreviousValue()) <= m_ftol;

@@ -8,10 +8,10 @@
 
 namespace astro
 {
-template<class Model>
+template<class Model, int Size = Eigen::Dynamic>
 class RANSAC
 {
-    using Matrix = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>;
+    using Matrix = Eigen::Matrix<double, Size, Size>;
     const Matrix& m_X;
     const Matrix& m_Y;
 

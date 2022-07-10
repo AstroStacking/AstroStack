@@ -21,12 +21,12 @@ public:
     {
     }
 
-    template<typename Function>
-    Eigen::VectorXd operator()(const Eigen::VectorXd& x, const Function& fun, State& state) const
+    template<typename Function, typename State>
+    typename State::Vector operator()(const typename State::Vector& x, const Function& fun, State& state) const
     {
         double stepSize = std::isnan(state.getInitialStep()) ? m_stepSize : state.getInitialStep();
         double currentValue = fun(x);
-        Eigen::VectorXd optimalPoint = x + stepSize * state.getDirection();
+        typename State::Vector optimalPoint = x + stepSize * state.getDirection();
         double newValue = fun(optimalPoint);
 
         while (newValue > currentValue * (1 + m_dampedError))

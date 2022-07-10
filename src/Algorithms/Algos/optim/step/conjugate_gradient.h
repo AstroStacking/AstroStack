@@ -13,10 +13,10 @@ class ConjugateGradient
 public:
     ConjugateGradient() = default;
 
-    template<typename Function>
-    Eigen::VectorXd operator()(const Eigen::VectorXd& x, State& state, const Function& fun) const
+    template<typename Function, typename State>
+    typename State::Vector operator()(const typename State::Vector& x, State& state, const Function& fun) const
     {
-        Eigen::VectorXd gradient = fun.gradient(x);
+        typename State::Vector gradient = fun.gradient(x);
 
         if (state.getDirection().size() > 0)
         {
@@ -35,8 +35,9 @@ public:
 class CWConjugate
 {
 public:
-    static double conjugate(const Eigen::VectorXd& newGradient, const Eigen::VectorXd& oldGradient,
-                            const Eigen::VectorXd& direction)
+    template<typename Vector>
+    static double conjugate(const Vector& newGradient, const Vector& oldGradient,
+                            const Vector& direction)
     {
         return static_cast<double>(newGradient.transpose() * (newGradient - oldGradient)) /
                static_cast<double>(direction.transpose() * (newGradient - oldGradient));
@@ -47,8 +48,9 @@ public:
 class DConjugate
 {
 public:
-    static double conjugate(const Eigen::VectorXd& newGradient, const Eigen::VectorXd& oldGradient,
-                            const Eigen::VectorXd& direction)
+    template<typename Vector>
+    static double conjugate(const Vector& newGradient, const Vector& oldGradient,
+                            const Vector& direction)
     {
         return -static_cast<double>(newGradient.transpose() * newGradient) /
                static_cast<double>(direction.transpose() * oldGradient);
@@ -59,8 +61,9 @@ public:
 class DYConjugate
 {
 public:
-    static double conjugate(const Eigen::VectorXd& newGradient, const Eigen::VectorXd& oldGradient,
-                            const Eigen::VectorXd& direction)
+    template<typename Vector>
+    static double conjugate(const Vector& newGradient, const Vector& oldGradient,
+                            const Vector& direction)
     {
         return static_cast<double>(newGradient.transpose() * newGradient) /
                static_cast<double>(direction.transpose() * (newGradient - oldGradient));
@@ -71,8 +74,9 @@ public:
 class FRConjugate
 {
 public:
-    static double conjugate(const Eigen::VectorXd& newGradient, const Eigen::VectorXd& oldGradient,
-                            const Eigen::VectorXd& direction)
+    template<typename Vector>
+    static double conjugate(const Vector& newGradient, const Vector& oldGradient,
+                            const Vector& direction)
     {
         return static_cast<double>(newGradient.transpose() * newGradient) /
                static_cast<double>(oldGradient.transpose() * oldGradient);
@@ -83,8 +87,9 @@ public:
 class PRPConjugate
 {
 public:
-    static double conjugate(const Eigen::VectorXd& newGradient, const Eigen::VectorXd& oldGradient,
-                            const Eigen::VectorXd& direction)
+    template<typename Vector>
+    static double conjugate(const Vector& newGradient, const Vector& oldGradient,
+                            const Vector& direction)
     {
         return static_cast<double>(newGradient.transpose() * (newGradient - oldGradient)) /
                static_cast<double>(oldGradient.transpose() * oldGradient);
@@ -95,8 +100,9 @@ public:
 class FRPRPConjugate
 {
 public:
-    static double conjugate(const Eigen::VectorXd& newGradient, const Eigen::VectorXd& oldGradient,
-                            const Eigen::VectorXd& direction)
+    template<typename Vector>
+    static double conjugate(const Vector& newGradient, const Vector& oldGradient,
+                            const Vector& direction)
     {
         double beta = PRPConjugate::conjugate(newGradient, oldGradient, direction);
         double betafr = FRConjugate::conjugate(newGradient, oldGradient, direction);
@@ -116,8 +122,9 @@ public:
 class HZConjugate
 {
 public:
-    static double conjugate(const Eigen::VectorXd& newGradient, const Eigen::VectorXd& oldGradient,
-                            const Eigen::VectorXd& direction)
+    template<typename Vector>
+    static double conjugate(const Vector& newGradient, const Vector& oldGradient,
+                            const Vector& direction)
     {
         auto yk = (newGradient - oldGradient);
         return static_cast<double>((yk - (2 * yk.norm() / static_cast<double>(yk.transpose() * direction)) * direction)

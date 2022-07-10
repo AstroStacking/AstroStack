@@ -12,7 +12,7 @@ namespace optimizer
 template<typename Function, typename Criterion, typename LineSearch, typename Step>
 class Standard
 {
-    State m_state;
+    State<Function::Size> m_state;
     const Function& m_fun;
     Criterion m_criterion;
     LineSearch m_linesearch;
@@ -34,7 +34,7 @@ public:
     {
     }
 
-    Eigen::VectorXd operator()(const Eigen::VectorXd& x0)
+    typename State<Function::Size>::Vector operator()(const typename State<Function::Size>::Vector& x0)
     {
         m_state.setCurrentPoint(x0);
         m_state.setCurrentValue(m_fun(x0));
@@ -47,7 +47,7 @@ public:
         return m_state.getCurrentPoint();
     }
 
-    const State& getState() const { return m_state; }
+    const State<Function::Size>& getState() const { return m_state; }
 };
 
 template<typename Function, typename Criterion, typename LineSearch, typename Step>

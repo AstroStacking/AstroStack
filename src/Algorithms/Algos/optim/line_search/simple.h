@@ -17,8 +17,8 @@ public:
     {
     }
 
-    template<typename Function>
-    Eigen::VectorXd operator()(const Eigen::VectorXd& x, const Function& fun, State& state) const
+    template<typename Function, typename State>
+    typename State::Vector operator()(const typename State::Vector& x, const Function& fun, State& state) const
     {
         return x + (std::isnan(state.getInitialStep()) ? m_length : state.getInitialStep()) * state.getDirection();
     }

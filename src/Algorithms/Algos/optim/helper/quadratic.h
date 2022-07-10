@@ -11,25 +11,27 @@ namespace optim
 namespace helper
 {
 /// Helper class to do a least square optimization
-template<typename Function>
+template<typename Function, int Size = Eigen::Dynamic>
 class Quadratic
 {
+    using Matrix = Eigen::Matrix<double, Size, Size>;
+    using Vector = Eigen::Matrix<double, Size, 1>;
     const Function& m_fun;
-    const Eigen::MatrixXd& m_X;
-    const Eigen::MatrixXd& m_Y;
+    const Matrix& m_X;
+    const Matrix& m_Y;
 
 public:
-    Quadratic(const Function& fun, const Eigen::MatrixXd& X, const Eigen::MatrixXd& Y)
+    Quadratic(const Function& fun, const Matrix& X, const Matrix& Y)
         : m_fun(fun)
         , m_X(X)
         , m_Y(Y)
     {
     }
 
-    double operator()(const Eigen::VectorXd& parameters) const
+    double operator()(const Vector& parameters) const
     {
         auto result = m_fun(m_X, parameters);
-        Eigen::VectorXd accu = Eigen::VectorXd::Zero(result.front().size());
+        Vector accu = Vector::Zero(result.front().size());
         for (size_t i = 0; i < result.size(); ++i)
         {
             accu = accu + Eigen::pow((m_Y.col(i) - result[i]).array(), 2).matrix();
@@ -38,12 +40,12 @@ public:
         return accu.sum();
     }
 
-    Eigen::VectorXd gradient(const Eigen::VectorXd& parameters) const
+    Vector gradient(const Vector& parameters) const
     {
         auto result = m_fun(m_X, parameters);
         auto resultGradient = m_fun.gradient(m_X, parameters);
 
-        Eigen::VectorXd accu = Eigen::VectorXd::Zero(parameters.size());
+        Vector accu = Vector::Zero(parameters.size());
         for (size_t i = 0; i < result.size(); ++i)
         {
             accu = accu - 2 * (resultGradient[i] * (m_Y.col(i) - result[i]).transpose()).rowwise().sum();
@@ -51,15 +53,15 @@ public:
         return accu;
     }
 
-    Eigen::MatrixXd firstHessian(const Eigen::VectorXd& parameters) const
+    Matrix firstHessian(const Vector& parameters) const
     {
         auto result = m_fun(m_X, parameters);
         auto resultHessian = m_fun.hessian(m_X, parameters);
 
-        Eigen::MatrixXd accu = Eigen::MatrixXd::Zero(parameters.size(), parameters.size());
+        Matrix accu = Matrix::Zero(parameters.size(), parameters.size());
         for (size_t i = 0; i < result.size(); ++i)
         {
-            Eigen::VectorXd diff = (m_Y.col(i) - result[i]);
+            Vector diff = (m_Y.col(i) - result[i]);
 
             for (size_t j = 0; j < diff.size(); ++j)
             {
@@ -70,11 +72,11 @@ public:
         return accu;
     }
 
-    Eigen::MatrixXd secondHessian(const Eigen::VectorXd& parameters) const
+    Matrix secondHessian(const Vector& parameters) const
     {
         auto resultGradient = m_fun.gradient(m_X, parameters);
 
-        Eigen::MatrixXd accu = Eigen::MatrixXd::Zero(parameters.size(), parameters.size());
+        Matrix accu = Matrix::Zero(parameters.size(), parameters.size());
         for (size_t i = 0; i < resultGradient.size(); ++i)
         {
             accu = accu + resultGradient[i] * resultGradient[i].transpose();
@@ -82,7 +84,7 @@ public:
         return accu;
     }
 
-    Eigen::MatrixXd hessian(const Eigen::VectorXd& parameters) const
+    Matrix hessian(const Vector& parameters) const
     {
         return 2 * (firstHessian(parameters) + secondHessian(parameters));
     }

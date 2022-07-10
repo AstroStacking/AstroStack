@@ -20,6 +20,7 @@ public:
     {
     }
 
+    template<typename State>
     bool operator()(State& state) const { return m_criterion1(state) && m_criterion2(state); }
 };
 
@@ -43,6 +44,7 @@ public:
     {
     }
 
+    template<typename State>
     bool operator()(State& state) const { return m_criterion1(state) || m_criterion2(state); }
 };
 
