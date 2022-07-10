@@ -30,7 +30,7 @@ TEST(RANSAC, SimpleTest)
             -122., 136., 40., 142., -113., 43., -98., -125., -116., -2., 64., -119., -44., -35., 82., 13., -107., -20.,
             34., -77., 7.;
 
-    astro::RANSAC ransac(AffineModel(), X, Y, 10, 2000);
+    astro::RANSAC ransac(AffineModel(), X, Y, 10, 2000, 0);
 
     ransac.run();
 
