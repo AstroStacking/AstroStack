@@ -3,6 +3,7 @@
 
 #include <Processing/exponential.h>
 #include <Processing/histostretch.h>
+#include <Processing/lightpollution.h>
 #include <Processing/rldeconvolution.h>
 
 #include <IO/output.h>
@@ -26,6 +27,10 @@ std::map<QString, MonoInterface*> scanPlugins()
     {
         auto* histostretch = new HistoStretch();
         plugins.emplace(histostretch->name(), histostretch);
+    }
+    {
+        auto* lightpollution = new LightPollution();
+        plugins.emplace(lightpollution->name(), lightpollution);
     }
     {
         auto* rldeconvolution = new RLDeconvolution();

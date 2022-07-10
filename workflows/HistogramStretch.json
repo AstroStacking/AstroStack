@@ -3,6 +3,9 @@
     "Type": "Mono",
     "Steps": [
         {
+            "Type": "LightPollution"
+        },
+        {
             "Type": "Exponential"
         },
         {

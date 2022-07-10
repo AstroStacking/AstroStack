@@ -3,6 +3,8 @@ FILE(GLOB ASTRO_PROCESSING_SRC
     Processing/exponential.ui
     Processing/histostretch.cpp
     Processing/histostretch.ui
+    Processing/lightpollution.cpp
+    Processing/lightpollution.ui
     Processing/monointerface.cpp
     Processing/rldeconvolution.cpp
     Processing/rldeconvolution.ui
@@ -12,6 +14,7 @@ FILE(GLOB ASTRO_PROCESSING_HEADERS
     Processing/config.h
     Processing/exponential.h
     Processing/histostretch.h
+    Processing/lightpollution.h
     Processing/monointerface.h
     Processing/rldeconvolution.h
     Processing/ui_monointerface.h
@@ -20,6 +23,7 @@ FILE(GLOB ASTRO_PROCESSING_HEADERS
 FILE(GLOB ASTRO_PROCESSING_DOC
     Processing/exponential.md
     Processing/histostretch.md
+    Processing/lightpollution.md
     Processing/rldeconvolution.md
 )
 
