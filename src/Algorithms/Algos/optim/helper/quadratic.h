@@ -11,27 +11,31 @@ namespace optim
 namespace helper
 {
 /// Helper class to do a least square optimization
-template<typename Function, int Size = Eigen::Dynamic>
+template<typename Function, int PSize = Eigen::Dynamic, int XSize = Eigen::Dynamic, int YSize = Eigen::Dynamic>
 class Quadratic
 {
-    using Matrix = Eigen::Matrix<double, Size, Size>;
-    using Vector = Eigen::Matrix<double, Size, 1>;
+    using MatrixX = Eigen::Matrix<double, XSize, Eigen::Dynamic>;
+    using MatrixY = Eigen::Matrix<double, YSize, Eigen::Dynamic>;
+    using MatrixP = Eigen::Matrix<double, PSize, PSize>;
+    using VectorX = Eigen::Matrix<double, XSize, 1>;
+    using VectorY = Eigen::Matrix<double, YSize, 1>;
+    using VectorP = Eigen::Matrix<double, XSize, 1>;
     const Function& m_fun;
-    const Matrix& m_X;
-    const Matrix& m_Y;
+    const MatrixX& m_X;
+    const MatrixY& m_Y;
 
 public:
-    Quadratic(const Function& fun, const Matrix& X, const Matrix& Y)
+    Quadratic(const Function& fun, const MatrixX& X, const MatrixY& Y)
         : m_fun(fun)
         , m_X(X)
         , m_Y(Y)
     {
     }
 
-    double operator()(const Vector& parameters) const
+    double operator()(const VectorP& parameters) const
     {
         auto result = m_fun(m_X, parameters);
-        Vector accu = Vector::Zero(result.front().size());
+        VectorY accu = VectorY::Zero(result.front().size());
         for (size_t i = 0; i < result.size(); ++i)
         {
             accu = accu + Eigen::pow((m_Y.col(i) - result[i]).array(), 2).matrix();
@@ -40,12 +44,12 @@ public:
         return accu.sum();
     }
 
-    Vector gradient(const Vector& parameters) const
+    VectorX gradient(const VectorP& parameters) const
     {
         auto result = m_fun(m_X, parameters);
         auto resultGradient = m_fun.gradient(m_X, parameters);
 
-        Vector accu = Vector::Zero(parameters.size());
+        VectorP accu = VectorP::Zero(parameters.size());
         for (size_t i = 0; i < result.size(); ++i)
         {
             accu = accu - 2 * (resultGradient[i] * (m_Y.col(i) - result[i]).transpose()).rowwise().sum();
@@ -53,15 +57,15 @@ public:
         return accu;
     }
 
-    Matrix firstHessian(const Vector& parameters) const
+    MatrixP firstHessian(const VectorX& parameters) const
     {
         auto result = m_fun(m_X, parameters);
         auto resultHessian = m_fun.hessian(m_X, parameters);
 
-        Matrix accu = Matrix::Zero(parameters.size(), parameters.size());
+        MatrixP accu = MatrixP::Zero(parameters.size(), parameters.size());
         for (size_t i = 0; i < result.size(); ++i)
         {
-            Vector diff = (m_Y.col(i) - result[i]);
+            VectorY diff = (m_Y.col(i) - result[i]);
 
             for (size_t j = 0; j < diff.size(); ++j)
             {
@@ -72,11 +76,11 @@ public:
         return accu;
     }
 
-    Matrix secondHessian(const Vector& parameters) const
+    MatrixP secondHessian(const VectorP& parameters) const
     {
         auto resultGradient = m_fun.gradient(m_X, parameters);
 
-        Matrix accu = Matrix::Zero(parameters.size(), parameters.size());
+        MatrixP accu = MatrixP::Zero(parameters.size(), parameters.size());
         for (size_t i = 0; i < resultGradient.size(); ++i)
         {
             accu = accu + resultGradient[i] * resultGradient[i].transpose();
@@ -84,7 +88,7 @@ public:
         return accu;
     }
 
-    Matrix hessian(const Vector& parameters) const
+    MatrixP hessian(const VectorP& parameters) const
     {
         return 2 * (firstHessian(parameters) + secondHessian(parameters));
     }

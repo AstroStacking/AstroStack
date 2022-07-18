@@ -21,7 +21,10 @@ public:
     }
 
     template<typename State>
-    bool operator()(State& state) const { return m_criterion1(state) && m_criterion2(state); }
+    bool operator()(State& state) const
+    {
+        return m_criterion1(state) && m_criterion2(state);
+    }
 };
 
 template<typename Criterion1, typename Criterion2>
@@ -45,7 +48,10 @@ public:
     }
 
     template<typename State>
-    bool operator()(State& state) const { return m_criterion1(state) || m_criterion2(state); }
+    bool operator()(State& state) const
+    {
+        return m_criterion1(state) || m_criterion2(state);
+    }
 };
 
 template<typename Criterion1, typename Criterion2>

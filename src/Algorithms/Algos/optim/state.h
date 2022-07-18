@@ -52,6 +52,7 @@ class State
 public:
     using Matrix = Eigen::Matrix<double, Size, Size>;
     using Vector = Eigen::Matrix<double, Size, 1>;
+
 private:
     size_t m_iteration{};
     Status m_status{Status::NOT_STOPPED};

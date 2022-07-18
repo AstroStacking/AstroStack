@@ -36,8 +36,7 @@ class CWConjugate
 {
 public:
     template<typename Vector>
-    static double conjugate(const Vector& newGradient, const Vector& oldGradient,
-                            const Vector& direction)
+    static double conjugate(const Vector& newGradient, const Vector& oldGradient, const Vector& direction)
     {
         return static_cast<double>(newGradient.transpose() * (newGradient - oldGradient)) /
                static_cast<double>(direction.transpose() * (newGradient - oldGradient));
@@ -49,8 +48,7 @@ class DConjugate
 {
 public:
     template<typename Vector>
-    static double conjugate(const Vector& newGradient, const Vector& oldGradient,
-                            const Vector& direction)
+    static double conjugate(const Vector& newGradient, const Vector& oldGradient, const Vector& direction)
     {
         return -static_cast<double>(newGradient.transpose() * newGradient) /
                static_cast<double>(direction.transpose() * oldGradient);
@@ -62,8 +60,7 @@ class DYConjugate
 {
 public:
     template<typename Vector>
-    static double conjugate(const Vector& newGradient, const Vector& oldGradient,
-                            const Vector& direction)
+    static double conjugate(const Vector& newGradient, const Vector& oldGradient, const Vector& direction)
     {
         return static_cast<double>(newGradient.transpose() * newGradient) /
                static_cast<double>(direction.transpose() * (newGradient - oldGradient));
@@ -75,8 +72,7 @@ class FRConjugate
 {
 public:
     template<typename Vector>
-    static double conjugate(const Vector& newGradient, const Vector& oldGradient,
-                            const Vector& direction)
+    static double conjugate(const Vector& newGradient, const Vector& oldGradient, const Vector& direction)
     {
         return static_cast<double>(newGradient.transpose() * newGradient) /
                static_cast<double>(oldGradient.transpose() * oldGradient);
@@ -88,8 +84,7 @@ class PRPConjugate
 {
 public:
     template<typename Vector>
-    static double conjugate(const Vector& newGradient, const Vector& oldGradient,
-                            const Vector& direction)
+    static double conjugate(const Vector& newGradient, const Vector& oldGradient, const Vector& direction)
     {
         return static_cast<double>(newGradient.transpose() * (newGradient - oldGradient)) /
                static_cast<double>(oldGradient.transpose() * oldGradient);
@@ -101,8 +96,7 @@ class FRPRPConjugate
 {
 public:
     template<typename Vector>
-    static double conjugate(const Vector& newGradient, const Vector& oldGradient,
-                            const Vector& direction)
+    static double conjugate(const Vector& newGradient, const Vector& oldGradient, const Vector& direction)
     {
         double beta = PRPConjugate::conjugate(newGradient, oldGradient, direction);
         double betafr = FRConjugate::conjugate(newGradient, oldGradient, direction);
@@ -123,8 +117,7 @@ class HZConjugate
 {
 public:
     template<typename Vector>
-    static double conjugate(const Vector& newGradient, const Vector& oldGradient,
-                            const Vector& direction)
+    static double conjugate(const Vector& newGradient, const Vector& oldGradient, const Vector& direction)
     {
         auto yk = (newGradient - oldGradient);
         return static_cast<double>((yk - (2 * yk.norm() / static_cast<double>(yk.transpose() * direction)) * direction)
