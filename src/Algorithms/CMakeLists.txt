@@ -4,7 +4,7 @@ FILE(GLOB ASTRO_ALGORITHMS_SRC
 
 FILE(GLOB ASTRO_ALGORITHMS_HEADERS
     Algos/config.h
-    Algos/model.h
+    Algos/gradient_estimation.h
     Algos/ransac.h
     Algos/optim/state.h
     Algos/optim/criteria/composite.h
