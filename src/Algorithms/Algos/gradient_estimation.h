@@ -54,21 +54,17 @@ public:
         return result;
     }
 };
-} // namespace
 
-namespace astro
-{
 template<size_t nbDims>
-ImageTypePtr estimateGradient(const ImageTypePtr& img, const ScalarImageTypePtr& mask = nullptr)
+void copyData(Eigen::Matrix3Xd& X, Eigen::Matrix<double, nbDims, Eigen::Dynamic>& Y, const astro::ImageTypePtr& img)
 {
-    using DataMatrix = Eigen::Matrix<double, nbDims, Eigen::Dynamic>;
-    
     auto size = img->GetRequestedRegion().GetSize();
-    DataMatrix Y(size.at(0) * size.at(1), nbDims);
-    Eigen::Matrix3Xd X(Eigen::Matrix3Xd::Ones(size.at(0) * size.at(1), 3));
+
+    Y.resize(nbDims, size.at(0) * size.at(1));
+    X = Eigen::Matrix3Xd::Ones(3, size.at(0) * size.at(1));
 
     size_t i = 0;
-    using IteratorType = itk::ImageRegionIterator<ImageType>;
+    using IteratorType = itk::ImageRegionIterator<astro::ImageType>;
     IteratorType it(img, img->GetRequestedRegion());
     it.GoToBegin();
 
@@ -78,12 +74,75 @@ ImageTypePtr estimateGradient(const ImageTypePtr& img, const ScalarImageTypePtr&
         auto index = it.GetIndex();
         for (unsigned int j = 0; j < nbDims; ++j)
         {
-            Y(i, j) = value.GetElement(j);
+            Y(j, i) = value.GetElement(j);
         }
-        X(i, 0) = index.at(0);
-        X(i, 1) = index.at(1);
+        X(0, i) = index.at(0);
+        X(1, i) = index.at(1);
         ++it;
         ++i;
+    }
+}
+
+template<size_t nbDims>
+void copyData(Eigen::Matrix3Xd& X, Eigen::Matrix<double, nbDims, Eigen::Dynamic>& Y, const astro::ImageTypePtr& img,
+              const astro::ScalarImageTypePtr& mask)
+{
+    auto size = img->GetRequestedRegion().GetSize();
+    auto maskSize = mask->GetRequestedRegion().GetSize();
+    if (size != maskSize)
+    {
+        throw std::range_error("Image and mask must have the same dimension");
+    }
+
+    Y.resize(nbDims, size.at(0) * size.at(1));
+    X = Eigen::Matrix3Xd::Ones(3, size.at(0) * size.at(1));
+
+    size_t i = 0;
+    using IteratorType = itk::ImageRegionIterator<astro::ImageType>;
+    using MaskedIteratorType = itk::ImageRegionIterator<astro::ScalarImageType>;
+    IteratorType it(img, img->GetRequestedRegion());
+    MaskedIteratorType maskedIt(mask, mask->GetRequestedRegion());
+    it.GoToBegin();
+    maskedIt.GoToBegin();
+
+    while (!it.IsAtEnd())
+    {
+        if (maskedIt.Get() != 0)
+        {
+            auto value = it.Get();
+            auto index = it.GetIndex();
+            for (unsigned int j = 0; j < nbDims; ++j)
+            {
+                Y(j, i) = value.GetElement(j);
+            }
+            X(0, i) = index.at(0);
+            X(1, i) = index.at(1);
+            ++i;
+        }
+        ++it;
+        ++maskedIt;
+    }
+}
+} // namespace
+
+namespace astro
+{
+template<size_t nbDims>
+ImageTypePtr estimateGradient(const ImageTypePtr& input, const ScalarImageTypePtr& mask = nullptr)
+{
+    ImageTypePtr img = input;
+
+    using DataMatrix = Eigen::Matrix<double, nbDims, Eigen::Dynamic>;
+    DataMatrix Y;
+    Eigen::Matrix3Xd X;
+
+    if (mask)
+    {
+        copyData<nbDims>(X, Y, img, mask);
+    }
+    else
+    {
+        copyData<nbDims>(X, Y, img);
     }
 
     /*
