@@ -22,7 +22,7 @@ namespace
 constexpr size_t HISTO_BINS = 256;
 constexpr size_t BIN_FACTOR = 256 / HISTO_BINS;
 
-using OutputImageType = itk::VectorImage<uint16_t, Dimension>;
+using OutputImageType = itk::Image<itk::RGBPixel<uint16_t>, Dimension>;
 using OutputImageTypePtr = itk::SmartPointer<OutputImageType>;
 
 template<int size>

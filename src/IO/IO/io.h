@@ -5,7 +5,7 @@
 #include <IO/config.h>
 
 #include <itkImage.h>
-#include <itkVectorImage.h>
+#include <itkRGBPixel.h>
 
 #if ASTRO_HAVE_EXIV2
 #include <exiv2/exiv2.hpp>
@@ -15,7 +15,7 @@ namespace astro
 {
 using PixelType = float;
 constexpr unsigned int Dimension = 2;
-using ImageType = itk::VectorImage<PixelType, Dimension>;
+using ImageType = itk::Image<itk::RGBPixel<PixelType>, Dimension>;
 using ScalarImageType = itk::Image<PixelType, Dimension>;
 using ImageTypePtr = itk::SmartPointer<ImageType>;
 using ScalarImageTypePtr = itk::SmartPointer<ScalarImageType>;
