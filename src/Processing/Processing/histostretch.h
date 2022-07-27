@@ -35,7 +35,6 @@ public:
     ~HistoStretchGUI() override;
 
     AstroImage process(AstroImage img, QPromise<void>& promise) override;
-    static std::vector<size_t> histogram(const ScalarImageTypePtr& img, size_t bins);
 
 private slots:
     void setRedValue(double val);
@@ -49,7 +48,10 @@ private:
     std::array<float, 4> getLimits(const ImageTypePtr& img);
     std::array<float, 4> getRelativeLimits(const ImageTypePtr& img);
 
-    float getMaxHistogram(ScalarImageTypePtr img, double ratio);
+    template<typename ImageTypePtr>
+    float getMaxHistogram(const ImageTypePtr& img, double ratio);
+    template<typename ImageTypePtr>
+    static std::vector<size_t> histogram(const ImageTypePtr& img, size_t bins);
 
     std::unique_ptr<Ui::HistoStretch> m_ui;
 };

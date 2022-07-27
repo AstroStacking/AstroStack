@@ -2,12 +2,12 @@
 #include "ui_histostretch.h"
 #include "ui_monointerface.h"
 
+#include <itkImageAdaptor.h>
 #include <itkImageDuplicator.h>
 #include <itkImageRegionIterator.h>
 #include <itkImageToHistogramFilter.h>
 #include <itkMinimumMaximumImageCalculator.h>
 #include <itkMultiplyImageFilter.h>
-#include <itkVectorIndexSelectionCastImageFilter.h>
 
 namespace astro
 {
@@ -78,17 +78,18 @@ void HistoStretchGUI::setApproximateGreenValue(int val)
     m_ui->green->setValue(val / 100.);
 }
 
-std::vector<size_t> HistoStretchGUI::histogram(const ScalarImageTypePtr& img, size_t bins)
+template<typename ImageTypePtr>
+std::vector<size_t> HistoStretchGUI::histogram(const ImageTypePtr& img, size_t bins)
 {
-    using ImageToHistogramFilterType = itk::Statistics::ImageToHistogramFilter<ScalarImageType>;
+    using ImageToHistogramFilterType = itk::Statistics::ImageToHistogramFilter<typename ImageTypePtr::ObjectType>;
 
-    ImageToHistogramFilterType::HistogramType::MeasurementVectorType lowerBound(bins);
+    typename ImageToHistogramFilterType::HistogramType::MeasurementVectorType lowerBound(bins);
     lowerBound.Fill(0);
 
-    ImageToHistogramFilterType::HistogramType::MeasurementVectorType upperBound(bins);
+    typename ImageToHistogramFilterType::HistogramType::MeasurementVectorType upperBound(bins);
     upperBound.Fill(1);
 
-    ImageToHistogramFilterType::HistogramType::SizeType size(1);
+    typename ImageToHistogramFilterType::HistogramType::SizeType size(1);
     size.Fill(bins);
 
     auto imageToHistogramFilter = ImageToHistogramFilterType::New();
@@ -97,7 +98,7 @@ std::vector<size_t> HistoStretchGUI::histogram(const ScalarImageTypePtr& img, si
     imageToHistogramFilter->SetHistogramBinMaximum(upperBound);
     imageToHistogramFilter->SetHistogramSize(size);
     imageToHistogramFilter->Update();
-    ImageToHistogramFilterType::HistogramType* histogram = imageToHistogramFilter->GetOutput();
+    typename ImageToHistogramFilterType::HistogramType* histogram = imageToHistogramFilter->GetOutput();
 
     std::vector<size_t> hist(bins, 0);
 
@@ -108,7 +109,8 @@ std::vector<size_t> HistoStretchGUI::histogram(const ScalarImageTypePtr& img, si
     return hist;
 }
 
-float HistoStretchGUI::getMaxHistogram(ScalarImageTypePtr img, double ratio)
+template<typename ImageTypePtr>
+float HistoStretchGUI::getMaxHistogram(const ImageTypePtr& img, double ratio)
 {
     constexpr unsigned int BINS = 256;
     constexpr unsigned int MEAN_SIZE = 5;
@@ -131,23 +133,22 @@ float HistoStretchGUI::getMaxHistogram(ScalarImageTypePtr img, double ratio)
 
 std::array<float, 4> HistoStretchGUI::getRelativeLimits(const ImageTypePtr& img)
 {
-    using IndexSelectionType = itk::VectorIndexSelectionCastImageFilter<ImageType, ScalarImageType>;
-    auto indexSelectionFilter0 = IndexSelectionType::New();
-    indexSelectionFilter0->SetIndex(0);
-    indexSelectionFilter0->SetInput(img);
+    using IndexSelectionRed = itk::ImageAdaptor<ImageType, RedChannelPixelAccessor>;
+    auto indexSelectionFilter0 = IndexSelectionRed::New();
+    indexSelectionFilter0->SetImage(img);
     indexSelectionFilter0->Update();
-    auto indexSelectionFilter1 = IndexSelectionType::New();
-    indexSelectionFilter1->SetIndex(1);
-    indexSelectionFilter1->SetInput(img);
+    using IndexSelectionGreen = itk::ImageAdaptor<ImageType, GreenChannelPixelAccessor>;
+    auto indexSelectionFilter1 = IndexSelectionGreen::New();
+    indexSelectionFilter1->SetImage(img);
     indexSelectionFilter1->Update();
-    auto indexSelectionFilter2 = IndexSelectionType::New();
-    indexSelectionFilter2->SetIndex(2);
-    indexSelectionFilter2->SetInput(img);
+    using IndexSelectionBlue = itk::ImageAdaptor<ImageType, BlueChannelPixelAccessor>;
+    auto indexSelectionFilter2 = IndexSelectionBlue::New();
+    indexSelectionFilter2->SetImage(img);
     indexSelectionFilter2->Update();
 
-    return {{getMaxHistogram(indexSelectionFilter0->GetOutput(), m_ui->red->value()),
-             getMaxHistogram(indexSelectionFilter1->GetOutput(), m_ui->green->value()),
-             getMaxHistogram(indexSelectionFilter2->GetOutput(), m_ui->blue->value()), 1}};
+    return {{getMaxHistogram(indexSelectionFilter0, m_ui->red->value()),
+             getMaxHistogram(indexSelectionFilter1, m_ui->green->value()),
+             getMaxHistogram(indexSelectionFilter2, m_ui->blue->value()), 1}};
 }
 
 std::array<float, 4> HistoStretchGUI::getLimits(const ImageTypePtr& img)

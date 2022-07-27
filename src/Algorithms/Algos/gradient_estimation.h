@@ -55,7 +55,8 @@ public:
     }
 };
 
-void copyData(Eigen::Matrix3Xd& X, Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y, const astro::ImageTypePtr& img)
+void copyData(Eigen::Matrix3Xd& X, Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y,
+              const astro::ImageTypePtr& img)
 {
     auto size = img->GetRequestedRegion().GetSize();
 
@@ -82,8 +83,8 @@ void copyData(Eigen::Matrix3Xd& X, Eigen::Matrix<double, astro::PixelDimension, 
     }
 }
 
-void copyData(Eigen::Matrix3Xd& X, Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y, const astro::ImageTypePtr& img,
-              const astro::ScalarImageTypePtr& mask)
+void copyData(Eigen::Matrix3Xd& X, Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y,
+              const astro::ImageTypePtr& img, const astro::ScalarImageTypePtr& mask)
 {
     auto size = img->GetRequestedRegion().GetSize();
     auto maskSize = mask->GetRequestedRegion().GetSize();

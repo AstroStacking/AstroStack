@@ -16,10 +16,38 @@ namespace astro
 using PixelType = float;
 constexpr unsigned int Dimension = 2;
 constexpr unsigned int PixelDimension = 3;
+using InternalImageType = itk::RGBPixel<PixelType>;
 using ImageType = itk::Image<itk::RGBPixel<PixelType>, Dimension>;
 using ScalarImageType = itk::Image<PixelType, Dimension>;
 using ImageTypePtr = itk::SmartPointer<ImageType>;
 using ScalarImageTypePtr = itk::SmartPointer<ScalarImageType>;
+
+class RedChannelPixelAccessor
+{
+public:
+    using InternalType = InternalImageType;
+    using ExternalType = PixelType;
+
+    static ExternalType Get(const InternalType& input) { return static_cast<ExternalType>(input.GetRed()); }
+};
+
+class GreenChannelPixelAccessor
+{
+public:
+    using InternalType = InternalImageType;
+    using ExternalType = PixelType;
+
+    static ExternalType Get(const InternalType& input) { return static_cast<ExternalType>(input.GetGreen()); }
+};
+
+class BlueChannelPixelAccessor
+{
+public:
+    using InternalType = InternalImageType;
+    using ExternalType = PixelType;
+
+    static ExternalType Get(const InternalType& input) { return static_cast<ExternalType>(input.GetBlue()); }
+};
 
 class ASTRO_IO_EXPORT AstroImage
 {

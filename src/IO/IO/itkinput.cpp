@@ -3,10 +3,10 @@
 #include <QtCore/QFileInfo>
 #include <QtWidgets/QMessageBox>
 
+#include <itkImageAdaptor.h>
 #include <itkImageFileReader.h>
 #include <itkMinimumMaximumImageCalculator.h>
 #include <itkMultiplyImageFilter.h>
-#include <itkVectorIndexSelectionCastImageFilter.h>
 
 namespace itk
 {
@@ -44,16 +44,15 @@ try
     reader->SetFileName(filename.toStdString());
     reader->Update();
 
-    using IndexSelectionType = itk::VectorIndexSelectionCastImageFilter<ImageType, ScalarImageType>;
+    using IndexSelectionType = itk::ImageAdaptor<ImageType, RedChannelPixelAccessor>;
     auto indexSelectionFilter = IndexSelectionType::New();
-    indexSelectionFilter->SetIndex(0);
-    indexSelectionFilter->SetInput(reader->GetOutput());
+    indexSelectionFilter->SetImage(reader->GetOutput());
     indexSelectionFilter->Update();
 
-    using ImageCalculatorFilterType = itk::MinimumMaximumImageCalculator<ScalarImageType>;
+    using ImageCalculatorFilterType = itk::MinimumMaximumImageCalculator<IndexSelectionType>;
 
     auto imageCalculatorFilter = ImageCalculatorFilterType::New();
-    imageCalculatorFilter->SetImage(indexSelectionFilter->GetOutput());
+    imageCalculatorFilter->SetImage(indexSelectionFilter);
     imageCalculatorFilter->ComputeMaximum();
     using FilterType = itk::MultiplyImageFilter<ImageType, ScalarImageType, ImageType>;
     auto filter = FilterType::New();
