@@ -39,7 +39,7 @@ try
     filter->SetConstant(255.);
     filter->Update();
 
-    using OutputImageType = itk::VectorImage<uint8_t, Dimension>;
+    using OutputImageType = itk::Image<itk::RGBPixel<uint8_t>, Dimension>;
     using CastFilterType = itk::CastImageFilter<ImageType, OutputImageType>;
     auto castFilter = CastFilterType::New();
     castFilter->SetInput(filter->GetOutput());
