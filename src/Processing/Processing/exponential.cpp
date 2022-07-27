@@ -56,7 +56,6 @@ void ExponentialGUI::setApproximateSkewValue(int val)
 AstroImage ExponentialGUI::process(AstroImage img, QPromise<void>& promise)
 {
     float exponent = m_ui->skew->value();
-    unsigned int nbDims = std::min(3U, img.getImg()->GetNumberOfComponentsPerPixel());
 
     using DuplicatorType = itk::ImageDuplicator<ImageType>;
     auto duplicator = DuplicatorType::New();
@@ -72,7 +71,7 @@ AstroImage ExponentialGUI::process(AstroImage img, QPromise<void>& promise)
     while (!it.IsAtEnd())
     {
         auto value = it.Get();
-        for (unsigned int i = 0; i < nbDims; ++i)
+        for (unsigned int i = 0; i < PixelDimension; ++i)
         {
             value.SetElement(i, std::pow(value.GetElement(i), exponent));
         }

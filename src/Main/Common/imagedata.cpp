@@ -25,27 +25,10 @@ constexpr size_t BIN_FACTOR = 256 / HISTO_BINS;
 using OutputImageType = itk::Image<itk::RGBPixel<uint16_t>, Dimension>;
 using OutputImageTypePtr = itk::SmartPointer<OutputImageType>;
 
-template<int size>
-QRgba64 from(OutputImageType::PixelType pixel);
-
-template<>
-QRgba64 from<1>(OutputImageType::PixelType pixel)
-{
-    return QRgba64::fromRgba64(pixel[0], pixel[0], pixel[0], 65535);
-}
-
-template<>
-QRgba64 from<3>(OutputImageType::PixelType pixel)
+QRgba64 from(OutputImageType::PixelType pixel)
 {
     return QRgba64::fromRgba64(pixel[0], pixel[1], pixel[2], 65535);
 }
-
-template<>
-QRgba64 from<4>(OutputImageType::PixelType pixel)
-{
-    return QRgba64::fromRgba64(pixel[0], pixel[1], pixel[2], pixel[3]);
-}
-
 } // namespace
 
 ImageData::ImageData(QWidget* parent)
@@ -99,7 +82,6 @@ void ImageData::save()
     settings.setValue("transform", array);
 }
 
-template<int PIXEL_SIZE>
 QGraphicsPixmapItem* ImageData::processImg(const ImageTypePtr& img)
 {
     using FilterType = itk::MultiplyImageFilter<ImageType, ScalarImageType, ImageType>;
@@ -123,7 +105,7 @@ QGraphicsPixmapItem* ImageData::processImg(const ImageTypePtr& img)
         for (int i = 0; i < size[0]; ++i)
         {
             index.SetElement(0, i);
-            image.setPixelColor(i, j, from<PIXEL_SIZE>(output->GetPixel(index)));
+            image.setPixelColor(i, j, from(output->GetPixel(index)));
         }
     }
 
@@ -173,21 +155,7 @@ void ImageData::processItem(const QPixmap& item)
 
 void ImageData::handleItem(const AstroImage& img)
 {
-    switch (img.getImg()->GetNumberOfComponentsPerPixel())
-    {
-        case 1:
-            m_item = processImg<1>(img.getImg());
-            break;
-        case 3:
-            m_item = processImg<3>(img.getImg());
-            break;
-        case 4:
-            m_item = processImg<4>(img.getImg());
-            break;
-        default:
-        {
-        }
-    }
+    m_item = processImg(img.getImg());
 
     emit triggerSwapItem();
 }

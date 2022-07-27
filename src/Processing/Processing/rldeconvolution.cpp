@@ -80,15 +80,12 @@ AstroImage RLDeconvolutionGUI::process(AstroImage img, QPromise<void>& promise)
     auto indexSelectionFilter1 = IndexSelectionType::New();
     auto indexSelectionFilter2 = IndexSelectionType::New();
 
-    if (img.getImg()->GetNumberOfComponentsPerPixel() == 3)
-    {
-        indexSelectionFilter1->SetIndex(1);
-        indexSelectionFilter1->SetInput(img.getImg());
-        indexSelectionFilter1->Update();
-        indexSelectionFilter2->SetIndex(2);
-        indexSelectionFilter2->SetInput(img.getImg());
-        indexSelectionFilter2->Update();
-    }
+    indexSelectionFilter1->SetIndex(1);
+    indexSelectionFilter1->SetInput(img.getImg());
+    indexSelectionFilter1->Update();
+    indexSelectionFilter2->SetIndex(2);
+    indexSelectionFilter2->SetInput(img.getImg());
+    indexSelectionFilter2->Update();
 
     auto deconvolutionFilter0 = DeconvolutionFilterType::New();
     auto deconvolutionFilter1 = DeconvolutionFilterType::New();
@@ -98,23 +95,18 @@ AstroImage RLDeconvolutionGUI::process(AstroImage img, QPromise<void>& promise)
     deconvolutionFilter0->SetKernelImage(kernel);
     deconvolutionFilter0->NormalizeOn();
 
-    if (img.getImg()->GetNumberOfComponentsPerPixel() == 3)
-    {
-        deconvolutionFilter1->SetInput(indexSelectionFilter1->GetOutput());
-        deconvolutionFilter1->SetKernelImage(kernel);
-        deconvolutionFilter1->NormalizeOn();
-        deconvolutionFilter2->SetInput(indexSelectionFilter2->GetOutput());
-        deconvolutionFilter2->SetKernelImage(kernel);
-        deconvolutionFilter2->NormalizeOn();
-    }
+    deconvolutionFilter1->SetInput(indexSelectionFilter1->GetOutput());
+    deconvolutionFilter1->SetKernelImage(kernel);
+    deconvolutionFilter1->NormalizeOn();
+    deconvolutionFilter2->SetInput(indexSelectionFilter2->GetOutput());
+    deconvolutionFilter2->SetKernelImage(kernel);
+    deconvolutionFilter2->NormalizeOn();
 
     auto composeFilter = ComposeFilterType::New();
     composeFilter->SetInput1(deconvolutionFilter0->GetOutput());
-    if (img.getImg()->GetNumberOfComponentsPerPixel() == 3)
-    {
-        composeFilter->SetInput2(deconvolutionFilter1->GetOutput());
-        composeFilter->SetInput3(deconvolutionFilter2->GetOutput());
-    }
+    composeFilter->SetInput2(deconvolutionFilter1->GetOutput());
+    composeFilter->SetInput3(deconvolutionFilter2->GetOutput());
+
     composeFilter->Update();
     img.setImg(composeFilter->GetOutput());
     emit save(img);

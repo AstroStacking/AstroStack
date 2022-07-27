@@ -47,8 +47,7 @@ private slots:
 
 private:
     std::array<float, 4> getLimits(const ImageTypePtr& img);
-    std::array<float, 4> getLimits1D(const ImageTypePtr& img);
-    std::array<float, 4> getLimits3D(const ImageTypePtr& img);
+    std::array<float, 4> getRelativeLimits(const ImageTypePtr& img);
 
     float getMaxHistogram(ScalarImageTypePtr img, double ratio);
 

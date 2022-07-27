@@ -55,12 +55,11 @@ public:
     }
 };
 
-template<size_t nbDims>
-void copyData(Eigen::Matrix3Xd& X, Eigen::Matrix<double, nbDims, Eigen::Dynamic>& Y, const astro::ImageTypePtr& img)
+void copyData(Eigen::Matrix3Xd& X, Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y, const astro::ImageTypePtr& img)
 {
     auto size = img->GetRequestedRegion().GetSize();
 
-    Y.resize(nbDims, size.at(0) * size.at(1));
+    Y.resize(astro::PixelDimension, size.at(0) * size.at(1));
     X = Eigen::Matrix3Xd::Ones(3, size.at(0) * size.at(1));
 
     size_t i = 0;
@@ -72,7 +71,7 @@ void copyData(Eigen::Matrix3Xd& X, Eigen::Matrix<double, nbDims, Eigen::Dynamic>
     {
         auto value = it.Get();
         auto index = it.GetIndex();
-        for (unsigned int j = 0; j < nbDims; ++j)
+        for (unsigned int j = 0; j < astro::PixelDimension; ++j)
         {
             Y(j, i) = value.GetElement(j);
         }
@@ -83,8 +82,7 @@ void copyData(Eigen::Matrix3Xd& X, Eigen::Matrix<double, nbDims, Eigen::Dynamic>
     }
 }
 
-template<size_t nbDims>
-void copyData(Eigen::Matrix3Xd& X, Eigen::Matrix<double, nbDims, Eigen::Dynamic>& Y, const astro::ImageTypePtr& img,
+void copyData(Eigen::Matrix3Xd& X, Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y, const astro::ImageTypePtr& img,
               const astro::ScalarImageTypePtr& mask)
 {
     auto size = img->GetRequestedRegion().GetSize();
@@ -94,7 +92,7 @@ void copyData(Eigen::Matrix3Xd& X, Eigen::Matrix<double, nbDims, Eigen::Dynamic>
         throw std::range_error("Image and mask must have the same dimension");
     }
 
-    Y.resize(nbDims, size.at(0) * size.at(1));
+    Y.resize(astro::PixelDimension, size.at(0) * size.at(1));
     X = Eigen::Matrix3Xd::Ones(3, size.at(0) * size.at(1));
 
     size_t i = 0;
@@ -111,7 +109,7 @@ void copyData(Eigen::Matrix3Xd& X, Eigen::Matrix<double, nbDims, Eigen::Dynamic>
         {
             auto value = it.Get();
             auto index = it.GetIndex();
-            for (unsigned int j = 0; j < nbDims; ++j)
+            for (unsigned int j = 0; j < astro::PixelDimension; ++j)
             {
                 Y(j, i) = value.GetElement(j);
             }
@@ -127,22 +125,21 @@ void copyData(Eigen::Matrix3Xd& X, Eigen::Matrix<double, nbDims, Eigen::Dynamic>
 
 namespace astro
 {
-template<size_t nbDims>
 ImageTypePtr estimateGradient(const ImageTypePtr& input, const ScalarImageTypePtr& mask = nullptr)
 {
     ImageTypePtr img = input;
 
-    using DataMatrix = Eigen::Matrix<double, nbDims, Eigen::Dynamic>;
+    using DataMatrix = Eigen::Matrix<double, PixelDimension, Eigen::Dynamic>;
     DataMatrix Y;
     Eigen::Matrix3Xd X;
 
     if (mask)
     {
-        copyData<nbDims>(X, Y, img, mask);
+        copyData(X, Y, img, mask);
     }
     else
     {
-        copyData<nbDims>(X, Y, img);
+        copyData(X, Y, img);
     }
 
     /*

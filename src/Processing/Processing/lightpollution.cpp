@@ -42,20 +42,7 @@ LightPollutionGUI::~LightPollutionGUI() = default;
 
 AstroImage LightPollutionGUI::process(AstroImage img, QPromise<void>& promise)
 {
-    unsigned int nbDims = std::min(3U, img.getImg()->GetNumberOfComponentsPerPixel());
-    ImageTypePtr light;
-
-    switch (nbDims)
-    {
-        case 1:
-            light = estimateGradient<1>(img.getImg());
-            break;
-        case 3:
-            light = estimateGradient<3>(img.getImg());
-            break;
-        default:
-            throw std::range_error("Not a supported number of channels");
-    }
+    ImageTypePtr light = estimateGradient(img.getImg());
 
     emit save(img);
 

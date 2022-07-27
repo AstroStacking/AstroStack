@@ -129,20 +129,7 @@ float HistoStretchGUI::getMaxHistogram(ScalarImageTypePtr img, double ratio)
     return (justBelow.base() - histFilt.begin()) / static_cast<float>(BINS);
 }
 
-std::array<float, 4> HistoStretchGUI::getLimits1D(const ImageTypePtr& img)
-{
-    using IndexSelectionType = itk::VectorIndexSelectionCastImageFilter<ImageType, ScalarImageType>;
-    auto indexSelectionFilter = IndexSelectionType::New();
-    indexSelectionFilter->SetIndex(0);
-    indexSelectionFilter->SetInput(img);
-    indexSelectionFilter->Update();
-
-    return {{getMaxHistogram(indexSelectionFilter->GetOutput(), m_ui->red->value()),
-             getMaxHistogram(indexSelectionFilter->GetOutput(), m_ui->green->value()),
-             getMaxHistogram(indexSelectionFilter->GetOutput(), m_ui->blue->value()), 1}};
-}
-
-std::array<float, 4> HistoStretchGUI::getLimits3D(const ImageTypePtr& img)
+std::array<float, 4> HistoStretchGUI::getRelativeLimits(const ImageTypePtr& img)
 {
     using IndexSelectionType = itk::VectorIndexSelectionCastImageFilter<ImageType, ScalarImageType>;
     auto indexSelectionFilter0 = IndexSelectionType::New();
@@ -167,11 +154,7 @@ std::array<float, 4> HistoStretchGUI::getLimits(const ImageTypePtr& img)
 {
     if (m_ui->relative->isChecked())
     {
-        if (img->GetNumberOfComponentsPerPixel() == 3)
-        {
-            return getLimits3D(img);
-        }
-        return getLimits1D(img);
+        return getRelativeLimits(img);
     }
     return {{static_cast<float>(m_ui->red->value()), static_cast<float>(m_ui->blue->value()),
              static_cast<float>(m_ui->green->value()), 1}};
@@ -192,12 +175,10 @@ AstroImage HistoStretchGUI::process(AstroImage img, QPromise<void>& promise)
     IteratorType it(img.getImg(), img.getImg()->GetRequestedRegion());
     it.GoToBegin();
 
-    unsigned int nbDims = img.getImg()->GetNumberOfComponentsPerPixel();
-
     while (!it.IsAtEnd())
     {
         auto value = it.Get();
-        for (unsigned int i = 0; i < nbDims; ++i)
+        for (unsigned int i = 0; i < PixelDimension; ++i)
         {
             value.SetElement(i, std::max((value.GetElement(i) - shift[i]) / (1 - shift[i]), 0.f));
         }

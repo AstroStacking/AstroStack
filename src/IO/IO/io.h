@@ -15,6 +15,7 @@ namespace astro
 {
 using PixelType = float;
 constexpr unsigned int Dimension = 2;
+constexpr unsigned int PixelDimension = 3;
 using ImageType = itk::Image<itk::RGBPixel<PixelType>, Dimension>;
 using ScalarImageType = itk::Image<PixelType, Dimension>;
 using ImageTypePtr = itk::SmartPointer<ImageType>;
