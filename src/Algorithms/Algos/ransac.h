@@ -8,12 +8,13 @@
 
 namespace astro
 {
-template<class Model, int Size = Eigen::Dynamic>
+template<class Model, int XSize = Eigen::Dynamic, int YSize = Eigen::Dynamic>
 class RANSAC
 {
-    using Matrix = Eigen::Matrix<double, Size, Size>;
-    const Matrix& m_X;
-    const Matrix& m_Y;
+    using MatrixX = Eigen::Matrix<double, XSize, Eigen::Dynamic>;
+    using MatrixY = Eigen::Matrix<double, XSize, Eigen::Dynamic>;
+    const MatrixX& m_X;
+    const MatrixY& m_Y;
 
     std::mt19937_64 m_generator;
 
@@ -36,8 +37,8 @@ class RANSAC
 
         Model model = m_initialModel;
 
-        Matrix Xp = m_X(Eigen::placeholders::all, v);
-        Matrix Yp = m_Y(Eigen::placeholders::all, v);
+        MatrixX Xp = m_X(Eigen::placeholders::all, v);
+        MatrixY Yp = m_Y(Eigen::placeholders::all, v);
 
         model.fit(Xp, Yp);
         auto errorp = model.predict(Xp) - Yp;
@@ -62,12 +63,13 @@ public:
     static constexpr int DEFAULT_NB_SAMPLES = 100;
     static constexpr int DEFAULT_NB_ITERATIONS = 100;
 
-    RANSAC(Model&& model, const Matrix& X, const Matrix& Y, int nbSamples = DEFAULT_NB_SAMPLES,
+    RANSAC(Model&& model, const MatrixX& X, const MatrixY& Y, int nbSamples = DEFAULT_NB_SAMPLES,
            int nbIterations = DEFAULT_NB_ITERATIONS, int_fast64_t seed = std::random_device()())
         : m_X(X)
         , m_Y(Y)
         , m_generator(seed)
         , m_initialModel(std::move(model))
+        , m_finalModel(m_initialModel)
         , m_nbSamples(nbSamples)
         , m_nbIterations(nbIterations)
     {
@@ -90,7 +92,7 @@ public:
         }
     }
 
-    Matrix predict(const Matrix& X) const { return m_finalModel.predict(X); }
+    MatrixY predict(const MatrixX& X) const { return m_finalModel.predict(X); }
     const std::vector<int>& getBestSeeds() const { return m_seeds; }
 };
 } // namespace astro

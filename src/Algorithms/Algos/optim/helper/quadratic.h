@@ -25,6 +25,8 @@ class Quadratic
     const MatrixY& m_Y;
 
 public:
+    static constexpr int Size = PSize;
+
     Quadratic(const Function& fun, const MatrixX& X, const MatrixY& Y)
         : m_fun(fun)
         , m_X(X)

@@ -55,6 +55,36 @@ public:
     }
 };
 
+class LightModel
+{
+    Eigen::Matrix<double, 9, 1> m_A;
+
+public:
+    LightModel() = default;
+    LightModel(const LightModel&) = default;
+    ~LightModel() = default;
+    LightModel& operator=(const LightModel&) = default;
+
+    Eigen::Matrix<double, 9, 1> getData() const { return m_A; }
+
+    void fit(const Eigen::Matrix<double, 3, Eigen::Dynamic>& X, const Eigen::Matrix<double, 3, Eigen::Dynamic>& Y)
+    {
+        Gradient fun;
+        auto optimizer = optim::optimizer::makeStandard(optim::helper::Quadratic(fun, X, Y),
+                                                        optim::criteria::RelativeValue(0.00001),
+                                                        optim::line_search::GoldenSection(0.0000001, 1),
+                                                        optim::step::ConjugateGradient<optim::step::FRConjugate>());
+
+        m_A = optimizer.getState().getCurrentPoint();
+    }
+
+    Eigen::Matrix<double, 3, Eigen::Dynamic> predict(const Eigen::Matrix<double, 3, Eigen::Dynamic>& X) const
+    {
+        Gradient fun;
+        return {};
+    }
+};
+
 void copyData(Eigen::Matrix3Xd& X, Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y,
               const astro::ImageTypePtr& img)
 {
@@ -143,28 +173,9 @@ ImageTypePtr estimateGradient(const ImageTypePtr& input, const ScalarImageTypePt
         copyData(X, Y, img);
     }
 
-    /*
-    using DuplicatorType = itk::ImageDuplicator<ImageType>;
-    auto duplicator = DuplicatorType::New();
-    duplicator->SetInputImage(img.getImg());
-    duplicator->Update();
 
-    img.setImg(duplicator->GetOutput());
-    using IteratorType = itk::ImageRegionIterator<ImageType>;
-
-    IteratorType it(img.getImg(), img.getImg()->GetRequestedRegion());
-    it.GoToBegin();
-
-    while (!it.IsAtEnd())
-    {
-        auto value = it.Get();
-        for (unsigned int i = 0; i < nbDims; ++i)
-        {
-            value.SetElement(i, std::pow(value.GetElement(i), exponent));
-        }
-        it.Set(value);
-        ++it;
-    }*/
+    astro::RANSAC ransac(LightModel(), X, Y, 10, 2000, 0);
+    ransac.run();
 
     return img;
 }
