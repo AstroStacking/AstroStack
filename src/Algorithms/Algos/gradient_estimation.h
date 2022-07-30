@@ -98,16 +98,16 @@ public:
 };
 
 void copyData(Eigen::Matrix2Xd& X, Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y,
-              const astro::ImageTypePtr& img)
+              const astro::ImageType& img)
 {
-    auto size = img->GetRequestedRegion().GetSize();
+    auto size = img.GetRequestedRegion().GetSize();
 
     Y.resize(astro::PixelDimension, size.at(0) * size.at(1));
     X = Eigen::Matrix2Xd::Ones(2, size.at(0) * size.at(1));
 
     size_t i = 0;
-    using IteratorType = itk::ImageRegionIterator<astro::ImageType>;
-    IteratorType it(img, img->GetRequestedRegion());
+    using IteratorType = itk::ImageRegionIterator<const astro::ImageType>;
+    IteratorType it(&img, img.GetRequestedRegion());
     it.GoToBegin();
 
     while (!it.IsAtEnd())
@@ -126,10 +126,10 @@ void copyData(Eigen::Matrix2Xd& X, Eigen::Matrix<double, astro::PixelDimension, 
 }
 
 void copyData(Eigen::Matrix2Xd& X, Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y,
-              const astro::ImageTypePtr& img, const astro::ScalarImageTypePtr& mask)
+              const astro::ImageType& img, const astro::ScalarImageType& mask)
 {
-    auto size = img->GetRequestedRegion().GetSize();
-    auto maskSize = mask->GetRequestedRegion().GetSize();
+    auto size = img.GetRequestedRegion().GetSize();
+    auto maskSize = mask.GetRequestedRegion().GetSize();
     if (size != maskSize)
     {
         throw std::range_error("Image and mask must have the same dimension");
@@ -139,10 +139,10 @@ void copyData(Eigen::Matrix2Xd& X, Eigen::Matrix<double, astro::PixelDimension, 
     X = Eigen::Matrix2Xd::Ones(2, size.at(0) * size.at(1));
 
     size_t i = 0;
-    using IteratorType = itk::ImageRegionIterator<astro::ImageType>;
-    using MaskedIteratorType = itk::ImageRegionIterator<astro::ScalarImageType>;
-    IteratorType it(img, img->GetRequestedRegion());
-    MaskedIteratorType maskedIt(mask, mask->GetRequestedRegion());
+    using IteratorType = itk::ImageRegionIterator<const astro::ImageType>;
+    using MaskedIteratorType = itk::ImageRegionIterator<const astro::ScalarImageType>;
+    IteratorType it(&img, img.GetRequestedRegion());
+    MaskedIteratorType maskedIt(&mask, mask.GetRequestedRegion());
     it.GoToBegin();
     maskedIt.GoToBegin();
 
@@ -164,6 +164,64 @@ void copyData(Eigen::Matrix2Xd& X, Eigen::Matrix<double, astro::PixelDimension, 
         ++maskedIt;
     }
 }
+
+void lightData(const Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y,
+            astro::ImageType& img)
+{
+    auto size = img.GetRequestedRegion().GetSize();
+
+    size_t i = 0;
+    using IteratorType = itk::ImageRegionIterator<astro::ImageType>;
+    IteratorType it(&img, img.GetRequestedRegion());
+    it.GoToBegin();
+
+    while (!it.IsAtEnd())
+    {
+        auto value = it.Get();
+        auto index = it.GetIndex();
+        for (unsigned int j = 0; j < astro::PixelDimension; ++j)
+        {
+            value.SetElement(j, Y(j, i));
+        }
+        ++it;
+        ++i;
+    }
+}
+
+void lightData(const Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y,
+              astro::ImageType& img, const astro::ScalarImageType& mask)
+{
+    auto size = img.GetRequestedRegion().GetSize();
+    auto maskSize = mask.GetRequestedRegion().GetSize();
+    if (size != maskSize)
+    {
+        throw std::range_error("Image and mask must have the same dimension");
+    }
+
+    size_t i = 0;
+    using IteratorType = itk::ImageRegionIterator<astro::ImageType>;
+    using MaskedIteratorType = itk::ImageRegionIterator<const astro::ScalarImageType>;
+    IteratorType it(&img, img.GetRequestedRegion());
+    MaskedIteratorType maskedIt(&mask, mask.GetRequestedRegion());
+    it.GoToBegin();
+    maskedIt.GoToBegin();
+
+    while (!it.IsAtEnd())
+    {
+        if (maskedIt.Get() != 0)
+        {
+            auto value = it.Get();
+            auto index = it.GetIndex();
+            for (unsigned int j = 0; j < astro::PixelDimension; ++j)
+            {
+                value.SetElement(j, Y(j, i));
+            }
+            ++i;
+        }
+        ++it;
+        ++maskedIt;
+    }
+}
 } // namespace
 
 namespace astro
@@ -178,17 +236,43 @@ ImageTypePtr estimateGradient(const ImageTypePtr& input, const ScalarImageTypePt
 
     if (mask)
     {
-        copyData(X, Y, img, mask);
+        copyData(X, Y, *img, *mask);
     }
     else
     {
-        copyData(X, Y, img);
+        copyData(X, Y, *img);
     }
-
 
     astro::RANSAC ransac(LightModel(), X, Y, 10, 2000, 0);
     ransac.run();
+    
+    auto light = ransac.predict(X);
 
-    return img;
+    auto output = ImageType::New();
+
+    ImageType::IndexType start;
+    start[0] = 0; // first index on X
+    start[1] = 0; // first index on Y
+    start[2] = 0; // first index on Z
+
+    ImageType::SizeType size = img->GetLargestPossibleRegion().GetSize();
+
+    ImageType::RegionType region;
+    region.SetSize(size);
+    region.SetIndex(start);
+
+    output->SetRegions(region);
+    output->Allocate();
+
+    if (mask)
+    {
+        lightData(light, *output, *mask);
+    }
+    else
+    {
+        lightData(light, *output);
+    }
+
+    return output;
 }
 } // namespace astro
