@@ -12,7 +12,7 @@ template<class Model, int XSize = Eigen::Dynamic, int YSize = Eigen::Dynamic>
 class RANSAC
 {
     using MatrixX = Eigen::Matrix<double, XSize, Eigen::Dynamic>;
-    using MatrixY = Eigen::Matrix<double, XSize, Eigen::Dynamic>;
+    using MatrixY = Eigen::Matrix<double, YSize, Eigen::Dynamic>;
     const MatrixX& m_X;
     const MatrixY& m_Y;
 

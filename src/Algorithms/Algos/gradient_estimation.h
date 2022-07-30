@@ -34,6 +34,18 @@ public:
         return result;
     }
 
+    Eigen::Matrix3Xd predict(const Eigen::Matrix2Xd& X, const Vector9d& parameters) const
+    {
+        Eigen::Matrix3Xd result(3, X.cols());
+        for (Eigen::Index col = 0; col < X.cols(); ++col)
+        {
+            result(0, col) = parameters(0) + parameters(1) * X(0, col) + parameters(2) * X(1, col);
+            result(1, col) = parameters(3) + parameters(4) * X(0, col) + parameters(5) * X(1, col);
+            result(2, col) = parameters(6) + parameters(7) * X(0, col) + parameters(8) * X(1, col);
+        }
+        return result;
+    }
+
     std::vector<Matrix93d> gradient(const Eigen::Matrix2Xd& X, const Vector9d& parameters) const
     {
         std::vector<Matrix93d> result;
@@ -67,7 +79,7 @@ public:
 
     Eigen::Matrix<double, 9, 1> getData() const { return m_A; }
 
-    void fit(const Eigen::Matrix<double, 3, Eigen::Dynamic>& X, const Eigen::Matrix<double, 3, Eigen::Dynamic>& Y)
+    void fit(const Eigen::Matrix2Xd& X, const Eigen::Matrix3Xd& Y)
     {
         Gradient fun;
         auto optimizer = optim::optimizer::makeStandard(optim::helper::Quadratic(fun, X, Y),
@@ -78,20 +90,20 @@ public:
         m_A = optimizer.getState().getCurrentPoint();
     }
 
-    Eigen::Matrix<double, 3, Eigen::Dynamic> predict(const Eigen::Matrix<double, 3, Eigen::Dynamic>& X) const
+    Eigen::Matrix3Xd predict(const Eigen::Matrix2Xd& X) const
     {
         Gradient fun;
-        return {};
+        return fun.predict(X, m_A);
     }
 };
 
-void copyData(Eigen::Matrix3Xd& X, Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y,
+void copyData(Eigen::Matrix2Xd& X, Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y,
               const astro::ImageTypePtr& img)
 {
     auto size = img->GetRequestedRegion().GetSize();
 
     Y.resize(astro::PixelDimension, size.at(0) * size.at(1));
-    X = Eigen::Matrix3Xd::Ones(3, size.at(0) * size.at(1));
+    X = Eigen::Matrix2Xd::Ones(2, size.at(0) * size.at(1));
 
     size_t i = 0;
     using IteratorType = itk::ImageRegionIterator<astro::ImageType>;
@@ -113,7 +125,7 @@ void copyData(Eigen::Matrix3Xd& X, Eigen::Matrix<double, astro::PixelDimension, 
     }
 }
 
-void copyData(Eigen::Matrix3Xd& X, Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y,
+void copyData(Eigen::Matrix2Xd& X, Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y,
               const astro::ImageTypePtr& img, const astro::ScalarImageTypePtr& mask)
 {
     auto size = img->GetRequestedRegion().GetSize();
@@ -124,7 +136,7 @@ void copyData(Eigen::Matrix3Xd& X, Eigen::Matrix<double, astro::PixelDimension, 
     }
 
     Y.resize(astro::PixelDimension, size.at(0) * size.at(1));
-    X = Eigen::Matrix3Xd::Ones(3, size.at(0) * size.at(1));
+    X = Eigen::Matrix2Xd::Ones(2, size.at(0) * size.at(1));
 
     size_t i = 0;
     using IteratorType = itk::ImageRegionIterator<astro::ImageType>;
@@ -162,7 +174,7 @@ ImageTypePtr estimateGradient(const ImageTypePtr& input, const ScalarImageTypePt
 
     using DataMatrix = Eigen::Matrix<double, PixelDimension, Eigen::Dynamic>;
     DataMatrix Y;
-    Eigen::Matrix3Xd X;
+    Eigen::Matrix2Xd X;
 
     if (mask)
     {
