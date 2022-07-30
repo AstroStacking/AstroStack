@@ -1,6 +1,8 @@
 FILE(GLOB TESTS_ALGORITHMS_SRC
     affinemodel.cpp
     ransac.cpp
+    Filters/Convertors/HSL2RGB.cpp
+    Filters/Convertors/RGB2HSL.cpp
     optim/powell.cpp
     optim/quadratic.cpp
     optim/rosenbrock.cpp

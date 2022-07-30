@@ -6,6 +6,9 @@ FILE(GLOB ASTRO_ALGORITHMS_HEADERS
     Algos/config.h
     Algos/gradient_estimation.h
     Algos/ransac.h
+    Algos/Filters/Convertors/HSL2RGB.h
+    Algos/Filters/Convertors/RGB2HSL.h
+    Algos/Filters/ChromaticSmootherFilter.h
     Algos/optim/state.h
     Algos/optim/criteria/composite.h
     Algos/optim/criteria/criteria.h
