@@ -13,20 +13,20 @@
 
 namespace astro
 {
-using PixelType = float;
+using UnderlyingPixelType = float;
 constexpr unsigned int Dimension = 2;
-constexpr unsigned int PixelDimension = 3;
-using InternalImageType = itk::RGBPixel<PixelType>;
-using ImageType = itk::Image<itk::RGBPixel<PixelType>, Dimension>;
-using ScalarImageType = itk::Image<PixelType, Dimension>;
+using PixelType = itk::RGBPixel<UnderlyingPixelType>;
+constexpr unsigned int PixelDimension = PixelType::Length;
+using ImageType = itk::Image<PixelType, Dimension>;
+using ScalarImageType = itk::Image<UnderlyingPixelType, Dimension>;
 using ImageTypePtr = itk::SmartPointer<ImageType>;
 using ScalarImageTypePtr = itk::SmartPointer<ScalarImageType>;
 
 class RedChannelPixelAccessor
 {
 public:
-    using InternalType = InternalImageType;
-    using ExternalType = PixelType;
+    using InternalType = PixelType;
+    using ExternalType = UnderlyingPixelType;
 
     static ExternalType Get(const InternalType& input) { return static_cast<ExternalType>(input.GetRed()); }
 };
@@ -34,8 +34,8 @@ public:
 class GreenChannelPixelAccessor
 {
 public:
-    using InternalType = InternalImageType;
-    using ExternalType = PixelType;
+    using InternalType = PixelType;
+    using ExternalType = UnderlyingPixelType;
 
     static ExternalType Get(const InternalType& input) { return static_cast<ExternalType>(input.GetGreen()); }
 };
@@ -43,8 +43,8 @@ public:
 class BlueChannelPixelAccessor
 {
 public:
-    using InternalType = InternalImageType;
-    using ExternalType = PixelType;
+    using InternalType = PixelType;
+    using ExternalType = UnderlyingPixelType;
 
     static ExternalType Get(const InternalType& input) { return static_cast<ExternalType>(input.GetBlue()); }
 };

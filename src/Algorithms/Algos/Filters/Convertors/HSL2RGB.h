@@ -54,6 +54,16 @@ itk::RGBPixel<Type> HSL2RGB(itk::RGBPixel<Type> hsl)
 
     return rgb;
 }
+
+
+class RGBPixelAccessor
+{
+public:
+    using InternalType = PixelType;
+    using ExternalType = PixelType;
+
+    static ExternalType Get(const InternalType& input) { return static_cast<ExternalType>(HSL2RGB(input)); }
+};
 } // namespace convertors
 } // namespace filters
 } // namespace astro

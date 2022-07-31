@@ -31,36 +31,39 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Skew:</string>
+        <string>Variance:</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QDoubleSpinBox" name="skew">
+      <widget class="QDoubleSpinBox" name="variance">
        <property name="decimals">
-        <number>2</number>
+        <number>0</number>
        </property>
        <property name="minimum">
-        <double>0.0100000000000</double>
-       </property>
-       <property name="maximum">
         <double>1.000000000000000</double>
        </property>
+       <property name="maximum">
+        <double>100.000000000000000</double>
+       </property>
        <property name="singleStep">
-        <double>0.1000000000000</double>
+        <double>1.000000000000000</double>
        </property>
        <property name="value">
-        <double>0.500000000000000</double>
+        <double>4.000000000000000</double>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QSlider" name="skewSlider">
+      <widget class="QSlider" name="varianceSlider">
+       <property name="minimum">
+        <number>1</number>
+       </property>
        <property name="maximum">
         <number>100</number>
        </property>
        <property name="value">
-        <number>50</number>
+        <number>4</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>

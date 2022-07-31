@@ -2,10 +2,15 @@
 #include "ui_chromasmoothing.h"
 #include "ui_monointerface.h"
 
+#include <Algos/Filters/Convertors/HSL2RGB.h>
+#include <Algos/Filters/Convertors/RGB2HSL.h>
+#include <Algos/Filters/mergehslfilter.h>
+
 #include <QtWidgets/QDoubleSpinBox>
 
-#include <itkImageDuplicator.h>
-#include <itkImageRegionIterator.h>
+#include <itkCastImageFilter.h>
+#include <itkDiscreteGaussianImageFilter.h>
+#include <itkImageAdaptor.h>
 
 namespace astro
 {
@@ -37,47 +42,59 @@ ChromaSmoothingGUI::ChromaSmoothingGUI(QWidget* parent)
     setTitle(tr("ChromaSmoothing"));
 
     setupSlots();
-    connect(m_ui->skew, &QDoubleSpinBox::valueChanged, this, &ChromaSmoothingGUI::setSkewValue);
-    connect(m_ui->skewSlider, &QSlider::valueChanged, this, &ChromaSmoothingGUI::setApproximateSkewValue);
+    connect(m_ui->variance, &QDoubleSpinBox::valueChanged, this, &ChromaSmoothingGUI::setSkewValue);
+    connect(m_ui->varianceSlider, &QSlider::valueChanged, this, &ChromaSmoothingGUI::setApproximateSkewValue);
 }
 
 ChromaSmoothingGUI::~ChromaSmoothingGUI() = default;
 
 void ChromaSmoothingGUI::setSkewValue(double val)
 {
-    m_ui->skewSlider->setValue(static_cast<int>(100 * val));
+    m_ui->varianceSlider->setValue(static_cast<int>(100 * val));
 }
 
 void ChromaSmoothingGUI::setApproximateSkewValue(int val)
 {
-    m_ui->skew->setValue(val / 100.);
+    m_ui->variance->setValue(val / 100.);
 }
 
 AstroImage ChromaSmoothingGUI::process(AstroImage img, QPromise<void>& promise)
 {
-    float exponent = m_ui->skew->value();
+    float variance = m_ui->variance->value();
 
-    using DuplicatorType = itk::ImageDuplicator<ImageType>;
-    auto duplicator = DuplicatorType::New();
-    duplicator->SetInputImage(img.getImg());
-    duplicator->Update();
+    using filterType = itk::DiscreteGaussianImageFilter<ImageType, ImageType>;
 
-    img.setImg(duplicator->GetOutput());
-    using IteratorType = itk::ImageRegionIterator<ImageType>;
+    // Create and setup a Gaussian filter
+    auto gaussianFilter = filterType::New();
+    gaussianFilter->SetInput(img.getImg());
+    gaussianFilter->SetVariance(variance);
+    gaussianFilter->Update();
 
-    IteratorType it(img.getImg(), img.getImg()->GetRequestedRegion());
-    it.GoToBegin();
+    using RGB2HSLConvertor = itk::ImageAdaptor<ImageType, filters::convertors::HSLPixelAccessor>;
+    auto originalImg = RGB2HSLConvertor::New();
+    auto smoothImg = RGB2HSLConvertor::New();
+    originalImg->SetImage(img.getImg());
+    smoothImg->SetImage(gaussianFilter->GetOutput());
+    originalImg->Update();
+    smoothImg->Update();
 
-    while (!it.IsAtEnd())
-    {
-        auto value = it.Get();
-        for (unsigned int i = 0; i < PixelDimension; ++i)
-        {
-            value.SetElement(i, std::pow(value.GetElement(i), exponent));
-        }
-        it.Set(value);
-        ++it;
-    }
+    using MergeFilter = astro::filters::MergeHSLFilter<RGB2HSLConvertor, RGB2HSLConvertor, ImageType>;
+    auto mergeFilter = MergeFilter::New();
+    mergeFilter->SetInput1(originalImg);
+    mergeFilter->SetInput2(smoothImg);
+    mergeFilter->Update();
+
+    using HSL2RGBConvertor = itk::ImageAdaptor<ImageType, filters::convertors::RGBPixelAccessor>;
+    auto finalImg = HSL2RGBConvertor::New();
+    finalImg->SetImage(mergeFilter->GetOutput());
+    finalImg->Update();
+
+    using CastFilterType = itk::CastImageFilter<HSL2RGBConvertor, ImageType>;
+    auto castFilter = CastFilterType::New();
+    castFilter->SetInput(finalImg);
+    castFilter->Update();
+    
+    img.setImg(castFilter->GetOutput());
 
     emit save(img);
 
