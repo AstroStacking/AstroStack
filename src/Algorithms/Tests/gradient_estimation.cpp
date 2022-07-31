@@ -18,9 +18,9 @@ TEST(gradient_estimation, Estimation)
             -39, 39, -10, 44, 43, -38, 5, -32, 22, -28, -9, -45, 6, -17, 16, -19, -25, 13, -39, 38, 21, -15, 25, -7, 46,
             11, 44, 44, 30, 19, -30, 45, 21, -30, 35, 1, -28, -6, 30, 4, -4, -8, -30, -44, 41, -7, 12, -33, 2, 17, 10,
             -15;
+    X = X / 50;
     Eigen::Matrix3Xd Y = truthmodel.predict(X, params);
     model.fit(X, Y);
-    std::cout << model.getData() << std::endl;
 
     ASSERT_TRUE(params.isApprox(model.getData()));
 }

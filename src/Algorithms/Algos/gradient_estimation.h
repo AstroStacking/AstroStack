@@ -88,7 +88,7 @@ public:
         auto optimizer = optim::optimizer::makeStandard(
                 optim::helper::Quadratic<LightGradient, 9, 2, 3>(fun, X, Y),
                 optim::criteria::makeOr(optim::criteria::RelativeValue(0.00001), optim::criteria::Iteration(100)),
-                optim::line_search::GoldenSection(0.00000000001, 0.000001), optim::step::Gradient());
+                optim::line_search::GoldenSection(0.0000001, 1), optim::step::Gradient());
         optimizer(m_A);
         m_A = optimizer.getState().getCurrentPoint();
     }
@@ -120,8 +120,8 @@ void copyData(Eigen::Matrix2Xd& X, Eigen::Matrix<double, PixelDimension, Eigen::
         {
             Y(j, i) = value.GetElement(j);
         }
-        X(0, i) = index.at(0);
-        X(1, i) = index.at(1);
+        X(0, i) = index.at(0) / size.at(0);
+        X(1, i) = index.at(1) / size.at(1);
         ++it;
         ++i;
     }
@@ -158,8 +158,8 @@ void copyData(Eigen::Matrix2Xd& X, Eigen::Matrix<double, PixelDimension, Eigen::
             {
                 Y(j, i) = value.GetElement(j);
             }
-            X(0, i) = index.at(0);
-            X(1, i) = index.at(1);
+            X(0, i) = index.at(0) / size.at(0);
+            X(1, i) = index.at(1) / size.at(1);
             ++i;
         }
         ++it;

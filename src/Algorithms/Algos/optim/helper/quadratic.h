@@ -56,7 +56,7 @@ public:
         {
             accu = accu - 2 * (resultGradient[i] * (m_Y.col(i) - result[i])).rowwise().sum();
         }
-        return accu;
+        return accu / result.size();
     }
 
     MatrixP firstHessian(const VectorP& parameters) const
@@ -92,7 +92,7 @@ public:
 
     MatrixP hessian(const VectorP& parameters) const
     {
-        return 2 * (firstHessian(parameters) + secondHessian(parameters));
+        return 2 * (firstHessian(parameters) + secondHessian(parameters)) / m_X.cols();
     }
 };
 } // namespace helper
