@@ -9,6 +9,24 @@
 
 namespace astro
 {
+namespace filters
+{
+template<typename TInput1, typename TInput2 = TInput1, typename TOutput = TInput1>
+class MergeHSL
+{
+public:
+    MergeHSL() = default;
+    ~MergeHSL() = default;
+    bool operator==(const MergeHSL&) const { return true; }
+    ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(MergeHSL);
+
+    TOutput operator()(const TInput1& A, const TInput2& B) const
+    {
+        TOutput output = A;
+        output[2] = B[2] return output;
+    }
+};
+
 template<typename TInputImage1, typename TInputImage2 = TInputImage1, typename TOutputImage = TInputImage1>
 class ASTRO_ALGORITHMS_EXPORT ChromaticSmootherFilter
     : public itk::BinaryGeneratorImageFilter<TInputImage1, TInputImage2, TOutputImage>
@@ -21,8 +39,8 @@ public:
 
     using Pointer = itk::SmartPointer<Self>;
     using ConstPointer = itk::SmartPointer<const Self>;
-    using FunctorType = Functor::OR<typename TInputImage1::PixelType, typename TInputImage2::PixelType,
-                                    typename TOutputImage::PixelType>;
+    using FunctorType = MergeHSL<typename TInputImage1::PixelType, typename TInputImage2::PixelType,
+                                 typename TOutputImage::PixelType>;
 
     itkNewMacro(Self);
 
@@ -46,4 +64,6 @@ protected:
 
     ~ChromaticSmootherFilter() override = default;
 };
+} // namespace filters
+
 } // namespace astro

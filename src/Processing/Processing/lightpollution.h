@@ -9,7 +9,7 @@ class LightPollution;
 namespace astro
 {
 /**
- * Estiates and removes the light pollution
+ * Estimates and removes the light pollution
  */
 class LightPollution
     : public QObject

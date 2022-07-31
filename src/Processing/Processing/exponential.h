@@ -9,7 +9,7 @@ class Exponential;
 namespace astro
 {
 /**
-  Raises the image values to the power of a parameter
+ * Raises the image values to the power of a parameter
  */
 class Exponential
     : public QObject
@@ -27,7 +27,7 @@ public:
 };
 
 /**
- QWidgets that will be displayed in the stack
+ * QWidgets that will be displayed in the stack
  */
 class ExponentialGUI : public MonoInterfaceGUI
 {

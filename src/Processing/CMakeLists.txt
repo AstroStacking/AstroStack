@@ -1,4 +1,6 @@
 FILE(GLOB ASTRO_PROCESSING_SRC
+    Processing/chromasmoothing.cpp
+    Processing/chromasmoothing.ui
     Processing/exponential.cpp
     Processing/exponential.ui
     Processing/histostretch.cpp
@@ -12,6 +14,7 @@ FILE(GLOB ASTRO_PROCESSING_SRC
 
 FILE(GLOB ASTRO_PROCESSING_HEADERS
     Processing/config.h
+    Processing/chromasmoothing.h
     Processing/exponential.h
     Processing/histostretch.h
     Processing/lightpollution.h
@@ -21,6 +24,7 @@ FILE(GLOB ASTRO_PROCESSING_HEADERS
 )
 
 FILE(GLOB ASTRO_PROCESSING_DOC
+    Processing/chromasmoothing.md
     Processing/exponential.md
     Processing/histostretch.md
     Processing/lightpollution.md
