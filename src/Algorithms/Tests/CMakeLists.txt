@@ -1,5 +1,6 @@
 FILE(GLOB TESTS_ALGORITHMS_SRC
     affinemodel.cpp
+    gradient_estimation.cpp
     ransac.cpp
     optim/powell.cpp
     optim/quadratic.cpp

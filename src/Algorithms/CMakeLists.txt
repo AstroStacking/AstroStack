@@ -26,7 +26,7 @@ ASTRO_add_library(
     FOLDER Algorithms
     SRC ${ASTRO_ALGORITHMS_SRC}
     HEADERS ${ASTRO_ALGORITHMS_HEADERS}
-    LIBRARIES ${ITK_LIBRARIES} Eigen3::Eigen
+    LIBRARIES AstroIO ${ITK_LIBRARIES} Eigen3::Eigen
 )
 
 add_subdirectory(Tests)

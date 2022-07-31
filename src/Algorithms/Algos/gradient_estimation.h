@@ -7,19 +7,22 @@
 #include <Algos/optim/optimizer/standard.h>
 #include <Algos/optim/step/gradient.h>
 #include <Algos/ransac.h>
+#include <IO/io.h>
 
 #include <itkImageDuplicator.h>
 #include <itkImageRegionIterator.h>
 
 #include <Eigen/Dense>
 
-namespace
+namespace astro
 {
-class Gradient
+namespace gradient_estimation
+{
+using Vector9d = Eigen::Vector<double, 9>;
+using Matrix93d = Eigen::Matrix<double, 9, 3>;
+class LightGradient
 {
 public:
-    using Vector9d = Eigen::Vector<double, 9>;
-    using Matrix93d = Eigen::Matrix<double, 9, 3>;
     std::vector<Eigen::Vector3d> operator()(const Eigen::Matrix2Xd& X, const Vector9d& parameters) const
     {
         std::vector<Eigen::Vector3d> result;
@@ -81,9 +84,9 @@ public:
 
     void fit(const Eigen::Matrix2Xd& X, const Eigen::Matrix3Xd& Y)
     {
-        Gradient fun;
+        LightGradient fun;
         auto optimizer = optim::optimizer::makeStandard(
-                optim::helper::Quadratic<Gradient, 9, 2, 3>(fun, X, Y),
+                optim::helper::Quadratic<LightGradient, 9, 2, 3>(fun, X, Y),
                 optim::criteria::makeOr(optim::criteria::RelativeValue(0.00001), optim::criteria::Iteration(100)),
                 optim::line_search::GoldenSection(0.00000000001, 0.000001), optim::step::Gradient());
         optimizer(m_A);
@@ -92,21 +95,20 @@ public:
 
     Eigen::Matrix3Xd predict(const Eigen::Matrix2Xd& X) const
     {
-        Gradient fun;
+        LightGradient fun;
         return fun.predict(X, m_A);
     }
 };
 
-void copyData(Eigen::Matrix2Xd& X, Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y,
-              const astro::ImageType& img)
+void copyData(Eigen::Matrix2Xd& X, Eigen::Matrix<double, PixelDimension, Eigen::Dynamic>& Y, const ImageType& img)
 {
     auto size = img.GetRequestedRegion().GetSize();
 
-    Y.resize(astro::PixelDimension, size.at(0) * size.at(1));
+    Y.resize(PixelDimension, size.at(0) * size.at(1));
     X = Eigen::Matrix2Xd::Ones(2, size.at(0) * size.at(1));
 
     size_t i = 0;
-    using IteratorType = itk::ImageRegionIterator<const astro::ImageType>;
+    using IteratorType = itk::ImageRegionIterator<const ImageType>;
     IteratorType it(&img, img.GetRequestedRegion());
     it.GoToBegin();
 
@@ -114,7 +116,7 @@ void copyData(Eigen::Matrix2Xd& X, Eigen::Matrix<double, astro::PixelDimension, 
     {
         auto value = it.Get();
         auto index = it.GetIndex();
-        for (unsigned int j = 0; j < astro::PixelDimension; ++j)
+        for (unsigned int j = 0; j < PixelDimension; ++j)
         {
             Y(j, i) = value.GetElement(j);
         }
@@ -125,8 +127,8 @@ void copyData(Eigen::Matrix2Xd& X, Eigen::Matrix<double, astro::PixelDimension, 
     }
 }
 
-void copyData(Eigen::Matrix2Xd& X, Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y,
-              const astro::ImageType& img, const astro::ScalarImageType& mask)
+void copyData(Eigen::Matrix2Xd& X, Eigen::Matrix<double, PixelDimension, Eigen::Dynamic>& Y, const ImageType& img,
+              const ScalarImageType& mask)
 {
     auto size = img.GetRequestedRegion().GetSize();
     auto maskSize = mask.GetRequestedRegion().GetSize();
@@ -135,12 +137,12 @@ void copyData(Eigen::Matrix2Xd& X, Eigen::Matrix<double, astro::PixelDimension, 
         throw std::range_error("Image and mask must have the same dimension");
     }
 
-    Y.resize(astro::PixelDimension, size.at(0) * size.at(1));
+    Y.resize(PixelDimension, size.at(0) * size.at(1));
     X = Eigen::Matrix2Xd::Ones(2, size.at(0) * size.at(1));
 
     size_t i = 0;
-    using IteratorType = itk::ImageRegionIterator<const astro::ImageType>;
-    using MaskedIteratorType = itk::ImageRegionIterator<const astro::ScalarImageType>;
+    using IteratorType = itk::ImageRegionIterator<const ImageType>;
+    using MaskedIteratorType = itk::ImageRegionIterator<const ScalarImageType>;
     IteratorType it(&img, img.GetRequestedRegion());
     MaskedIteratorType maskedIt(&mask, mask.GetRequestedRegion());
     it.GoToBegin();
@@ -152,7 +154,7 @@ void copyData(Eigen::Matrix2Xd& X, Eigen::Matrix<double, astro::PixelDimension, 
         {
             auto value = it.Get();
             auto index = it.GetIndex();
-            for (unsigned int j = 0; j < astro::PixelDimension; ++j)
+            for (unsigned int j = 0; j < PixelDimension; ++j)
             {
                 Y(j, i) = value.GetElement(j);
             }
@@ -165,12 +167,12 @@ void copyData(Eigen::Matrix2Xd& X, Eigen::Matrix<double, astro::PixelDimension, 
     }
 }
 
-void lightData(const Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y, astro::ImageType& img)
+void lightData(const Eigen::Matrix<double, PixelDimension, Eigen::Dynamic>& Y, ImageType& img)
 {
     auto size = img.GetRequestedRegion().GetSize();
 
     size_t i = 0;
-    using IteratorType = itk::ImageRegionIterator<astro::ImageType>;
+    using IteratorType = itk::ImageRegionIterator<ImageType>;
     IteratorType it(&img, img.GetRequestedRegion());
     it.GoToBegin();
 
@@ -178,7 +180,7 @@ void lightData(const Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic
     {
         auto value = it.Get();
         auto index = it.GetIndex();
-        for (unsigned int j = 0; j < astro::PixelDimension; ++j)
+        for (unsigned int j = 0; j < PixelDimension; ++j)
         {
             value.SetElement(j, Y(j, i));
         }
@@ -187,8 +189,8 @@ void lightData(const Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic
     }
 }
 
-void lightData(const Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y, astro::ImageType& img,
-               const astro::ScalarImageType& mask)
+void lightData(const Eigen::Matrix<double, PixelDimension, Eigen::Dynamic>& Y, ImageType& img,
+               const ScalarImageType& mask)
 {
     auto size = img.GetRequestedRegion().GetSize();
     auto maskSize = mask.GetRequestedRegion().GetSize();
@@ -198,8 +200,8 @@ void lightData(const Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic
     }
 
     size_t i = 0;
-    using IteratorType = itk::ImageRegionIterator<astro::ImageType>;
-    using MaskedIteratorType = itk::ImageRegionIterator<const astro::ScalarImageType>;
+    using IteratorType = itk::ImageRegionIterator<ImageType>;
+    using MaskedIteratorType = itk::ImageRegionIterator<const ScalarImageType>;
     IteratorType it(&img, img.GetRequestedRegion());
     MaskedIteratorType maskedIt(&mask, mask.GetRequestedRegion());
     it.GoToBegin();
@@ -211,7 +213,7 @@ void lightData(const Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic
         {
             auto value = it.Get();
             auto index = it.GetIndex();
-            for (unsigned int j = 0; j < astro::PixelDimension; ++j)
+            for (unsigned int j = 0; j < PixelDimension; ++j)
             {
                 value.SetElement(j, Y(j, i));
             }
@@ -221,10 +223,8 @@ void lightData(const Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic
         ++maskedIt;
     }
 }
-} // namespace
+} // namespace gradient_estimation
 
-namespace astro
-{
 ImageTypePtr estimateGradient(const ImageTypePtr& input, const ScalarImageTypePtr& mask = nullptr)
 {
     ImageTypePtr img = input;
@@ -235,15 +235,15 @@ ImageTypePtr estimateGradient(const ImageTypePtr& input, const ScalarImageTypePt
 
     if (mask)
     {
-        copyData(X, Y, *img, *mask);
+        gradient_estimation::copyData(X, Y, *img, *mask);
     }
     else
     {
-        copyData(X, Y, *img);
+        gradient_estimation::copyData(X, Y, *img);
     }
 
     // Found heuristic for these...
-    astro::RANSAC ransac(LightModel(), X, Y, 100, 200, 0);
+    RANSAC ransac(gradient_estimation::LightModel(), X, Y, 100, 200, 0);
     ransac.run();
 
     auto light = ransac.predict(X);
@@ -266,11 +266,11 @@ ImageTypePtr estimateGradient(const ImageTypePtr& input, const ScalarImageTypePt
 
     if (mask)
     {
-        lightData(light, *output, *mask);
+        gradient_estimation::lightData(light, *output, *mask);
     }
     else
     {
-        lightData(light, *output);
+        gradient_estimation::lightData(light, *output);
     }
 
     return output;
