@@ -4,6 +4,8 @@
 
 #include <Algos/gradient_estimation.h>
 
+#include <itkSubtractImageFilter.h>
+
 #include <QtWidgets/QDoubleSpinBox>
 
 namespace astro
@@ -43,7 +45,15 @@ LightPollutionGUI::~LightPollutionGUI() = default;
 AstroImage LightPollutionGUI::process(AstroImage img, QPromise<void>& promise)
 {
     ImageTypePtr light = estimateGradient(img.getImg());
-    img.setImg(light);
+
+    using SubtractImageFilterType = itk::SubtractImageFilter<ImageType, ImageType>;
+
+    auto subtractFilter = SubtractImageFilterType::New();
+    subtractFilter->SetInput1(img.getImg());
+    subtractFilter->SetInput2(light);
+    subtractFilter->Update();
+
+    img.setImg(subtractFilter->GetOutput());
 
     emit save(img);
 
