@@ -5,7 +5,7 @@
 #include <Algos/optim/helper/quadratic.h>
 #include <Algos/optim/line_search/golden_section.h>
 #include <Algos/optim/optimizer/standard.h>
-#include <Algos/optim/step/conjugate_gradient.h>
+#include <Algos/optim/step/gradient.h>
 #include <Algos/ransac.h>
 
 #include <itkImageDuplicator.h>
@@ -82,10 +82,10 @@ public:
     void fit(const Eigen::Matrix2Xd& X, const Eigen::Matrix3Xd& Y)
     {
         Gradient fun;
-        auto optimizer = optim::optimizer::makeStandard(optim::helper::Quadratic(fun, X, Y),
-                                                        optim::criteria::RelativeValue(0.00001),
-                                                        optim::line_search::GoldenSection(0.0000001, 1),
-                                                        optim::step::ConjugateGradient<optim::step::FRConjugate>());
+        auto optimizer = optim::optimizer::makeStandard(
+                optim::helper::Quadratic<Gradient, 9, 2, 3>(fun, X, Y),
+                optim::criteria::makeOr(optim::criteria::RelativeValue(0.00001), optim::criteria::Iteration(100)),
+                optim::line_search::GoldenSection(0.00000000001, 0.000001), optim::step::Gradient());
         optimizer(m_A);
         m_A = optimizer.getState().getCurrentPoint();
     }
@@ -165,8 +165,7 @@ void copyData(Eigen::Matrix2Xd& X, Eigen::Matrix<double, astro::PixelDimension, 
     }
 }
 
-void lightData(const Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y,
-            astro::ImageType& img)
+void lightData(const Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y, astro::ImageType& img)
 {
     auto size = img.GetRequestedRegion().GetSize();
 
@@ -188,8 +187,8 @@ void lightData(const Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic
     }
 }
 
-void lightData(const Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y,
-              astro::ImageType& img, const astro::ScalarImageType& mask)
+void lightData(const Eigen::Matrix<double, astro::PixelDimension, Eigen::Dynamic>& Y, astro::ImageType& img,
+               const astro::ScalarImageType& mask)
 {
     auto size = img.GetRequestedRegion().GetSize();
     auto maskSize = mask.GetRequestedRegion().GetSize();
@@ -243,9 +242,10 @@ ImageTypePtr estimateGradient(const ImageTypePtr& input, const ScalarImageTypePt
         copyData(X, Y, *img);
     }
 
-    astro::RANSAC ransac(LightModel(), X, Y, 10, 2000, 0);
+    // Found heuristic for these...
+    astro::RANSAC ransac(LightModel(), X, Y, 100, 200, 0);
     ransac.run();
-    
+
     auto light = ransac.predict(X);
 
     auto output = ImageType::New();
