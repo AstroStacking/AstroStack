@@ -11,7 +11,8 @@ namespace optim
 namespace helper
 {
 /// Helper class to do a least square optimization
-template<typename Function, int PSize = Eigen::Dynamic, int XSize = Eigen::Dynamic, int YSize = Eigen::Dynamic>
+template<typename Function, int PSize = Eigen::Dynamic, int XSize = Eigen::Dynamic, int YSize = Eigen::Dynamic,
+         bool Full = true>
 class Quadratic
 {
     using MatrixX = Eigen::Matrix<double, XSize, Eigen::Dynamic>;
@@ -92,7 +93,11 @@ public:
 
     MatrixP hessian(const VectorP& parameters) const
     {
-        return 2 * (firstHessian(parameters) + secondHessian(parameters)) / m_X.cols();
+        if constexpr (Full)
+        {
+            return 2 * (firstHessian(parameters) + secondHessian(parameters)) / m_X.cols();
+        }
+        return 2 * secondHessian(parameters) / m_X.cols();
     }
 };
 } // namespace helper

@@ -3,10 +3,9 @@
 #include <Algos/optim/criteria/composite.h>
 #include <Algos/optim/criteria/criteria.h>
 #include <Algos/optim/helper/quadratic.h>
-#include <Algos/optim/line_search/golden_section.h>
+#include <Algos/optim/line_search/simple.h>
 #include <Algos/optim/optimizer/standard.h>
-#include <Algos/optim/step/gradient.h>
-#include <Algos/ransac.h>
+#include <Algos/optim/step/newton.h>
 #include <IO/io.h>
 
 #include <itkImageDuplicator.h>
@@ -86,9 +85,9 @@ public:
     {
         LightGradient fun;
         auto optimizer = optim::optimizer::makeStandard(
-                optim::helper::Quadratic<LightGradient, 9, 2, 3>(fun, X, Y),
+                optim::helper::Quadratic<LightGradient, 9, 2, 3, false>(fun, X, Y),
                 optim::criteria::makeOr(optim::criteria::RelativeValue(0.00001), optim::criteria::Iteration(100)),
-                optim::line_search::GoldenSection(0.0000001, 1), optim::step::Gradient());
+                optim::line_search::Simple(1), optim::step::Newton());
         optimizer(m_A);
         m_A = optimizer.getState().getCurrentPoint();
     }
@@ -242,11 +241,9 @@ ImageTypePtr estimateGradient(const ImageTypePtr& input, const ScalarImageTypePt
         gradient_estimation::copyData(X, Y, *img);
     }
 
-    // Found heuristic for these...
-    RANSAC ransac(gradient_estimation::LightModel(), X, Y, 100, 200, 0);
-    ransac.run();
-
-    auto light = ransac.predict(X);
+    gradient_estimation::LightModel model;
+    model.fit(X, Y);
+    auto light = model.predict(X);
 
     auto output = ImageType::New();
 
