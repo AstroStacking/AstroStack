@@ -69,7 +69,7 @@ public:
 
 class LightModel
 {
-    Eigen::Matrix<double, 9, 1> m_A;
+    Eigen::Matrix<double, 9, 1> m_A{};
 
 public:
     LightModel() = default;
@@ -86,7 +86,7 @@ public:
                                                         optim::criteria::RelativeValue(0.00001),
                                                         optim::line_search::GoldenSection(0.0000001, 1),
                                                         optim::step::ConjugateGradient<optim::step::FRConjugate>());
-
+        optimizer(m_A);
         m_A = optimizer.getState().getCurrentPoint();
     }
 

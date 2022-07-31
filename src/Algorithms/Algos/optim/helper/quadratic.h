@@ -19,7 +19,7 @@ class Quadratic
     using MatrixP = Eigen::Matrix<double, PSize, PSize>;
     using VectorX = Eigen::Matrix<double, XSize, 1>;
     using VectorY = Eigen::Matrix<double, YSize, 1>;
-    using VectorP = Eigen::Matrix<double, XSize, 1>;
+    using VectorP = Eigen::Matrix<double, PSize, 1>;
     const Function& m_fun;
     const MatrixX& m_X;
     const MatrixY& m_Y;
@@ -46,7 +46,7 @@ public:
         return accu.sum();
     }
 
-    VectorX gradient(const VectorP& parameters) const
+    VectorP gradient(const VectorP& parameters) const
     {
         auto result = m_fun(m_X, parameters);
         auto resultGradient = m_fun.gradient(m_X, parameters);
@@ -54,12 +54,12 @@ public:
         VectorP accu = VectorP::Zero(parameters.size());
         for (size_t i = 0; i < result.size(); ++i)
         {
-            accu = accu - 2 * (resultGradient[i] * (m_Y.col(i) - result[i]).transpose()).rowwise().sum();
+            accu = accu - 2 * (resultGradient[i] * (m_Y.col(i) - result[i])).rowwise().sum();
         }
         return accu;
     }
 
-    MatrixP firstHessian(const VectorX& parameters) const
+    MatrixP firstHessian(const VectorP& parameters) const
     {
         auto result = m_fun(m_X, parameters);
         auto resultHessian = m_fun.hessian(m_X, parameters);
