@@ -1,6 +1,7 @@
 #include "monointerface.h"
 #include "ui_monointerface.h"
 
+#include <Processing/chromasmoothing.h>
 #include <Processing/exponential.h>
 #include <Processing/histostretch.h>
 #include <Processing/lightpollution.h>
@@ -20,6 +21,10 @@ namespace
 std::map<QString, MonoInterface*> scanPlugins()
 {
     std::map<QString, MonoInterface*> plugins;
+    {
+        auto* chromasmoothing = new ChromaSmoothing();
+        plugins.emplace(chromasmoothing->name(), chromasmoothing);
+    }
     {
         auto* exponential = new Exponential();
         plugins.emplace(exponential->name(), exponential);

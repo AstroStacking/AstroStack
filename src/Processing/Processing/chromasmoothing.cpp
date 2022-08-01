@@ -52,12 +52,12 @@ ChromaSmoothingGUI::~ChromaSmoothingGUI() = default;
 
 void ChromaSmoothingGUI::setSkewValue(double val)
 {
-    m_ui->varianceSlider->setValue(static_cast<int>(100 * val));
+    m_ui->varianceSlider->setValue(static_cast<int>(val));
 }
 
 void ChromaSmoothingGUI::setApproximateSkewValue(int val)
 {
-    m_ui->variance->setValue(val / 100.);
+    m_ui->variance->setValue(val);
 }
 
 AstroImage ChromaSmoothingGUI::process(AstroImage img, QPromise<void>& promise)
@@ -112,8 +112,8 @@ AstroImage ChromaSmoothingGUI::process(AstroImage img, QPromise<void>& promise)
 
     using MergeFilter = astro::filters::MergeHSLFilter<RGB2HSLConvertor, RGB2HSLConvertor, ImageType>;
     auto mergeFilter = MergeFilter::New();
-    mergeFilter->SetInput1(originalImg);
-    mergeFilter->SetInput2(smoothImg);
+    mergeFilter->SetInput1(smoothImg);
+    mergeFilter->SetInput2(originalImg);
     mergeFilter->Update();
 
     using HSL2RGBConvertor = itk::ImageAdaptor<ImageType, filters::convertors::RGBPixelAccessor>;
