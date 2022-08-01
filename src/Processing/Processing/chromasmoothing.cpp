@@ -8,11 +8,11 @@
 
 #include <QtWidgets/QDoubleSpinBox>
 
-#include <itkComposeImageFilter.h>
-#include <itkVectorIndexSelectionCastImageFilter.h>
 #include <itkCastImageFilter.h>
+#include <itkComposeImageFilter.h>
 #include <itkDiscreteGaussianImageFilter.h>
 #include <itkImageAdaptor.h>
+#include <itkVectorIndexSelectionCastImageFilter.h>
 
 namespace astro
 {
@@ -125,7 +125,7 @@ AstroImage ChromaSmoothingGUI::process(AstroImage img, QPromise<void>& promise)
     auto castFilter = CastFilterType::New();
     castFilter->SetInput(finalImg);
     castFilter->Update();
-    
+
     img.setImg(castFilter->GetOutput());
 
     emit save(img);
