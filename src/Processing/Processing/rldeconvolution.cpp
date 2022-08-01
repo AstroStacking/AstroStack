@@ -74,12 +74,12 @@ AstroImage RLDeconvolutionGUI::process(AstroImage img, QPromise<void>& promise)
     using ComposeFilterType = itk::ComposeImageFilter<ScalarImageType, ImageType>;
 
     auto indexSelectionFilter0 = IndexSelectionType::New();
-    indexSelectionFilter0->SetIndex(0);
-    indexSelectionFilter0->SetInput(img.getImg());
-    indexSelectionFilter0->Update();
     auto indexSelectionFilter1 = IndexSelectionType::New();
     auto indexSelectionFilter2 = IndexSelectionType::New();
 
+    indexSelectionFilter0->SetIndex(0);
+    indexSelectionFilter0->SetInput(img.getImg());
+    indexSelectionFilter0->Update();
     indexSelectionFilter1->SetIndex(1);
     indexSelectionFilter1->SetInput(img.getImg());
     indexSelectionFilter1->Update();

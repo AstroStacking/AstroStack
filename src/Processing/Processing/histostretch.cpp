@@ -136,15 +136,12 @@ std::array<float, 4> HistoStretchGUI::getRelativeLimits(const ImageTypePtr& img)
     using IndexSelectionRed = itk::ImageAdaptor<ImageType, RedChannelPixelAccessor>;
     auto indexSelectionFilter0 = IndexSelectionRed::New();
     indexSelectionFilter0->SetImage(img);
-    indexSelectionFilter0->Update();
     using IndexSelectionGreen = itk::ImageAdaptor<ImageType, GreenChannelPixelAccessor>;
     auto indexSelectionFilter1 = IndexSelectionGreen::New();
     indexSelectionFilter1->SetImage(img);
-    indexSelectionFilter1->Update();
     using IndexSelectionBlue = itk::ImageAdaptor<ImageType, BlueChannelPixelAccessor>;
     auto indexSelectionFilter2 = IndexSelectionBlue::New();
     indexSelectionFilter2->SetImage(img);
-    indexSelectionFilter2->Update();
 
     return {{getMaxHistogram(indexSelectionFilter0, m_ui->red->value()),
              getMaxHistogram(indexSelectionFilter1, m_ui->green->value()),

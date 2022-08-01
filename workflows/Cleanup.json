@@ -1,0 +1,9 @@
+{
+    "Name": "Cleanup",
+    "Type": "Mono",
+    "Steps": [
+        {
+            "Type": "ChromaSmoothing"
+        }
+    ]
+}

@@ -1,24 +1,23 @@
 #pragma once
-
 #include <Processing/monointerface.h>
 
 namespace Ui
 {
-class RLDeconvolution;
+class ChromaSmoothing;
 }
 
 namespace astro
 {
 /**
- * Richardson Lucy Deconvolution
+ * Raises the image values to the power of a parameter
  */
-class RLDeconvolution
+class ChromaSmoothing
     : public QObject
     , public MonoInterface
 {
     Q_OBJECT
 public:
-    ~RLDeconvolution() override;
+    ~ChromaSmoothing() override;
 
     QString name() const override;
 
@@ -28,18 +27,23 @@ public:
 };
 
 /**
- * QWidgets that will be displayed in the stack
+ QWidgets that will be displayed in the stack
  */
-class RLDeconvolutionGUI : public MonoInterfaceGUI
+class ChromaSmoothingGUI : public MonoInterfaceGUI
 {
     Q_OBJECT
 public:
-    RLDeconvolutionGUI(QWidget* parent);
-    ~RLDeconvolutionGUI() override;
+    ChromaSmoothingGUI(QWidget* parent);
+    ~ChromaSmoothingGUI() override;
 
     AstroImage process(AstroImage img, QPromise<void>& promise) override;
 
+private slots:
+    void setSkewValue(double val);
+    void setApproximateSkewValue(int val);
+
 private:
-    std::unique_ptr<Ui::RLDeconvolution> m_ui;
+    std::unique_ptr<Ui::ChromaSmoothing> m_ui;
 };
+
 } // namespace astro

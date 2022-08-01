@@ -9,6 +9,9 @@ class HistoStretch;
 
 namespace astro
 {
+/**
+ * Stretches the histogram to remove black pixels
+ */
 class HistoStretch
     : public QObject
     , public MonoInterface
@@ -25,7 +28,7 @@ public:
 };
 
 /**
- QWidgets that will be displayed in the stack
+ * QWidgets that will be displayed in the stack
  */
 class HistoStretchGUI : public MonoInterfaceGUI
 {
