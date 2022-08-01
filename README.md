@@ -22,8 +22,10 @@ Currently only processing one photo at a time is possible. The future stacking p
 
 ### Processing plugins
 
+* [ChromaSmoothing](src/Processing/Processing/chromasmoothing.md)
 * [Exponential](src/Processing/Processing/exponential.md)
 * [Histogram Stretch](src/Processing/Processing/histostretch.md)
+* [Light Pollution](src/Processing/Processing/lightpollution.md)
 * [Richardson Lucy Deconvolve](src/Processing/Processing/rldeconvolution.md)
 
 ### Processing workflows
@@ -32,10 +34,17 @@ Several workflows for single photos are possible.
 A right click on an image will open a contextual menu with possible workflows.
 The current shipped ones are:
 
+* [Cleanup](workflows/Cleanup.md)
 * [Deconvolve](workflows/Deconvolve.md)
 * [Histogram Stretch](workflows/HistoStretech.md)
 
 ## Changelog
+### 0.2.0
+
+* Mono processing:
+  * Light pollution
+  * Chromatic smoothing
+
 ### 0.1.0
 
 * Display an image and its histogram

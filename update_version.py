@@ -33,4 +33,4 @@ if __name__ == "__main__":
   update_cmakelist(sys.argv[1])
   #update_doxygen(sys.argv[1])
   update_changelog(sys.argv[1])
-  update_wininstaller(sys.argv[1])
+  #update_wininstaller(sys.argv[1])
