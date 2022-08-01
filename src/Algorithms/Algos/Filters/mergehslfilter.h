@@ -45,14 +45,6 @@ public:
 
     itkTypeMacro(MergeHSLFilter, BinaryGeneratorImageFilter);
 
-#ifdef ITK_USE_CONCEPT_CHECKING
-    // Begin concept checking
-    itkConceptMacro(Input1Input2OutputBitwiseOperatorsCheck,
-                    (itk::Concept::BitwiseOperators<typename TInputImage1::PixelType, typename TInputImage2::PixelType,
-                                                    typename TOutputImage::PixelType>) );
-    // End concept checking
-#endif
-
 protected:
     MergeHSLFilter()
     {

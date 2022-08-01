@@ -8,6 +8,8 @@
 
 #include <QtWidgets/QDoubleSpinBox>
 
+#include <itkComposeImageFilter.h>
+#include <itkVectorIndexSelectionCastImageFilter.h>
 #include <itkCastImageFilter.h>
 #include <itkDiscreteGaussianImageFilter.h>
 #include <itkImageAdaptor.h>
@@ -62,19 +64,49 @@ AstroImage ChromaSmoothingGUI::process(AstroImage img, QPromise<void>& promise)
 {
     float variance = m_ui->variance->value();
 
-    using filterType = itk::DiscreteGaussianImageFilter<ImageType, ImageType>;
+    using IndexSelectionType = itk::VectorIndexSelectionCastImageFilter<ImageType, ScalarImageType>;
+    using filterType = itk::DiscreteGaussianImageFilter<ScalarImageType, ScalarImageType>;
+    using ComposeFilterType = itk::ComposeImageFilter<ScalarImageType, ImageType>;
+
+    auto indexSelectionFilter0 = IndexSelectionType::New();
+    auto indexSelectionFilter1 = IndexSelectionType::New();
+    auto indexSelectionFilter2 = IndexSelectionType::New();
+
+    indexSelectionFilter0->SetIndex(0);
+    indexSelectionFilter0->SetInput(img.getImg());
+    indexSelectionFilter0->Update();
+    indexSelectionFilter1->SetIndex(1);
+    indexSelectionFilter1->SetInput(img.getImg());
+    indexSelectionFilter1->Update();
+    indexSelectionFilter2->SetIndex(2);
+    indexSelectionFilter2->SetInput(img.getImg());
+    indexSelectionFilter2->Update();
 
     // Create and setup a Gaussian filter
-    auto gaussianFilter = filterType::New();
-    gaussianFilter->SetInput(img.getImg());
-    gaussianFilter->SetVariance(variance);
-    gaussianFilter->Update();
+    auto gaussianFilter0 = filterType::New();
+    auto gaussianFilter1 = filterType::New();
+    auto gaussianFilter2 = filterType::New();
+    gaussianFilter0->SetInput(indexSelectionFilter0->GetOutput());
+    gaussianFilter0->SetVariance(variance);
+    gaussianFilter0->Update();
+    gaussianFilter1->SetInput(indexSelectionFilter1->GetOutput());
+    gaussianFilter1->SetVariance(variance);
+    gaussianFilter1->Update();
+    gaussianFilter2->SetInput(indexSelectionFilter2->GetOutput());
+    gaussianFilter2->SetVariance(variance);
+    gaussianFilter2->Update();
+
+    auto composeFilter = ComposeFilterType::New();
+    composeFilter->SetInput1(gaussianFilter0->GetOutput());
+    composeFilter->SetInput2(gaussianFilter1->GetOutput());
+    composeFilter->SetInput3(gaussianFilter2->GetOutput());
+    composeFilter->Update();
 
     using RGB2HSLConvertor = itk::ImageAdaptor<ImageType, filters::convertors::HSLPixelAccessor>;
     auto originalImg = RGB2HSLConvertor::New();
     auto smoothImg = RGB2HSLConvertor::New();
     originalImg->SetImage(img.getImg());
-    smoothImg->SetImage(gaussianFilter->GetOutput());
+    smoothImg->SetImage(composeFilter->GetOutput());
     originalImg->Update();
     smoothImg->Update();
 
