@@ -1,6 +1,6 @@
 #pragma once
-#include <IO/config.h>
 #include <IO/io.h>
+#include <QtIO/config.h>
 
 #include <QtCore/QStringList>
 #include <QtWidgets/QWidget>
@@ -10,7 +10,7 @@ namespace astro
 /**
  Interface to read images
  */
-class ASTRO_IO_EXPORT InputInterface
+class ASTRO_QTIO_EXPORT InputInterface
 {
 public:
     InputInterface();

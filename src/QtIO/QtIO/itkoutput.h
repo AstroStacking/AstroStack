@@ -1,5 +1,5 @@
 #pragma once
-#include <IO/output.h>
+#include <QtIO/output.h>
 
 namespace astro
 {

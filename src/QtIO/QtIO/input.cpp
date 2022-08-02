@@ -1,7 +1,7 @@
 #include "input.h"
 
-#include <IO/itkinput.h>
 #include <Plugin/pluginfactory.h>
+#include <QtIO/itkinput.h>
 
 #include <QtCore/QFileInfo>
 

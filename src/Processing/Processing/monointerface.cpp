@@ -7,8 +7,8 @@
 #include <Processing/lightpollution.h>
 #include <Processing/rldeconvolution.h>
 
-#include <IO/output.h>
 #include <Plugin/pluginfactory.h>
+#include <QtIO/output.h>
 
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>

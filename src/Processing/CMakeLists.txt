@@ -38,5 +38,5 @@ ASTRO_add_library(
     SRC ${ASTRO_PROCESSING_SRC}
     HEADERS ${ASTRO_PROCESSING_HEADERS}
     DOC ${ASTRO_PROCESSING_DOC}
-    LIBRARIES AstroAlgorithms AstroPlugin AstroIO Qt6::Core Qt6::Widgets ${ITK_LIBRARIES}
+    LIBRARIES AstroAlgorithms AstroPlugin AstroQtIO Qt6::Core Qt6::Widgets ${ITK_LIBRARIES}
 )

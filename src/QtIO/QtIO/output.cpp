@@ -1,7 +1,7 @@
 #include "output.h"
 
-#include <IO/itkoutput.h>
 #include <Plugin/pluginfactory.h>
+#include <QtIO/itkoutput.h>
 
 #include <QtCore/QFileInfo>
 

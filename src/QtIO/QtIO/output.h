@@ -1,13 +1,13 @@
 #pragma once
-#include <IO/config.h>
 #include <IO/io.h>
+#include <QtIO/config.h>
 
 #include <QtWidgets/QWidget>
 
 namespace astro
 {
 
-class ASTRO_IO_EXPORT OutputInterface
+class ASTRO_QTIO_EXPORT OutputInterface
 {
 public:
     OutputInterface();

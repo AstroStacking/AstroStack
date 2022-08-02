@@ -2,9 +2,9 @@
 #include "ui_monoprocessing.h"
 
 #include <Common/imagedata.h>
-#include <IO/input.h>
-#include <IO/output.h>
 #include <Processing/monointerface.h>
+#include <QtIO/input.h>
+#include <QtIO/output.h>
 
 #include <QtConcurrent/QtConcurrentRun>
 #include <QtCore/QDir>
