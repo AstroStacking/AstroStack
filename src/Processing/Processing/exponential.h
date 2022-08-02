@@ -1,49 +1,12 @@
 #pragma once
-#include <Processing/monointerface.h>
 
-namespace Ui
-{
-class Exponential;
-}
+#include <IO/io.h>
+#include <Processing/config.h>
 
 namespace astro
 {
-/**
- * Raises the image values to the power of a parameter
- */
-class Exponential
-    : public QObject
-    , public MonoInterface
+namespace processing
 {
-    Q_OBJECT
-public:
-    ~Exponential() override;
-
-    QString name() const override;
-
-    QString explanation() const override;
-
-    MonoInterfaceGUI* generateGUI(QWidget* parent) const override;
-};
-
-/**
- * QWidgets that will be displayed in the stack
- */
-class ExponentialGUI : public MonoInterfaceGUI
-{
-    Q_OBJECT
-public:
-    ExponentialGUI(QWidget* parent);
-    ~ExponentialGUI() override;
-
-    AstroImage process(AstroImage img, QPromise<void>& promise) override;
-
-private slots:
-    void setSkewValue(double val);
-    void setApproximateSkewValue(int val);
-
-private:
-    std::unique_ptr<Ui::Exponential> m_ui;
-};
-
+ASTRO_PROCESSING_EXPORT AstroImage exponential(AstroImage img, float exponent);
+}
 } // namespace astro

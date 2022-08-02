@@ -1,6 +1,4 @@
 #include "rldeconvolution.h"
-#include "ui_monointerface.h"
-#include "ui_rldeconvolution.h"
 
 #include <itkComposeImageFilter.h>
 #include <itkImageDuplicator.h>
@@ -9,40 +7,10 @@
 
 namespace astro
 {
-RLDeconvolution::~RLDeconvolution() = default;
-
-QString RLDeconvolution::name() const
+namespace processing
 {
-    return "RLDeconvolution";
-}
-
-QString RLDeconvolution::explanation() const
+AstroImage RLDeconvolution(AstroImage img, int filterSize, float sigma)
 {
-    return tr("Raises the image values to the power of a parameter");
-}
-
-MonoInterfaceGUI* RLDeconvolution::generateGUI(QWidget* parent) const
-{
-    return new RLDeconvolutionGUI(parent);
-}
-
-RLDeconvolutionGUI::RLDeconvolutionGUI(QWidget* parent)
-    : MonoInterfaceGUI(parent)
-    , m_ui(std::make_unique<Ui::RLDeconvolution>())
-{
-    QWidget* child = new QWidget(this);
-    m_ui->setupUi(child);
-    m_monoUi->setupUi(this, child);
-    setTitle(tr("Richardson Lucy Deconvolution"));
-
-    setupSlots();
-}
-
-RLDeconvolutionGUI::~RLDeconvolutionGUI() = default;
-
-AstroImage RLDeconvolutionGUI::process(AstroImage img, QPromise<void>& promise)
-{
-    int filterSize = m_ui->filterSize->value();
     ScalarImageTypePtr kernel = ScalarImageType::New();
     ScalarImageType::SizeType size;
     size[0] = size[1] = 1 + 2 * filterSize;
@@ -53,8 +21,6 @@ AstroImage RLDeconvolutionGUI::process(AstroImage img, QPromise<void>& promise)
     region.SetIndex(start);
     kernel->SetRegions(region);
     kernel->Allocate();
-
-    float sigma = static_cast<float>(m_ui->sigma->value());
 
     ScalarImageType::IndexType index;
     for (int j = 0; j < size[1]; ++j)
@@ -109,8 +75,8 @@ AstroImage RLDeconvolutionGUI::process(AstroImage img, QPromise<void>& promise)
 
     composeFilter->Update();
     img.setImg(composeFilter->GetOutput());
-    emit save(img);
 
     return img;
 }
+} // namespace processing
 } // namespace astro

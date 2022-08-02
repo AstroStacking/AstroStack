@@ -1,12 +1,8 @@
 #include "chromasmoothing.h"
-#include "ui_chromasmoothing.h"
-#include "ui_monointerface.h"
 
 #include <Algos/Filters/Convertors/HSL2RGB.h>
 #include <Algos/Filters/Convertors/RGB2HSL.h>
 #include <Algos/Filters/mergehslfilter.h>
-
-#include <QtWidgets/QDoubleSpinBox>
 
 #include <itkCastImageFilter.h>
 #include <itkComposeImageFilter.h>
@@ -14,55 +10,13 @@
 #include <itkImageAdaptor.h>
 #include <itkVectorIndexSelectionCastImageFilter.h>
 
+
 namespace astro
 {
-
-ChromaSmoothing::~ChromaSmoothing() = default;
-
-QString ChromaSmoothing::name() const
+namespace processing
 {
-    return "ChromaSmoothing";
-}
-
-QString ChromaSmoothing::explanation() const
+ASTRO_PROCESSING_EXPORT AstroImage chromaSmoothing(AstroImage img, float variance)
 {
-    return tr("Raises the image values to the power of a parameter");
-}
-
-MonoInterfaceGUI* ChromaSmoothing::generateGUI(QWidget* parent) const
-{
-    return new ChromaSmoothingGUI(parent);
-}
-
-ChromaSmoothingGUI::ChromaSmoothingGUI(QWidget* parent)
-    : MonoInterfaceGUI(parent)
-    , m_ui(std::make_unique<Ui::ChromaSmoothing>())
-{
-    QWidget* child = new QWidget(this);
-    m_ui->setupUi(child);
-    m_monoUi->setupUi(this, child);
-    setTitle(tr("ChromaSmoothing"));
-
-    setupSlots();
-    connect(m_ui->variance, &QDoubleSpinBox::valueChanged, this, &ChromaSmoothingGUI::setSkewValue);
-    connect(m_ui->varianceSlider, &QSlider::valueChanged, this, &ChromaSmoothingGUI::setApproximateSkewValue);
-}
-
-ChromaSmoothingGUI::~ChromaSmoothingGUI() = default;
-
-void ChromaSmoothingGUI::setSkewValue(double val)
-{
-    m_ui->varianceSlider->setValue(static_cast<int>(val));
-}
-
-void ChromaSmoothingGUI::setApproximateSkewValue(int val)
-{
-    m_ui->variance->setValue(val);
-}
-
-AstroImage ChromaSmoothingGUI::process(AstroImage img, QPromise<void>& promise)
-{
-    float variance = m_ui->variance->value();
 
     using IndexSelectionType = itk::VectorIndexSelectionCastImageFilter<ImageType, ScalarImageType>;
     using filterType = itk::DiscreteGaussianImageFilter<ScalarImageType, ScalarImageType>;
@@ -126,10 +80,7 @@ AstroImage ChromaSmoothingGUI::process(AstroImage img, QPromise<void>& promise)
     castFilter->SetInput(finalImg);
     castFilter->Update();
 
-    img.setImg(castFilter->GetOutput());
-
-    emit save(img);
-
     return img;
 }
+} // namespace processing
 } // namespace astro

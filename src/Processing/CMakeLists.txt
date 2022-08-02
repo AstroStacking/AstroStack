@@ -1,15 +1,9 @@
 FILE(GLOB ASTRO_PROCESSING_SRC
     Processing/chromasmoothing.cpp
-    Processing/chromasmoothing.ui
     Processing/exponential.cpp
-    Processing/exponential.ui
     Processing/histostretch.cpp
-    Processing/histostretch.ui
     Processing/lightpollution.cpp
-    Processing/lightpollution.ui
-    Processing/monointerface.cpp
     Processing/rldeconvolution.cpp
-    Processing/rldeconvolution.ui
 )
 
 FILE(GLOB ASTRO_PROCESSING_HEADERS
@@ -18,17 +12,7 @@ FILE(GLOB ASTRO_PROCESSING_HEADERS
     Processing/exponential.h
     Processing/histostretch.h
     Processing/lightpollution.h
-    Processing/monointerface.h
     Processing/rldeconvolution.h
-    Processing/ui_monointerface.h
-)
-
-FILE(GLOB ASTRO_PROCESSING_DOC
-    Processing/chromasmoothing.md
-    Processing/exponential.md
-    Processing/histostretch.md
-    Processing/lightpollution.md
-    Processing/rldeconvolution.md
 )
 
 ASTRO_add_library(
@@ -37,6 +21,5 @@ ASTRO_add_library(
     FOLDER Processing
     SRC ${ASTRO_PROCESSING_SRC}
     HEADERS ${ASTRO_PROCESSING_HEADERS}
-    DOC ${ASTRO_PROCESSING_DOC}
-    LIBRARIES AstroAlgorithms AstroPlugin AstroQtIO Qt6::Core Qt6::Widgets ${ITK_LIBRARIES}
+    LIBRARIES AstroAlgorithms AstroIO ${ITK_LIBRARIES}
 )

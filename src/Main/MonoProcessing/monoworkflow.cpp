@@ -3,7 +3,7 @@
 #include <Explorer/explorer.h>
 #include <MonoProcessing/monoprocessing.h>
 #include <Plugin/pluginfactory.h>
-#include <Processing/monointerface.h>
+#include <QtProcessing/monointerface.h>
 
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>

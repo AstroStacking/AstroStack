@@ -1,6 +1,4 @@
 #include "histostretch.h"
-#include "ui_histostretch.h"
-#include "ui_monointerface.h"
 
 #include <itkImageAdaptor.h>
 #include <itkImageDuplicator.h>
@@ -9,77 +7,16 @@
 #include <itkMinimumMaximumImageCalculator.h>
 #include <itkMultiplyImageFilter.h>
 
+#include <numeric>
+
 namespace astro
 {
-HistoStretch::~HistoStretch() = default;
-
-QString HistoStretch::name() const
+namespace processing
 {
-    return "HistoStretch";
-}
-
-QString HistoStretch::explanation() const
+namespace
 {
-    return tr("Stretches the histogram to maximise low light contrast");
-}
-
-MonoInterfaceGUI* HistoStretch::generateGUI(QWidget* parent) const
-{
-    return new HistoStretchGUI(parent);
-}
-
-HistoStretchGUI::HistoStretchGUI(QWidget* parent)
-    : MonoInterfaceGUI(parent)
-    , m_ui(std::make_unique<Ui::HistoStretch>())
-{
-    QWidget* child = new QWidget(this);
-    m_ui->setupUi(child);
-    m_monoUi->setupUi(this, child);
-    setTitle(tr("Histogram Stretch"));
-
-    setupSlots();
-    connect(m_ui->red, &QDoubleSpinBox::valueChanged, this, &HistoStretchGUI::setRedValue);
-    connect(m_ui->redSlider, &QSlider::valueChanged, this, &HistoStretchGUI::setApproximateRedValue);
-    connect(m_ui->blue, &QDoubleSpinBox::valueChanged, this, &HistoStretchGUI::setBlueValue);
-    connect(m_ui->blueSlider, &QSlider::valueChanged, this, &HistoStretchGUI::setApproximateBlueValue);
-    connect(m_ui->green, &QDoubleSpinBox::valueChanged, this, &HistoStretchGUI::setGreenValue);
-    connect(m_ui->greenSlider, &QSlider::valueChanged, this, &HistoStretchGUI::setApproximateGreenValue);
-}
-
-HistoStretchGUI::~HistoStretchGUI() = default;
-
-void HistoStretchGUI::setRedValue(double val)
-{
-    m_ui->redSlider->setValue(val * 100);
-}
-
-void HistoStretchGUI::setApproximateRedValue(int val)
-{
-    m_ui->red->setValue(val / 100.);
-}
-
-void HistoStretchGUI::setBlueValue(double val)
-{
-    m_ui->blueSlider->setValue(val * 100);
-}
-
-void HistoStretchGUI::setApproximateBlueValue(int val)
-{
-    m_ui->blue->setValue(val / 100.);
-}
-
-void HistoStretchGUI::setGreenValue(double val)
-{
-    m_ui->greenSlider->setValue(val * 100);
-}
-
-void HistoStretchGUI::setApproximateGreenValue(int val)
-{
-    m_ui->green->setValue(val / 100.);
-}
-
 template<typename ImageTypePtr>
-std::vector<size_t> HistoStretchGUI::histogram(const ImageTypePtr& img, size_t bins)
+std::vector<size_t> histogram(const ImageTypePtr& img, size_t bins)
 {
     using ImageToHistogramFilterType = itk::Statistics::ImageToHistogramFilter<typename ImageTypePtr::ObjectType>;
 
@@ -110,7 +47,7 @@ std::vector<size_t> HistoStretchGUI::histogram(const ImageTypePtr& img, size_t b
 }
 
 template<typename ImageTypePtr>
-float HistoStretchGUI::getMaxHistogram(const ImageTypePtr& img, double ratio)
+float getMaxHistogram(const ImageTypePtr& img, double ratio)
 {
     constexpr unsigned int BINS = 256;
     constexpr unsigned int MEAN_SIZE = 5;
@@ -131,7 +68,7 @@ float HistoStretchGUI::getMaxHistogram(const ImageTypePtr& img, double ratio)
     return (justBelow.base() - histFilt.begin()) / static_cast<float>(BINS);
 }
 
-std::array<float, 4> HistoStretchGUI::getRelativeLimits(const ImageTypePtr& img)
+std::array<float, 4> getRelativeLimits(const ImageTypePtr& img, float red, float green, float blue)
 {
     using IndexSelectionRed = itk::ImageAdaptor<ImageType, RedChannelPixelAccessor>;
     auto indexSelectionFilter0 = IndexSelectionRed::New();
@@ -143,24 +80,23 @@ std::array<float, 4> HistoStretchGUI::getRelativeLimits(const ImageTypePtr& img)
     auto indexSelectionFilter2 = IndexSelectionBlue::New();
     indexSelectionFilter2->SetImage(img);
 
-    return {{getMaxHistogram(indexSelectionFilter0, m_ui->red->value()),
-             getMaxHistogram(indexSelectionFilter1, m_ui->green->value()),
-             getMaxHistogram(indexSelectionFilter2, m_ui->blue->value()), 1}};
+    return {{getMaxHistogram(indexSelectionFilter0, red), getMaxHistogram(indexSelectionFilter1, green),
+             getMaxHistogram(indexSelectionFilter2, blue), 1}};
 }
 
-std::array<float, 4> HistoStretchGUI::getLimits(const ImageTypePtr& img)
+std::array<float, 4> getLimits(const ImageTypePtr& img, float red, float green, float blue, bool relative)
 {
-    if (m_ui->relative->isChecked())
+    if (relative)
     {
-        return getRelativeLimits(img);
+        return getRelativeLimits(img, red, green, blue);
     }
-    return {{static_cast<float>(m_ui->red->value()), static_cast<float>(m_ui->blue->value()),
-             static_cast<float>(m_ui->green->value()), 1}};
+    return {{red, green, blue, 1}};
 }
+} // namespace
 
-AstroImage HistoStretchGUI::process(AstroImage img, QPromise<void>& promise)
+AstroImage histoStretch(AstroImage img, float red, float green, float blue, bool relative)
 {
-    std::array<float, 4> shift = getLimits(img.getImg());
+    std::array<float, 4> shift = getLimits(img.getImg(), red, green, blue, relative);
 
     using DuplicatorType = itk::ImageDuplicator<ImageType>;
     auto duplicator = DuplicatorType::New();
@@ -184,8 +120,7 @@ AstroImage HistoStretchGUI::process(AstroImage img, QPromise<void>& promise)
         ++it;
     }
 
-    emit save(img);
-
     return img;
 }
+} // namespace processing
 } // namespace astro

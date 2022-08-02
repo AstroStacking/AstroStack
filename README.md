@@ -22,11 +22,11 @@ Currently only processing one photo at a time is possible. The future stacking p
 
 ### Processing plugins
 
-* [ChromaSmoothing](src/Processing/Processing/chromasmoothing.md)
-* [Exponential](src/Processing/Processing/exponential.md)
-* [Histogram Stretch](src/Processing/Processing/histostretch.md)
-* [Light Pollution](src/Processing/Processing/lightpollution.md)
-* [Richardson Lucy Deconvolve](src/Processing/Processing/rldeconvolution.md)
+* [ChromaSmoothing](src/QtProcessing/QtProcessing/chromasmoothing.md)
+* [Exponential](src/QtProcessing/QtProcessing/exponential.md)
+* [Histogram Stretch](src/QtProcessing/QtProcessing/histostretch.md)
+* [Light Pollution](src/QtProcessing/QtProcessing/lightpollution.md)
+* [Richardson Lucy Deconvolve](src/QtProcessing/QtProcessing/rldeconvolution.md)
 
 ### Processing workflows
 

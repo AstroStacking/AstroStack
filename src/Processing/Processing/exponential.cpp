@@ -1,62 +1,14 @@
 #include "exponential.h"
-#include "ui_exponential.h"
-#include "ui_monointerface.h"
-
-#include <QtWidgets/QDoubleSpinBox>
 
 #include <itkImageDuplicator.h>
 #include <itkImageRegionIterator.h>
 
 namespace astro
 {
-
-Exponential::~Exponential() = default;
-
-QString Exponential::name() const
+namespace processing
 {
-    return "Exponential";
-}
-
-QString Exponential::explanation() const
+ASTRO_PROCESSING_EXPORT AstroImage exponential(AstroImage img, float exponent)
 {
-    return tr("Raises the image values to the power of a parameter");
-}
-
-MonoInterfaceGUI* Exponential::generateGUI(QWidget* parent) const
-{
-    return new ExponentialGUI(parent);
-}
-
-ExponentialGUI::ExponentialGUI(QWidget* parent)
-    : MonoInterfaceGUI(parent)
-    , m_ui(std::make_unique<Ui::Exponential>())
-{
-    QWidget* child = new QWidget(this);
-    m_ui->setupUi(child);
-    m_monoUi->setupUi(this, child);
-    setTitle(tr("Exponential"));
-
-    setupSlots();
-    connect(m_ui->skew, &QDoubleSpinBox::valueChanged, this, &ExponentialGUI::setSkewValue);
-    connect(m_ui->skewSlider, &QSlider::valueChanged, this, &ExponentialGUI::setApproximateSkewValue);
-}
-
-ExponentialGUI::~ExponentialGUI() = default;
-
-void ExponentialGUI::setSkewValue(double val)
-{
-    m_ui->skewSlider->setValue(static_cast<int>(100 * val));
-}
-
-void ExponentialGUI::setApproximateSkewValue(int val)
-{
-    m_ui->skew->setValue(val / 100.);
-}
-
-AstroImage ExponentialGUI::process(AstroImage img, QPromise<void>& promise)
-{
-    float exponent = m_ui->skew->value();
-
     using DuplicatorType = itk::ImageDuplicator<ImageType>;
     auto duplicator = DuplicatorType::New();
     duplicator->SetInputImage(img.getImg());
@@ -79,8 +31,7 @@ AstroImage ExponentialGUI::process(AstroImage img, QPromise<void>& promise)
         ++it;
     }
 
-    emit save(img);
-
     return img;
 }
+} // namespace processing
 } // namespace astro
