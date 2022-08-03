@@ -35,7 +35,7 @@ QStringList ITKOutputPlugin::filters() const
 void ITKOutputPlugin::save(ImageTypePtr img, QString filename, QWidget* parent) const
 try
 {
-    io::save(img, filename.toStdString());
+    io::save<uint8_t>(img, filename.toStdString());
 }
 catch (...)
 {
