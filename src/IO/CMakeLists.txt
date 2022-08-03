@@ -1,10 +1,14 @@
 FILE(GLOB ASTRO_IO_SRC
     IO/io.cpp
+    IO/itkinput.cpp
+    IO/itkoutput.cpp
 )
 
 FILE(GLOB ASTRO_IO_HEADERS
     IO/config.h
     IO/io.h
+    IO/itkinput.h
+    IO/itkoutput.h
 )
 
 SET(ASTRO_IO_LIBS ${ITK_LIBRARIES})

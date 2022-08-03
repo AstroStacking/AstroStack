@@ -1,5 +1,7 @@
 #include "itkoutput.h"
 
+#include <IO/itkoutput.h>
+
 #include <QtCore/QFileInfo>
 #include <QtWidgets/QMessageBox>
 
@@ -33,22 +35,7 @@ QStringList ITKOutputPlugin::filters() const
 void ITKOutputPlugin::save(ImageTypePtr img, QString filename, QWidget* parent) const
 try
 {
-    using FilterType = itk::MultiplyImageFilter<ImageType, ScalarImageType, ImageType>;
-    auto filter = FilterType::New();
-    filter->SetInput(img);
-    filter->SetConstant(255.);
-    filter->Update();
-
-    using OutputImageType = itk::Image<itk::RGBPixel<uint8_t>, Dimension>;
-    using CastFilterType = itk::CastImageFilter<ImageType, OutputImageType>;
-    auto castFilter = CastFilterType::New();
-    castFilter->SetInput(filter->GetOutput());
-
-    using WriterType = itk::ImageFileWriter<OutputImageType>;
-    auto writer = WriterType::New();
-    writer->SetInput(castFilter->GetOutput());
-    writer->SetFileName(filename.toStdString());
-    writer->Update();
+    io::save(img, filename.toStdString());
 }
 catch (...)
 {
