@@ -34,11 +34,32 @@ int main(int argc, char** argv)
             "blue", QCoreApplication::translate("main", "Coefficient for the blue channel."));
     parser.addOption(blueOption);
     QCommandLineOption relativeOption(
-            "relative", QCoreApplication::translate("main", "Use relative streteching."));
+            "relative", QCoreApplication::translate("main", "Use relative stretching."));
     parser.addOption(relativeOption);
 
     // Process the actual command line arguments given by the user
     parser.process(app);
+    if(!parser.isSet(inputOption))
+    {
+        throw std::runtime_error("Missing input image");
+    }
+    if(!parser.isSet(outputOption))
+    {
+        throw std::runtime_error("Missing output image");
+    }
+
+    if(!parser.isSet(redOption))
+    {
+        throw std::runtime_error("Missing red argument");
+    }
+    if(!parser.isSet(greenOption))
+    {
+        throw std::runtime_error("Missing green argument");
+    }
+    if(!parser.isSet(blueOption))
+    {
+        throw std::runtime_error("Missing blue argument");
+    }
 
     std::string input = parser.value(inputOption).toStdString();
     std::string output = parser.value(outputOption).toStdString();

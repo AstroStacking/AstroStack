@@ -33,6 +33,23 @@ int main(int argc, char** argv)
 
     // Process the actual command line arguments given by the user
     parser.process(app);
+    if(!parser.isSet(inputOption))
+    {
+        throw std::runtime_error("Missing input image");
+    }
+    if(!parser.isSet(outputOption))
+    {
+        throw std::runtime_error("Missing output image");
+    }
+    
+    if(!parser.isSet(sizeOption))
+    {
+        throw std::runtime_error("Missing filter size argument");
+    }
+    if(!parser.isSet(sigmaOption))
+    {
+        throw std::runtime_error("Missing sigma argument");
+    }
 
     std::string input = parser.value(inputOption).toStdString();
     std::string output = parser.value(outputOption).toStdString();
