@@ -34,4 +34,5 @@ ASTRO_add_executable(
     SRC ${ASTRO_MAIN_SRC}
     HEADERS ${ASTRO_MAIN_HEADERS}
     LIBRARIES AstroAlgorithms AstroQtIO AstroQtProcessing Qt6::Widgets Qt6::Charts
+    BUNDLE TRUE
 )
