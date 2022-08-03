@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <IO/io.h>
+
 #include <itkRGBPixel.h>
 
 namespace astro
