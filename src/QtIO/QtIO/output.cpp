@@ -44,12 +44,7 @@ void OutputInterface::saveImg(const AstroImage& img, QString path, QWidget* pare
         if (plugin->filters().count(extension))
         {
             plugin->save(img.getImg(), path, parent);
-#if ASTRO_HAVE_EXIV2
-            auto image = Exiv2::ImageFactory::open(path.toStdString());
-            assert(image.get() != 0);
-            image->setExifData(img.getExif());
-            image->writeMetadata();
-#endif
+            saveEnrichedImage(path.toStdString(), img);
             return;
         }
     }

@@ -39,4 +39,29 @@ const Exiv2::ExifData& AstroImage::getExif() const
     return m_data;
 }
 #endif
+
+AstroImage enrichImage(const std::string& filename, ImageTypePtr img)
+{
+#if ASTRO_HAVE_EXIV2
+    auto image = Exiv2::ImageFactory::open(filename);
+    assert(image.get() != 0);
+    image->readMetadata();
+#endif
+    return AstroImage(std::move(img)
+#if ASTRO_HAVE_EXIV2
+                              ,
+                      image->exifData()
+#endif
+    );
+}
+
+void saveEnrichedImage(const std::string& filename, const AstroImage& img)
+{
+#if ASTRO_HAVE_EXIV2
+    auto image = Exiv2::ImageFactory::open(filename);
+    assert(image.get() != 0);
+    image->setExifData(img.getExif());
+    image->writeMetadata();
+#endif
+}
 } // namespace astro

@@ -70,4 +70,7 @@ public:
     const Exiv2::ExifData& getExif() const;
 #endif
 };
+
+ASTRO_IO_EXPORT AstroImage enrichImage(const std::string& filename, ImageTypePtr img);
+ASTRO_IO_EXPORT void saveEnrichedImage(const std::string& filename, const AstroImage& img);
 } // namespace astro

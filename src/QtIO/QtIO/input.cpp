@@ -46,17 +46,7 @@ AstroImage InputInterface::loadImg(QString path, QWidget* parent)
             ImageTypePtr img = plugin->open(path, parent);
             if (img)
             {
-#if ASTRO_HAVE_EXIV2
-                auto image = Exiv2::ImageFactory::open(path.toStdString());
-                assert(image.get() != 0);
-                image->readMetadata();
-#endif
-                return AstroImage(img
-#if ASTRO_HAVE_EXIV2
-                                  ,
-                                  image->exifData()
-#endif
-                );
+                return enrichImage(path.toStdString(), std::move(img));
             }
         }
     }
