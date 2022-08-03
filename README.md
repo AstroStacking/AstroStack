@@ -41,6 +41,7 @@ The current shipped ones are:
 ## Changelog
 ### 0.2.0
 
+* Expose the processes as command line tools
 * Mono processing:
   * Light pollution
   * Chromatic smoothing
