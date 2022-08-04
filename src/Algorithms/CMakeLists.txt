@@ -9,6 +9,7 @@ FILE(GLOB ASTRO_ALGORITHMS_HEADERS
     Algos/Filters/Convertors/HSL2RGB.h
     Algos/Filters/Convertors/RGB2HSL.h
     Algos/Filters/mergehslfilter.h
+    Algos/Filters/multifunctorimagefilter.h
     Algos/optim/state.h
     Algos/optim/criteria/composite.h
     Algos/optim/criteria/criteria.h

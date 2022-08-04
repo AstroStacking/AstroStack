@@ -26,11 +26,11 @@ int main(int argc, char** argv)
 
     // Process the actual command line arguments given by the user
     parser.process(app);
-    if(!parser.isSet(inputOption))
+    if (!parser.isSet(inputOption))
     {
         throw std::runtime_error("Missing input image");
     }
-    if(!parser.isSet(outputOption))
+    if (!parser.isSet(outputOption))
     {
         throw std::runtime_error("Missing output image");
     }
@@ -42,8 +42,8 @@ int main(int argc, char** argv)
     astro::AstroImage img = astro::enrichImage(input, astro::io::open(input));
 
     img = astro::processing::lightPollution(img);
-    
-    if(highdef)
+
+    if (highdef)
     {
         astro::io::save<uint16_t>(img.getImg(), output);
     }
@@ -52,6 +52,6 @@ int main(int argc, char** argv)
         astro::io::save<uint8_t>(img.getImg(), output);
     }
     astro::saveEnrichedImage(output, img);
-    
+
     return 0;
 }

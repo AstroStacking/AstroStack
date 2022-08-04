@@ -24,39 +24,35 @@ int main(int argc, char** argv)
     QCommandLineOption highdefOption("high-def", QCoreApplication::translate("main", "Save in 16bits."));
     parser.addOption(highdefOption);
 
-    QCommandLineOption redOption(
-            "red", QCoreApplication::translate("main", "Coefficient for the red channel."));
+    QCommandLineOption redOption("red", QCoreApplication::translate("main", "Coefficient for the red channel."));
     parser.addOption(redOption);
-    QCommandLineOption greenOption(
-            "green", QCoreApplication::translate("main", "Coefficient for the green channel."));
+    QCommandLineOption greenOption("green", QCoreApplication::translate("main", "Coefficient for the green channel."));
     parser.addOption(greenOption);
-    QCommandLineOption blueOption(
-            "blue", QCoreApplication::translate("main", "Coefficient for the blue channel."));
+    QCommandLineOption blueOption("blue", QCoreApplication::translate("main", "Coefficient for the blue channel."));
     parser.addOption(blueOption);
-    QCommandLineOption relativeOption(
-            "relative", QCoreApplication::translate("main", "Use relative stretching."));
+    QCommandLineOption relativeOption("relative", QCoreApplication::translate("main", "Use relative stretching."));
     parser.addOption(relativeOption);
 
     // Process the actual command line arguments given by the user
     parser.process(app);
-    if(!parser.isSet(inputOption))
+    if (!parser.isSet(inputOption))
     {
         throw std::runtime_error("Missing input image");
     }
-    if(!parser.isSet(outputOption))
+    if (!parser.isSet(outputOption))
     {
         throw std::runtime_error("Missing output image");
     }
 
-    if(!parser.isSet(redOption))
+    if (!parser.isSet(redOption))
     {
         throw std::runtime_error("Missing red argument");
     }
-    if(!parser.isSet(greenOption))
+    if (!parser.isSet(greenOption))
     {
         throw std::runtime_error("Missing green argument");
     }
-    if(!parser.isSet(blueOption))
+    if (!parser.isSet(blueOption))
     {
         throw std::runtime_error("Missing blue argument");
     }
@@ -73,8 +69,8 @@ int main(int argc, char** argv)
     astro::AstroImage img = astro::enrichImage(input, astro::io::open(input));
 
     img = astro::processing::histoStretch(img, red, green, blue, relative);
-    
-    if(highdef)
+
+    if (highdef)
     {
         astro::io::save<uint16_t>(img.getImg(), output);
     }
@@ -83,6 +79,6 @@ int main(int argc, char** argv)
         astro::io::save<uint8_t>(img.getImg(), output);
     }
     astro::saveEnrichedImage(output, img);
-    
+
     return 0;
 }

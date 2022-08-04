@@ -1,5 +1,5 @@
 /**
- * \file ChromaticSmootherFilter.h
+ * \file mergehslfilter.h
  */
 
 #pragma once

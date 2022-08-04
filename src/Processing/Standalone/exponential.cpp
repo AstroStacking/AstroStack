@@ -25,21 +25,23 @@ int main(int argc, char** argv)
     parser.addOption(highdefOption);
 
     QCommandLineOption exponentialOption(
-            "exponential", QCoreApplication::translate("main", "Exponential parameter for the transform (must be positive and less than 1)."));
+            "exponential",
+            QCoreApplication::translate("main",
+                                        "Exponential parameter for the transform (must be positive and less than 1)."));
     parser.addOption(exponentialOption);
 
     // Process the actual command line arguments given by the user
     parser.process(app);
-    if(!parser.isSet(inputOption))
+    if (!parser.isSet(inputOption))
     {
         throw std::runtime_error("Missing input image");
     }
-    if(!parser.isSet(outputOption))
+    if (!parser.isSet(outputOption))
     {
         throw std::runtime_error("Missing output image");
     }
 
-    if(!parser.isSet(exponentialOption))
+    if (!parser.isSet(exponentialOption))
     {
         throw std::runtime_error("Missing exponential argument");
     }
@@ -53,8 +55,8 @@ int main(int argc, char** argv)
     astro::AstroImage img = astro::enrichImage(input, astro::io::open(input));
 
     img = astro::processing::exponential(img, exponential);
-    
-    if(highdef)
+
+    if (highdef)
     {
         astro::io::save<uint16_t>(img.getImg(), output);
     }
@@ -63,6 +65,6 @@ int main(int argc, char** argv)
         astro::io::save<uint8_t>(img.getImg(), output);
     }
     astro::saveEnrichedImage(output, img);
-    
+
     return 0;
 }

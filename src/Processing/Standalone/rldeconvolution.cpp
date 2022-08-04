@@ -24,29 +24,28 @@ int main(int argc, char** argv)
     QCommandLineOption highdefOption("high-def", QCoreApplication::translate("main", "Save in 16bits."));
     parser.addOption(highdefOption);
 
-    QCommandLineOption sizeOption(
-            "filter-size", QCoreApplication::translate("main", "Filter size to use for the Gaussian kernel."));
+    QCommandLineOption sizeOption("filter-size",
+                                  QCoreApplication::translate("main", "Filter size to use for the Gaussian kernel."));
     parser.addOption(sizeOption);
-    QCommandLineOption sigmaOption(
-            "sigma", QCoreApplication::translate("main", "Sigma of the Gaussian kernel."));
+    QCommandLineOption sigmaOption("sigma", QCoreApplication::translate("main", "Sigma of the Gaussian kernel."));
     parser.addOption(sigmaOption);
 
     // Process the actual command line arguments given by the user
     parser.process(app);
-    if(!parser.isSet(inputOption))
+    if (!parser.isSet(inputOption))
     {
         throw std::runtime_error("Missing input image");
     }
-    if(!parser.isSet(outputOption))
+    if (!parser.isSet(outputOption))
     {
         throw std::runtime_error("Missing output image");
     }
-    
-    if(!parser.isSet(sizeOption))
+
+    if (!parser.isSet(sizeOption))
     {
         throw std::runtime_error("Missing filter size argument");
     }
-    if(!parser.isSet(sigmaOption))
+    if (!parser.isSet(sigmaOption))
     {
         throw std::runtime_error("Missing sigma argument");
     }
@@ -61,8 +60,8 @@ int main(int argc, char** argv)
     astro::AstroImage img = astro::enrichImage(input, astro::io::open(input));
 
     img = astro::processing::RLDeconvolution(img, filterSize, sigma);
-    
-    if(highdef)
+
+    if (highdef)
     {
         astro::io::save<uint16_t>(img.getImg(), output);
     }
@@ -71,6 +70,6 @@ int main(int argc, char** argv)
         astro::io::save<uint8_t>(img.getImg(), output);
     }
     astro::saveEnrichedImage(output, img);
-    
+
     return 0;
 }
