@@ -8,6 +8,7 @@ FILE(GLOB ASTRO_ALGORITHMS_HEADERS
     Algos/ransac.h
     Algos/Filters/Convertors/HSL2RGB.h
     Algos/Filters/Convertors/RGB2HSL.h
+    Algos/Filters/Stackers/max.h
     Algos/Filters/mergehslfilter.h
     Algos/Filters/multifunctorimagefilter.h
     Algos/optim/state.h
