@@ -4,7 +4,10 @@
 
 #pragma once
 
-#include <InPlaceImageFilter.h>
+#include <itkImageScanlineIterator.h>
+#include <itkInPlaceImageFilter.h>
+#include <itkSimpleDataObjectDecorator.h>
+#include <itkTotalProgressReporter.h>
 
 namespace astro
 {
@@ -27,7 +30,7 @@ public:
     using InputImagePointer = typename InputImageType::ConstPointer;
     using InputImageRegionType = typename InputImageType::RegionType;
     using InputImagePixelType = typename InputImageType::PixelType;
-    using DecoratedInputImagePixelType = SimpleDataObjectDecorator<InputImagePixelType>;
+    using DecoratedInputImagePixelType = itk::SimpleDataObjectDecorator<InputImagePixelType>;
 
     using OutputImageType = TOutputImage;
     using OutputImagePointer = typename OutputImageType::Pointer;
@@ -44,36 +47,33 @@ public:
 
     void setFunctor(const FunctorType& functor)
     {
-        if (m_functor != functor)
+        if (!(m_functor == functor))
         {
             m_functor = functor;
             this->Modified();
         }
     }
 
+    using Superclass::SetNthInput;
+
 protected:
-    MultiFunctorImageFilter()
-    {
-#if !defined(ITK_WRAPPING_PARSER)
-        Superclass::SetFunctor(FunctorType());
-#endif
-    }
+    MultiFunctorImageFilter() { setFunctor(FunctorType()); }
 
     ~MultiFunctorImageFilter() override = default;
 
     void DynamicThreadedGenerateData(const OutputImageRegionType& outputRegionForThread) override
     {
         std::vector<const TInputImage*> images(this->GetNumberOfInputs());
-        std::vector<ImageScanlineConstIterator<TInputImage>> iterators(this->GetNumberOfInputs());
+        std::vector<itk::ImageScanlineConstIterator<TInputImage>> iterators(this->GetNumberOfInputs());
         for (unsigned int idx = 0; idx < this->GetNumberOfInputs(); ++idx)
         {
-            images[idx] = dynamic_cast<const TInputImage*>(ProcessObject::GetInput(idx));
-            iterators[idx] = ImageScanlineConstIterator<TInputImage>(images[idx], outputRegionForThread);
+            images[idx] = dynamic_cast<const TInputImage*>(itk::ProcessObject::GetInput(idx));
+            iterators[idx] = itk::ImageScanlineConstIterator<TInputImage>(images[idx], outputRegionForThread);
         }
         TOutputImage* outputPtr = this->GetOutput(0);
-        ImageScanlineIterator<TOutputImage> outputIt(outputPtr, outputRegionForThread);
+        itk::ImageScanlineIterator<TOutputImage> outputIt(outputPtr, outputRegionForThread);
 
-        TotalProgressReporter progress(this, outputPtr->GetRequestedRegion().GetNumberOfPixels());
+        itk::TotalProgressReporter progress(this, outputPtr->GetRequestedRegion().GetNumberOfPixels());
 
         std::vector<typename TInputImage::PixelType> values(this->GetNumberOfInputs());
 
@@ -85,7 +85,7 @@ protected:
                 {
                     values[idx] = iterators[idx].Get();
                 }
-                outputIt.Set(m_Functor(values));
+                outputIt.Set(m_functor(values));
                 for (unsigned int idx = 0; idx < this->GetNumberOfInputs(); ++idx)
                 {
                     ++iterators[idx];
@@ -104,12 +104,12 @@ protected:
 
     void GenerateOutputInformation() override
     {
-        const DataObject* input = nullptr;
-        InputImagePointer inputPtr = dynamic_cast<const TInputImage*>(ProcessObject::GetInput(0));
+        const itk::DataObject* input = nullptr;
+        InputImagePointer inputPtr = dynamic_cast<const TInputImage*>(itk::ProcessObject::GetInput(0));
 
         for (unsigned int idx = 0; idx < this->GetNumberOfOutputs(); ++idx)
         {
-            DataObject* output = this->GetOutput(idx);
+            itk::DataObject* output = this->GetOutput(idx);
             if (output)
             {
                 output->CopyInformation(input);
