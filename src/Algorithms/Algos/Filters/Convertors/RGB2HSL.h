@@ -15,6 +15,15 @@ namespace filters
 namespace convertors
 {
 template<typename Type>
+Type RGB2L(itk::RGBPixel<Type> rgb)
+{
+    auto Cmax = std::max(std::max(rgb[0], rgb[1]), rgb[2]);
+    auto Cmin = std::min(std::min(rgb[0], rgb[1]), rgb[2]);
+
+    return (Cmax + Cmin) / 2;
+}
+
+template<typename Type>
 itk::RGBPixel<Type> RGB2HSL(itk::RGBPixel<Type> rgb)
 {
     auto Cmax = std::max(std::max(rgb[0], rgb[1]), rgb[2]);
@@ -50,6 +59,15 @@ itk::RGBPixel<Type> RGB2HSL(itk::RGBPixel<Type> rgb)
     hsl[1] = S;
     return hsl;
 }
+
+class LPixelAccessor
+{
+public:
+    using InternalType = PixelType;
+    using ExternalType = UnderlyingPixelType;
+
+    static ExternalType Get(const InternalType& input) { return static_cast<ExternalType>(RGB2L(input)); }
+};
 
 class HSLPixelAccessor
 {

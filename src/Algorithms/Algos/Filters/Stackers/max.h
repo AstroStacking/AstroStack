@@ -20,7 +20,7 @@ public:
     ~Max() = default;
     bool operator==(const Max&) const { return true; }
 
-    Type operator()(std::vector<Type>& values) const { return values[0]; }
+    Type operator()(std::vector<Type>& values) const { return *std::max_element(values.begin(), values.end()); }
 };
 } // namespace stackers
 } // namespace filters

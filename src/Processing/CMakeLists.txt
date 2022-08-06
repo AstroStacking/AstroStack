@@ -38,6 +38,18 @@ ASTRO_add_executable(
     LIBRARIES AstroProcessing Qt6::Core
 )
 
+FILE(GLOB ASTRO_PROCESSING_DECONVOLUTION
+    Standalone/deconvolution.cpp
+)
+
+ASTRO_add_executable(
+    Deconvolution
+    NAME Deconvolution
+    FOLDER Processing
+    SRC ${ASTRO_PROCESSING_DECONVOLUTION}
+    LIBRARIES AstroProcessing Qt6::Core
+)
+
 FILE(GLOB ASTRO_PROCESSING_EXPONENTIAL
     Standalone/exponential.cpp
 )
@@ -74,14 +86,14 @@ ASTRO_add_executable(
     LIBRARIES AstroProcessing Qt6::Core
 )
 
-FILE(GLOB ASTRO_PROCESSING_DECONVOLUTION
-    Standalone/rldeconvolution.cpp
+FILE(GLOB ASTRO_PROCESSING_STACKING
+    Standalone/stacking.cpp
 )
 
 ASTRO_add_executable(
-    Deconvolution
-    NAME Deconvolution
+    Stacking
+    NAME Stacking
     FOLDER Processing
-    SRC ${ASTRO_PROCESSING_DECONVOLUTION}
+    SRC ${ASTRO_PROCESSING_STACKING}
     LIBRARIES AstroProcessing Qt6::Core
 )
