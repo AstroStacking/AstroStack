@@ -29,13 +29,13 @@ int main(int argc, char** argv)
     {
         throw std::runtime_error("Missing output image");
     }
-    
-    QStringList filenames = parser.values("images");
+
+    QStringList filenames = parser.positionalArguments();
     std::string output = parser.value(outputOption).toStdString();
     bool highdef = parser.isSet(highdefOption);
 
     std::vector<astro::AstroImage> images;
-    for(QString filename: filenames)
+    for (QString filename : filenames)
     {
         images.push_back(astro::enrichImage(filename.toStdString(), astro::io::open(filename.toStdString())));
     }

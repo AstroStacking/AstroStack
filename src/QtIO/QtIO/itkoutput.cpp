@@ -9,22 +9,8 @@
 #include <itkImageFileWriter.h>
 #include <itkMultiplyImageFilter.h>
 
-namespace itk
-{
-void JPEGImageIOFactoryRegister__Private();
-void PNGImageIOFactoryRegister__Private();
-void TIFFImageIOFactoryRegister__Private();
-} // namespace itk
-
 namespace astro
 {
-ITKOutputPlugin::ITKOutputPlugin()
-{
-    itk::JPEGImageIOFactoryRegister__Private();
-    itk::PNGImageIOFactoryRegister__Private();
-    itk::TIFFImageIOFactoryRegister__Private();
-}
-
 ITKOutputPlugin::~ITKOutputPlugin() = default;
 
 QStringList ITKOutputPlugin::filters() const

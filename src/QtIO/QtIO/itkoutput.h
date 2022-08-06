@@ -12,7 +12,6 @@ class ITKOutputPlugin
     Q_INTERFACES(astro::OutputInterface)
 
 public:
-    ITKOutputPlugin();
     ~ITKOutputPlugin() override;
     QStringList filters() const override;
     void save(ImageTypePtr img, QString filename, QWidget* parent) const override;

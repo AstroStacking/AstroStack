@@ -12,7 +12,6 @@ class ITKInputPlugin
     Q_INTERFACES(astro::InputInterface)
 
 public:
-    ITKInputPlugin();
     ~ITKInputPlugin() override;
     QStringList filters() const override;
     ImageTypePtr open(QString filename, QWidget* parent) const override;

@@ -41,5 +41,15 @@ ImageTypePtr open(const std::string& filename)
     filter->Update();
     return filter->GetOutput();
 }
+
+bool registerITKPlugins()
+{
+    itk::JPEGImageIOFactoryRegister__Private();
+    itk::PNGImageIOFactoryRegister__Private();
+    itk::TIFFImageIOFactoryRegister__Private();
+}
+
+bool registeredPlugins{registerITKPlugins()};
+
 } // namespace io
 } // namespace astro

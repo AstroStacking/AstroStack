@@ -3,7 +3,7 @@
 namespace astro
 {
 AstroImage::AstroImage() = default;
-;
+
 
 AstroImage::AstroImage(ImageTypePtr img
 #if ASTRO_HAVE_EXIV2

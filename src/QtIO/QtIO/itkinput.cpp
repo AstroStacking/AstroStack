@@ -5,21 +5,8 @@
 #include <QtCore/QFileInfo>
 #include <QtWidgets/QMessageBox>
 
-namespace itk
-{
-void JPEGImageIOFactoryRegister__Private();
-void PNGImageIOFactoryRegister__Private();
-void TIFFImageIOFactoryRegister__Private();
-} // namespace itk
-
 namespace astro
 {
-ITKInputPlugin::ITKInputPlugin()
-{
-    itk::JPEGImageIOFactoryRegister__Private();
-    itk::PNGImageIOFactoryRegister__Private();
-    itk::TIFFImageIOFactoryRegister__Private();
-}
 
 ITKInputPlugin::~ITKInputPlugin() = default;
 
