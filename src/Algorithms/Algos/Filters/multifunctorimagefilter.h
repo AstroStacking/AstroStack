@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <Algos/config.h>
+
 #include <itkImageScanlineIterator.h>
 #include <itkInPlaceImageFilter.h>
 #include <itkSimpleDataObjectDecorator.h>
@@ -47,7 +49,7 @@ public:
 
     void setFunctor(const FunctorType& functor)
     {
-        if (!(m_functor == functor))
+        if (m_functor != functor)
         {
             m_functor = functor;
             this->Modified();

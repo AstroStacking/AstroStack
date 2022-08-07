@@ -4,7 +4,10 @@
 
 #pragma once
 
+#include <Algos/config.h>
+
 #include <itkBinaryGeneratorImageFilter.h>
+#include <itkMacro.h>
 #include <itkNumericTraits.h>
 
 namespace astro
@@ -18,6 +21,7 @@ public:
     MergeHSL() = default;
     ~MergeHSL() = default;
     bool operator==(const MergeHSL&) const { return true; }
+    ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(MergeHSL);
 
     TOutput operator()(const TInput1& A, const TInput2& B) const
     {

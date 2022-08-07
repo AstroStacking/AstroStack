@@ -4,8 +4,10 @@
 
 #pragma once
 
+#include <Algos/config.h>
 #include <IO/io.h>
 
+#include <itkMacro.h>
 #include <itkRGBPixel.h>
 
 namespace astro
@@ -76,6 +78,30 @@ public:
     using ExternalType = PixelType;
 
     static ExternalType Get(const InternalType& input) { return static_cast<ExternalType>(RGB2HSL(input)); }
+};
+
+template<typename TInput, typename TOutput>
+class RGB2HSLFunctor
+{
+public:
+    RGB2HSLFunctor() = default;
+    ~RGB2HSLFunctor() = default;
+    bool operator==(const RGB2HSLFunctor&) const { return true; }
+    ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(RGB2HSLFunctor);
+
+    inline TOutput operator()(const TInput& A) const { return static_cast<TOutput>(RGB2HSLFunctor(A)); }
+};
+
+template<typename TInput, typename TOutput>
+class RGB2LFunctor
+{
+public:
+    RGB2LFunctor() = default;
+    ~RGB2LFunctor() = default;
+    bool operator==(const RGB2LFunctor&) const { return true; }
+    ITK_UNEQUAL_OPERATOR_MEMBER_FUNCTION(RGB2LFunctor);
+
+    inline TOutput operator()(const TInput& A) const { return static_cast<TOutput>(RGB2LFunctor(A)); }
 };
 
 } // namespace convertors
