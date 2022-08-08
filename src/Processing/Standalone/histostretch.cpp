@@ -17,18 +17,18 @@ int main(int argc, char** argv)
     parser.setApplicationDescription("Histo Stretch");
     parser.addHelpOption();
     parser.addVersionOption();
-    QCommandLineOption inputOption("input", QCoreApplication::translate("main", "Input image."));
+    QCommandLineOption inputOption("input", QCoreApplication::translate("main", "Input image."), "input");
     parser.addOption(inputOption);
-    QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output image."));
+    QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output image."), "output");
     parser.addOption(outputOption);
     QCommandLineOption highdefOption("high-def", QCoreApplication::translate("main", "Save in 16bits."));
     parser.addOption(highdefOption);
 
-    QCommandLineOption redOption("red", QCoreApplication::translate("main", "Coefficient for the red channel."));
+    QCommandLineOption redOption("red", QCoreApplication::translate("main", "Coefficient for the red channel."), ".1");
     parser.addOption(redOption);
-    QCommandLineOption greenOption("green", QCoreApplication::translate("main", "Coefficient for the green channel."));
+    QCommandLineOption greenOption("green", QCoreApplication::translate("main", "Coefficient for the green channel."), ".1");
     parser.addOption(greenOption);
-    QCommandLineOption blueOption("blue", QCoreApplication::translate("main", "Coefficient for the blue channel."));
+    QCommandLineOption blueOption("blue", QCoreApplication::translate("main", "Coefficient for the blue channel."), ".1");
     parser.addOption(blueOption);
     QCommandLineOption relativeOption("relative", QCoreApplication::translate("main", "Use relative stretching."));
     parser.addOption(relativeOption);

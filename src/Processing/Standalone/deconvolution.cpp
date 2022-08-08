@@ -17,17 +17,17 @@ int main(int argc, char** argv)
     parser.setApplicationDescription("Deconvolution");
     parser.addHelpOption();
     parser.addVersionOption();
-    QCommandLineOption inputOption("input", QCoreApplication::translate("main", "Input image."));
+    QCommandLineOption inputOption("input", QCoreApplication::translate("main", "Input image."), "input");
     parser.addOption(inputOption);
-    QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output image."));
-    parser.addOption(outputOption);
+    QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output image."), "output");
+   parser.addOption(outputOption);
     QCommandLineOption highdefOption("high-def", QCoreApplication::translate("main", "Save in 16bits."));
     parser.addOption(highdefOption);
 
     QCommandLineOption sizeOption("filter-size",
-                                  QCoreApplication::translate("main", "Filter size to use for the Gaussian kernel."));
+                                  QCoreApplication::translate("main", "Filter size to use for the Gaussian kernel."), "4");
     parser.addOption(sizeOption);
-    QCommandLineOption sigmaOption("sigma", QCoreApplication::translate("main", "Sigma of the Gaussian kernel."));
+    QCommandLineOption sigmaOption("sigma", QCoreApplication::translate("main", "Sigma of the Gaussian kernel."), "2");
     parser.addOption(sigmaOption);
 
     // Process the actual command line arguments given by the user

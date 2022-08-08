@@ -18,7 +18,7 @@ int main(int argc, char** argv)
     parser.addHelpOption();
     parser.addVersionOption();
     parser.addPositionalArgument("images", QCoreApplication::translate("main", "Input images."));
-    QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output image."));
+    QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output image."), "output");
     parser.addOption(outputOption);
     QCommandLineOption highdefOption("high-def", QCoreApplication::translate("main", "Save in 16bits."));
     parser.addOption(highdefOption);

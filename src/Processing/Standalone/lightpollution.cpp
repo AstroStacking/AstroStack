@@ -17,9 +17,9 @@ int main(int argc, char** argv)
     parser.setApplicationDescription("Light Pollution");
     parser.addHelpOption();
     parser.addVersionOption();
-    QCommandLineOption inputOption("input", QCoreApplication::translate("main", "Input image."));
+    QCommandLineOption inputOption("input", QCoreApplication::translate("main", "Input image."), "input");
     parser.addOption(inputOption);
-    QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output image."));
+    QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output image."), "output");
     parser.addOption(outputOption);
     QCommandLineOption highdefOption("high-def", QCoreApplication::translate("main", "Save in 16bits."));
     parser.addOption(highdefOption);
