@@ -86,6 +86,18 @@ ASTRO_add_executable(
     LIBRARIES AstroProcessing Qt6::Core
 )
 
+FILE(GLOB ASTRO_PROCESSING_REGISTER
+    Standalone/register.cpp
+)
+
+ASTRO_add_executable(
+    Register
+    NAME Register
+    FOLDER Processing
+    SRC ${ASTRO_PROCESSING_REGISTER}
+    LIBRARIES AstroProcessing Qt6::Core
+)
+
 FILE(GLOB ASTRO_PROCESSING_STACKING
     Standalone/stacking.cpp
 )
