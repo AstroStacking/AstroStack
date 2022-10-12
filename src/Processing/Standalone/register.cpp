@@ -48,6 +48,12 @@ int main(int argc, char** argv)
 
     astro::AstroImage img = astro::enrichImage(input1, astro::io::open(input1));
 
+    // segment image 1
+    // segment image 2
+    // Find match 1 on 2
+    // Register 1 on 2
+    
+    
     if (highdef)
     {
         astro::io::save<uint16_t>(img.getImg(), output);

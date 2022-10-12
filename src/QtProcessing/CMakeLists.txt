@@ -8,6 +8,7 @@ FILE(GLOB ASTRO_QTPROCESSING_SRC
     QtProcessing/lightpollution.cpp
     QtProcessing/lightpollution.ui
     QtProcessing/monointerface.cpp
+    QtProcessing/multiinterface.cpp
     QtProcessing/rldeconvolution.cpp
     QtProcessing/rldeconvolution.ui
 )
@@ -19,8 +20,10 @@ FILE(GLOB ASTRO_QTPROCESSING_HEADERS
     QtProcessing/histostretch.h
     QtProcessing/lightpollution.h
     QtProcessing/monointerface.h
+    QtProcessing/multiinterface.h
     QtProcessing/rldeconvolution.h
     QtProcessing/ui_monointerface.h
+    QtProcessing/ui_multiinterface.h
 )
 
 FILE(GLOB ASTRO_QTPROCESSING_DOC

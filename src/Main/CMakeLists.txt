@@ -11,6 +11,9 @@ FILE(GLOB ASTRO_MAIN_SRC
     MonoProcessing/monoprocessing.cpp
     MonoProcessing/monoprocessing.ui
     MonoProcessing/monoworkflow.cpp
+    MultiProcessing/multiprocessing.cpp
+    MultiProcessing/multiprocessing.ui
+    MultiProcessing/multiworkflow.cpp
     mainwindow.ui
     mainwindow.cpp
     main.cpp
@@ -24,6 +27,8 @@ FILE(GLOB ASTRO_MAIN_HEADERS
     Explorer/imagedisplay.h
     MonoProcessing/monoprocessing.h
     MonoProcessing/monoworkflow.h
+    MultiProcessing/multiprocessing.h
+    MultiProcessing/multiworkflow.h
     mainwindow.h
 )
 
