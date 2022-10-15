@@ -1,4 +1,5 @@
 FILE(GLOB ASTRO_IO_SRC
+    IO/hdf5.cpp
     IO/io.cpp
     IO/itkinput.cpp
     IO/itkoutput.cpp
@@ -6,6 +7,7 @@ FILE(GLOB ASTRO_IO_SRC
 
 FILE(GLOB ASTRO_IO_HEADERS
     IO/config.h
+    IO/hdf5.h
     IO/io.h
     IO/itkinput.h
     IO/itkoutput.h
@@ -22,5 +24,5 @@ ASTRO_add_library(
     FOLDER IO
     SRC ${ASTRO_IO_SRC}
     HEADERS ${ASTRO_IO_HEADERS}
-    LIBRARIES ${ASTRO_IO_LIBS}
+    LIBRARIES ${ASTRO_IO_LIBS} hdf5::hdf5_cpp
 )
