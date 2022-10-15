@@ -19,7 +19,8 @@ int main(int argc, char** argv)
     parser.addVersionOption();
     QCommandLineOption input1Option("input1", QCoreApplication::translate("main", "Input image."), "input1");
     parser.addOption(input1Option);
-    QCommandLineOption input2Option("input2", QCoreApplication::translate("main", "Input image on which to register."), "input2");
+    QCommandLineOption input2Option("input2", QCoreApplication::translate("main", "Input image on which to register."),
+                                    "input2");
     parser.addOption(input2Option);
     QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output image."), "output");
     parser.addOption(outputOption);
@@ -52,8 +53,8 @@ int main(int argc, char** argv)
     // segment image 2
     // Find match 1 on 2
     // Register 1 on 2
-    
-    
+
+
     if (highdef)
     {
         astro::io::save<uint16_t>(img.getImg(), output);

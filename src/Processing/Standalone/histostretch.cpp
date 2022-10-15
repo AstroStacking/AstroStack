@@ -26,9 +26,11 @@ int main(int argc, char** argv)
 
     QCommandLineOption redOption("red", QCoreApplication::translate("main", "Coefficient for the red channel."), ".1");
     parser.addOption(redOption);
-    QCommandLineOption greenOption("green", QCoreApplication::translate("main", "Coefficient for the green channel."), ".1");
+    QCommandLineOption greenOption("green", QCoreApplication::translate("main", "Coefficient for the green channel."),
+                                   ".1");
     parser.addOption(greenOption);
-    QCommandLineOption blueOption("blue", QCoreApplication::translate("main", "Coefficient for the blue channel."), ".1");
+    QCommandLineOption blueOption("blue", QCoreApplication::translate("main", "Coefficient for the blue channel."),
+                                  ".1");
     parser.addOption(blueOption);
     QCommandLineOption relativeOption("relative", QCoreApplication::translate("main", "Use relative stretching."));
     parser.addOption(relativeOption);
