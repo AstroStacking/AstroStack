@@ -11,6 +11,7 @@ FILE(GLOB ASTRO_IO_HEADERS
     IO/io.h
     IO/itkinput.h
     IO/itkoutput.h
+    IO/traits.h
 )
 
 SET(ASTRO_IO_LIBS ${ITK_LIBRARIES})
