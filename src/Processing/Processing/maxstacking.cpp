@@ -2,7 +2,7 @@
 
 #include <Algos/Filters/Stackers/max.h>
 #include <Algos/Filters/multifunctorimagefilter.h>
-
+#include <IO/traits.h>
 
 namespace astro
 {
@@ -12,25 +12,25 @@ void maxStacking(const H5::DataSet& inputs, H5::DataSet& output)
 {
     H5::DataSpace inputDataspace = inputs.getSpace();
     int ndimsInput = inputDataspace.getSimpleExtentNdims();
-    if (ndimsInput != 4)
+    if (ndimsInput != Traits<ImageType>::NbDimensions + 1)
     {
         throw std::runtime_error("Wrong number of input dimensions");
     }
-    hsize_t dimsInput[4];
-    ndimsInput = inputDataspace.getSimpleExtentDims(dimsInput, NULL);
-    if (dimsInput[3] != 3)
+    hsize_t dimsInput[Traits<ImageType>::NbDimensions + 1];
+    ndimsInput = inputDataspace.getSimpleExtentDims(dimsInput, nullptr);
+    if (dimsInput[Traits<ImageType>::NbDimensions] != Traits<ImageType>::LastDim)
     {
         throw std::runtime_error("Wrong pixel output dimension");
     }
     H5::DataSpace outputDataspace = output.getSpace();
     int ndimsOutput = outputDataspace.getSimpleExtentNdims();
-    if (ndimsOutput != 3)
+    if (ndimsOutput != Traits<ImageType>::NbDimensions)
     {
         throw std::runtime_error("Wrong number of output dimensions");
     }
-    hsize_t dimsOutput[3];
-    ndimsOutput = outputDataspace.getSimpleExtentDims(dimsOutput, NULL);
-    if (dimsOutput[2] != 3)
+    hsize_t dimsOutput[Traits<ImageType>::NbDimensions];
+    ndimsOutput = outputDataspace.getSimpleExtentDims(dimsOutput, nullptr);
+    if (dimsOutput[Traits<ImageType>::NbDimensions - 1] != Traits<ImageType>::LastDim)
     {
         throw std::runtime_error("Wrong pixel output dimension");
     }

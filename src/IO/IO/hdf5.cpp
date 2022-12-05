@@ -1,6 +1,6 @@
 #include "hdf5.h"
 
-#include <io/itkinput.h>
+#include <IO/itkinput.h>
 
 #include <itkImportImageFilter.h>
 
