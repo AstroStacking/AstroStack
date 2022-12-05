@@ -45,7 +45,7 @@ int main(int argc, char** argv)
     QTemporaryFile file;
     file.close();
 
-    H5::H5File h5file(file.fileName().toStdString().c_str(), H5F_ACC_TRUNC);
+    H5::H5File h5file(file.fileName().toStdString(), H5F_ACC_TRUNC);
 
     astro::AstroImage refImg =
             astro::enrichImage(filenames.front().toStdString(), astro::io::open(filenames.front().toStdString()));

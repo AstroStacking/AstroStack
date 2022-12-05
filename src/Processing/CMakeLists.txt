@@ -90,13 +90,13 @@ FILE(GLOB ASTRO_PROCESSING_REGISTER
     Standalone/register.cpp
 )
 
-ASTRO_add_executable(
-    Register
-    NAME Register
-    FOLDER Processing
-    SRC ${ASTRO_PROCESSING_REGISTER}
-    LIBRARIES AstroProcessing Qt6::Core
-)
+#ASTRO_add_executable(
+#    Register
+#    NAME Register
+#    FOLDER Processing
+#    SRC ${ASTRO_PROCESSING_REGISTER}
+#    LIBRARIES AstroProcessing Qt6::Core
+#)
 
 FILE(GLOB ASTRO_PROCESSING_STACKING
     Standalone/stacking.cpp
@@ -105,6 +105,18 @@ FILE(GLOB ASTRO_PROCESSING_STACKING
 ASTRO_add_executable(
     Stacking
     NAME Stacking
+    FOLDER Processing
+    SRC ${ASTRO_PROCESSING_STACKING}
+    LIBRARIES AstroProcessing Qt6::Core
+)
+
+FILE(GLOB ASTRO_PROCESSING_STACKING
+    Standalone/read.cpp
+)
+
+ASTRO_add_executable(
+    Read
+    NAME Read
     FOLDER Processing
     SRC ${ASTRO_PROCESSING_STACKING}
     LIBRARIES AstroProcessing Qt6::Core
