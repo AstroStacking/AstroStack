@@ -19,7 +19,7 @@ int main(int argc, char** argv)
     parser.addPositionalArgument("images", QCoreApplication::translate("main", "Input images."));
     QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output hdf5."), "output");
     parser.addOption(outputOption);
-    QCommandLineOption outputDatasetOption("dataset", QCoreApplication::translate("main", "Dataset hdf5."), "inputs");
+    QCommandLineOption outputDatasetOption("dataset", QCoreApplication::translate("main", "Dataset hdf5."), "inputs", "inputs");
     parser.addOption(outputDatasetOption);
 
     // Process the actual command line arguments given by the user

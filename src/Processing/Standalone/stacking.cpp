@@ -1,19 +1,11 @@
 #include <IO/hdf5.h>
 #include <IO/io.h>
-#include <IO/itkinput.h>
 #include <IO/itkoutput.h>
 #include <Processing/maxstacking.h>
 
 #include <QtCore/QCommandLineOption>
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QCoreApplication>
-#include <QtCore/QTemporaryFile>
-
-namespace
-{
-std::string inputsDatasetName{"inputs"};
-std::string outputDatasetName{"output"};
-} // namespace
 
 int main(int argc, char** argv)
 {
@@ -25,7 +17,12 @@ int main(int argc, char** argv)
     parser.setApplicationDescription("Stacking");
     parser.addHelpOption();
     parser.addVersionOption();
-    parser.addPositionalArgument("images", QCoreApplication::translate("main", "Input images."));
+    QCommandLineOption inputOption("input", QCoreApplication::translate("main", "Input hdf5."), "input");
+    parser.addOption(inputOption);
+    QCommandLineOption inputDatasetOption("dataset", QCoreApplication::translate("main", "Input Dataset."), "inputs", "inputs");
+    parser.addOption(inputDatasetOption);
+    QCommandLineOption outputDatasetOption("outputDataset", QCoreApplication::translate("main", "Output Dataset."), "outputDataset", "output");
+    parser.addOption(outputDatasetOption);
     QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output image."), "output");
     parser.addOption(outputOption);
     QCommandLineOption highdefOption("high-def", QCoreApplication::translate("main", "Save in 16bits."));
@@ -39,43 +36,44 @@ int main(int argc, char** argv)
     }
 
     QStringList filenames = parser.positionalArguments();
+    std::string input = parser.value(inputOption).toStdString();
+    std::string inputsDatasetName = parser.value(inputDatasetOption).toStdString();
     std::string output = parser.value(outputOption).toStdString();
+    std::string outputDatasetName = parser.value(outputDatasetOption).toStdString();
     bool highdef = parser.isSet(highdefOption);
 
-    QTemporaryFile file;
-    file.close();
+    H5::H5File h5file(input, H5F_ACC_RDWR);
 
-    H5::H5File h5file(file.fileName().toStdString(), H5F_ACC_TRUNC);
-
-    astro::AstroImage refImg =
-            astro::enrichImage(filenames.front().toStdString(), astro::io::open(filenames.front().toStdString()));
-    auto size = refImg.getImg()->GetRequestedRegion().GetSize();
-
-    std::vector<std::string> transformedFilenames;
-    for (QString filename : filenames)
+    H5::DataSet inputsDataset = h5file.openDataSet(inputsDatasetName);
+    
+    H5::DataSpace dataspace = inputsDataset.getSpace();
+    int ndims = dataspace.getSimpleExtentNdims();
+    if (ndims != 4)
     {
-        transformedFilenames.push_back(filename.toStdString());
+        throw std::runtime_error("Wrong number of dimensions");
+    }
+    hsize_t dims[4];
+    ndims = dataspace.getSimpleExtentDims(dims, NULL);
+    if (dims[3] != astro::PixelDimension)
+    {
+        throw std::runtime_error("Wrong pixel dimension");
     }
 
-    H5::DataSet inputsDataset = astro::readTo(transformedFilenames, size, h5file, inputsDatasetName);
-
-    hsize_t outputImgDim[3]{size.at(0), size.at(1), astro::PixelDimension};
+    hsize_t outputImgDim[3]{dims[1], dims[2], astro::PixelDimension};
     H5::DataSpace outputSpace(3, outputImgDim);
     H5::DataSet outputDataset = h5file.createDataSet(outputDatasetName, H5::PredType::NATIVE_FLOAT, outputSpace);
 
     astro::processing::maxStacking(inputsDataset, outputDataset);
 
-    refImg.setImg(astro::extractFrom(outputDataset));
-
     if (highdef)
     {
-        astro::io::save<uint16_t>(refImg.getImg(), output);
+        astro::io::save<uint16_t>(astro::extractFrom(outputDataset), output);
     }
     else
     {
-        astro::io::save<uint8_t>(refImg.getImg(), output);
+        astro::io::save<uint8_t>(astro::extractFrom(outputDataset), output);
     }
-    astro::saveEnrichedImage(output, refImg);
+    //astro::saveEnrichedImage(output, refImg);
 
     return 0;
 }
