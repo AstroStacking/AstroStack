@@ -19,9 +19,11 @@ int main(int argc, char** argv)
     parser.addVersionOption();
     QCommandLineOption inputOption("input", QCoreApplication::translate("main", "Input hdf5."), "input");
     parser.addOption(inputOption);
-    QCommandLineOption inputDatasetOption("dataset", QCoreApplication::translate("main", "Input Dataset."), "inputs", "inputs");
+    QCommandLineOption inputDatasetOption("dataset", QCoreApplication::translate("main", "Input Dataset."), "inputs",
+                                          "inputs");
     parser.addOption(inputDatasetOption);
-    QCommandLineOption outputDatasetOption("outputDataset", QCoreApplication::translate("main", "Output Dataset."), "outputDataset", "output");
+    QCommandLineOption outputDatasetOption("outputDataset", QCoreApplication::translate("main", "Output Dataset."),
+                                           "outputDataset", "output");
     parser.addOption(outputDatasetOption);
     QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output image."), "output");
     parser.addOption(outputOption);
@@ -45,7 +47,7 @@ int main(int argc, char** argv)
     H5::H5File h5file(input, H5F_ACC_RDWR);
 
     H5::DataSet inputsDataset = h5file.openDataSet(inputsDatasetName);
-    
+
     H5::DataSpace dataspace = inputsDataset.getSpace();
     int ndims = dataspace.getSimpleExtentNdims();
     if (ndims != 4)
@@ -53,7 +55,7 @@ int main(int argc, char** argv)
         throw std::runtime_error("Wrong number of dimensions");
     }
     hsize_t dims[4];
-    ndims = dataspace.getSimpleExtentDims(dims, NULL);
+    ndims = dataspace.getSimpleExtentDims(dims, nullptr);
     if (dims[3] != astro::PixelDimension)
     {
         throw std::runtime_error("Wrong pixel dimension");
