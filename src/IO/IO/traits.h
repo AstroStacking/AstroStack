@@ -14,7 +14,7 @@ struct Traits<ImageType>
 {
     static constexpr size_t NbDimensions = 3;
     static constexpr bool ConstantLastDim = true;
-    static constexpr bool LastDim = PixelDimension;
+    static constexpr size_t LastDim = PixelDimension;
 };
 
 template<>
