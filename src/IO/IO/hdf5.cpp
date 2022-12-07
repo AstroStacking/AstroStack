@@ -7,6 +7,25 @@
 
 namespace astro
 {
+namespace hdf5
+{
+H5::Group getGroupForDataset(const H5::H5File& dataset, const std::string& datasetName)
+{
+    size_t needSubGroup = datasetName.rfind("/");
+    if (needSubGroup == std::string::npos)
+    {
+        return dataset;
+    }
+    try
+    {
+        return dataset.openGroup(datasetName.substr(0, needSubGroup - 1));
+    }
+    catch (const std::exception&)
+    {
+        return dataset.createGroup(datasetName.substr(0, needSubGroup - 1));
+    }
+}
+
 ImageTypePtr extractFrom(const H5::DataSet& dataset)
 {
     H5::DataSpace dataspace = dataset.getSpace();
@@ -109,6 +128,17 @@ ASTRO_IO_EXPORT ImageTypePtr extractFrom(const H5::DataSet& dataset, size_t inde
     return importFilter->GetOutput();
 }
 
+H5::DataSet writeTo(const ImageTypePtr& img, H5::Group& group, const std::string& datasetName)
+{
+    itk::Size<Dimension> size = img->GetRequestedRegion().GetSize();
+    hsize_t maxDims[3]{size.at(0), size.at(1), PixelDimension};
+    hsize_t inputDim[3]{size.at(0), size.at(1), PixelDimension};
+    H5::DataSpace dataspace(3, inputDim);
+    H5::DataSet dataset = group.createDataSet(datasetName, H5::PredType::NATIVE_FLOAT, dataspace);
+    dataset.write(img->GetBufferPointer(), H5::PredType::NATIVE_FLOAT, dataspace, dataspace);
+    return dataset;
+}
+
 H5::DataSet readTo(const std::vector<std::string>& filenames, itk::Size<Dimension> size, H5::Group& group,
                    const std::string& datasetName)
 {
@@ -126,9 +156,10 @@ H5::DataSet readTo(const std::vector<std::string>& filenames, itk::Size<Dimensio
 
         auto img = io::open(filenames[i]);
 
-        dataset.write(img.GetPointer(), H5::PredType::NATIVE_FLOAT, dataspace, fspace1);
+        dataset.write(img->GetBufferPointer(), H5::PredType::NATIVE_FLOAT, dataspace, fspace1);
     }
 
     return dataset;
 }
+} // namespace hdf5
 } // namespace astro

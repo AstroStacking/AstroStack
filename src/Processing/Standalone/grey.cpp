@@ -1,7 +1,7 @@
 #include <IO/hdf5.h>
 #include <IO/io.h>
 #include <IO/itkoutput.h>
-#include <Processing/maxstacking.h>
+#include <Processing/grey.h>
 
 #include <QtCore/QCommandLineOption>
 #include <QtCore/QCommandLineParser>
@@ -10,11 +10,11 @@
 int main(int argc, char** argv)
 {
     QCoreApplication app(argc, argv);
-    QCoreApplication::setApplicationName("Stacking");
+    QCoreApplication::setApplicationName("Grey");
     QCoreApplication::setApplicationVersion("0.2.0");
 
     QCommandLineParser parser;
-    parser.setApplicationDescription("Stacking");
+    parser.setApplicationDescription("Grey");
     parser.addHelpOption();
     parser.addVersionOption();
     QCommandLineOption inputOption("input", QCoreApplication::translate("main", "Input hdf5."), "input");
@@ -22,8 +22,11 @@ int main(int argc, char** argv)
     QCommandLineOption inputDatasetOption("dataset", QCoreApplication::translate("main", "Input Dataset."), "inputs",
                                           "inputs");
     parser.addOption(inputDatasetOption);
+    QCommandLineOption indexOption("index", QCoreApplication::translate("main", "Image Index for the Dataset."),
+                                   "index");
+    parser.addOption(indexOption);
     QCommandLineOption outputDatasetOption("outputDataset", QCoreApplication::translate("main", "Output Dataset."),
-                                           "stack", "stack");
+                                           "grey", "grey");
     parser.addOption(outputDatasetOption);
     QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output image."), "output");
     parser.addOption(outputOption);
@@ -36,10 +39,14 @@ int main(int argc, char** argv)
     {
         throw std::runtime_error("Missing output image");
     }
+    if (!parser.isSet(indexOption))
+    {
+        throw std::runtime_error("Missing index");
+    }
 
-    QStringList filenames = parser.positionalArguments();
     std::string input = parser.value(inputOption).toStdString();
     std::string inputsDatasetName = parser.value(inputDatasetOption).toStdString();
+    size_t index = parser.value(indexOption).toUInt();
     std::string output = parser.value(outputOption).toStdString();
     std::string outputDatasetName = parser.value(outputDatasetOption).toStdString();
     bool highdef = parser.isSet(highdefOption);
@@ -61,12 +68,8 @@ int main(int argc, char** argv)
         throw std::runtime_error("Wrong pixel dimension");
     }
 
-    hsize_t outputImgDim[3]{dims[1], dims[2], astro::PixelDimension};
-    H5::DataSpace outputSpace(3, outputImgDim);
-    H5::DataSet outputDataset = h5file.createDataSet(outputDatasetName, H5::PredType::NATIVE_FLOAT, outputSpace);
-
-    astro::processing::maxStacking(inputsDataset, outputDataset);
-    astro::ImageTypePtr result = astro::hdf5::extractFrom(outputDataset);
+    H5::Group group = astro::hdf5::getGroupForDataset(h5file, output);
+    astro::ImageTypePtr result = astro::processing::grey(inputsDataset, index, group, outputDatasetName);
 
     if (highdef)
     {

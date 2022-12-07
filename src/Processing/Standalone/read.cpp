@@ -46,7 +46,7 @@ int main(int argc, char** argv)
         transformedFilenames.push_back(filename.toStdString());
     }
 
-    astro::readTo(transformedFilenames, size, h5file, inputsDatasetName);
+    astro::hdf5::readTo(transformedFilenames, size, h5file, inputsDatasetName);
 
     return 0;
 }

@@ -1,6 +1,7 @@
 FILE(GLOB ASTRO_PROCESSING_SRC
     Processing/chromasmoothing.cpp
     Processing/exponential.cpp
+    Processing/grey.cpp
     Processing/histostretch.cpp
     Processing/lightpollution.cpp
     Processing/maxstacking.cpp
@@ -11,6 +12,7 @@ FILE(GLOB ASTRO_PROCESSING_HEADERS
     Processing/config.h
     Processing/chromasmoothing.h
     Processing/exponential.h
+    Processing/grey.h
     Processing/histostretch.h
     Processing/lightpollution.h
     Processing/maxstacking.h
@@ -23,7 +25,7 @@ ASTRO_add_library(
     FOLDER Processing
     SRC ${ASTRO_PROCESSING_SRC}
     HEADERS ${ASTRO_PROCESSING_HEADERS}
-    LIBRARIES AstroAlgorithms AstroIO ${ITK_LIBRARIES} hdf5::hdf5_cpp
+    LIBRARIES AstroAlgorithms AstroIO ${ITK_LIBRARIES} hdf5::hdf5_cpp hdf5::hdf5
 )
 
 FILE(GLOB ASTRO_PROCESSING_CHROMA
@@ -74,6 +76,18 @@ ASTRO_add_executable(
     LIBRARIES AstroProcessing Qt6::Core
 )
 
+FILE(GLOB ASTRO_PROCESSING_GREY
+    Standalone/grey.cpp
+)
+
+ASTRO_add_executable(
+    Grey
+    NAME Grey
+    FOLDER Processing
+    SRC ${ASTRO_PROCESSING_GREY}
+    LIBRARIES AstroProcessing Qt6::Core
+)
+
 FILE(GLOB ASTRO_PROCESSING_LIGHTPOLLUTION
     Standalone/lightpollution.cpp
 )
@@ -83,6 +97,18 @@ ASTRO_add_executable(
     NAME LightPollution
     FOLDER Processing
     SRC ${ASTRO_PROCESSING_LIGHTPOLLUTION}
+    LIBRARIES AstroProcessing Qt6::Core
+)
+
+FILE(GLOB ASTRO_PROCESSING_READ
+    Standalone/read.cpp
+)
+
+ASTRO_add_executable(
+    Read
+    NAME Read
+    FOLDER Processing
+    SRC ${ASTRO_PROCESSING_READ}
     LIBRARIES AstroProcessing Qt6::Core
 )
 
@@ -105,18 +131,6 @@ FILE(GLOB ASTRO_PROCESSING_STACKING
 ASTRO_add_executable(
     Stacking
     NAME Stacking
-    FOLDER Processing
-    SRC ${ASTRO_PROCESSING_STACKING}
-    LIBRARIES AstroProcessing Qt6::Core
-)
-
-FILE(GLOB ASTRO_PROCESSING_STACKING
-    Standalone/read.cpp
-)
-
-ASTRO_add_executable(
-    Read
-    NAME Read
     FOLDER Processing
     SRC ${ASTRO_PROCESSING_STACKING}
     LIBRARIES AstroProcessing Qt6::Core
