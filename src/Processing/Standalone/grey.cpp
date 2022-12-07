@@ -68,8 +68,24 @@ int main(int argc, char** argv)
         throw std::runtime_error("Wrong pixel dimension");
     }
 
-    H5::Group group = astro::hdf5::getGroupForDataset(h5file, output);
-    astro::ImageTypePtr result = astro::processing::grey(inputsDataset, index, group, outputDatasetName);
+    astro::ImageTypePtr result;
+    size_t needSubGroup = outputDatasetName.rfind("/");
+    if (needSubGroup == std::string::npos)
+    {
+        result = astro::processing::grey(inputsDataset, index, h5file, outputDatasetName);
+    }
+    try
+    {
+        result = astro::processing::grey(inputsDataset, index,
+                                         h5file.openGroup(outputDatasetName.substr(0, needSubGroup - 1)),
+                                         outputDatasetName.substr(needSubGroup + 1));
+    }
+    catch (const std::exception&)
+    {
+        result = astro::processing::grey(inputsDataset, index,
+                                         h5file.createGroup(outputDatasetName.substr(0, needSubGroup - 1)),
+                                         outputDatasetName.substr(needSubGroup + 1));
+    }
 
     if (highdef)
     {
