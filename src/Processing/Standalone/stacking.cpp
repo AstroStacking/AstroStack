@@ -23,7 +23,7 @@ int main(int argc, char** argv)
                                           "inputs");
     parser.addOption(inputDatasetOption);
     QCommandLineOption outputDatasetOption("outputDataset", QCoreApplication::translate("main", "Output Dataset."),
-                                           "outputDataset", "output");
+                                           "stack", "stack");
     parser.addOption(outputDatasetOption);
     QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output image."), "output");
     parser.addOption(outputOption);
@@ -66,14 +66,15 @@ int main(int argc, char** argv)
     H5::DataSet outputDataset = h5file.createDataSet(outputDatasetName, H5::PredType::NATIVE_FLOAT, outputSpace);
 
     astro::processing::maxStacking(inputsDataset, outputDataset);
+    astro::ImageTypePtr result = astro::extractFrom(outputDataset);
 
     if (highdef)
     {
-        astro::io::save<uint16_t>(astro::extractFrom(outputDataset), output);
+        astro::io::save<uint16_t>(result, output);
     }
     else
     {
-        astro::io::save<uint8_t>(astro::extractFrom(outputDataset), output);
+        astro::io::save<uint8_t>(result, output);
     }
     //astro::saveEnrichedImage(output, refImg);
 

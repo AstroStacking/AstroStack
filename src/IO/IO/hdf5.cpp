@@ -2,6 +2,7 @@
 
 #include <IO/itkinput.h>
 
+#include <itkCastImageFilter.h>
 #include <itkImportImageFilter.h>
 
 namespace astro
@@ -47,7 +48,12 @@ ImageTypePtr extractFrom(const H5::DataSet& dataset)
 
     importFilter->SetImportPointer(buffer.data(), buffer.size(), importImageFilterWillOwnTheBuffer);
     importFilter->Update();
-    return importFilter->GetOutput();
+
+    using CastFilterType = itk::CastImageFilter<ImageType, ImageType>;
+    auto castFilter = CastFilterType::New();
+    castFilter->SetInput(importFilter->GetOutput());
+    castFilter->Update();
+    return castFilter->GetOutput();
 }
 
 ASTRO_IO_EXPORT ImageTypePtr extractFrom(const H5::DataSet& dataset, size_t index)

@@ -14,25 +14,31 @@ void maxStacking(const H5::DataSet& inputs, H5::DataSet& output)
     int ndimsInput = inputDataspace.getSimpleExtentNdims();
     if (ndimsInput != Traits<ImageType>::NbDimensions + 1)
     {
-        throw std::runtime_error("Wrong number of input dimensions");
+        throw std::runtime_error("Wrong number of input dimensions, got " + std::to_string(ndimsInput) +
+                                 " instead of " + std::to_string(Traits<ImageType>::NbDimensions + 1));
     }
     hsize_t dimsInput[Traits<ImageType>::NbDimensions + 1];
     ndimsInput = inputDataspace.getSimpleExtentDims(dimsInput, nullptr);
     if (dimsInput[Traits<ImageType>::NbDimensions] != Traits<ImageType>::LastDim)
     {
-        throw std::runtime_error("Wrong pixel output dimension");
+        throw std::runtime_error("Wrong pixel input dimension, got " +
+                                 std::to_string(dimsInput[Traits<ImageType>::NbDimensions]) + " instead of " +
+                                 std::to_string(Traits<ImageType>::LastDim));
     }
     H5::DataSpace outputDataspace = output.getSpace();
     int ndimsOutput = outputDataspace.getSimpleExtentNdims();
     if (ndimsOutput != Traits<ImageType>::NbDimensions)
     {
-        throw std::runtime_error("Wrong number of output dimensions");
+        throw std::runtime_error("Wrong number of output dimensions, got " + std::to_string(ndimsOutput) +
+                                 " instead of " + std::to_string(Traits<ImageType>::NbDimensions));
     }
     hsize_t dimsOutput[Traits<ImageType>::NbDimensions];
     ndimsOutput = outputDataspace.getSimpleExtentDims(dimsOutput, nullptr);
     if (dimsOutput[Traits<ImageType>::NbDimensions - 1] != Traits<ImageType>::LastDim)
     {
-        throw std::runtime_error("Wrong pixel output dimension");
+        throw std::runtime_error("Wrong pixel output dimension, got " +
+                                 std::to_string(dimsOutput[Traits<ImageType>::NbDimensions - 1]) + " instead of " +
+                                 std::to_string(Traits<ImageType>::LastDim));
     }
 
     hsize_t countInput[4]{dimsInput[0], 1, dimsInput[2], dimsInput[3]};
