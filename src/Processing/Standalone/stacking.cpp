@@ -63,7 +63,27 @@ int main(int argc, char** argv)
 
     hsize_t outputImgDim[3]{dims[1], dims[2], astro::PixelDimension};
     H5::DataSpace outputSpace(3, outputImgDim);
-    H5::DataSet outputDataset = h5file.createDataSet(outputDatasetName, H5::PredType::NATIVE_FLOAT, outputSpace);
+    H5::DataSet outputDataset;
+
+    size_t needSubGroup = outputDatasetName.rfind("/");
+    if (needSubGroup == std::string::npos)
+    {
+        outputDataset = h5file.createDataSet(outputDatasetName, H5::PredType::NATIVE_FLOAT, outputSpace);
+    }
+    else
+    {
+        H5::Group group;
+        try
+        {
+            group = h5file.openGroup(outputDatasetName.substr(0, needSubGroup));
+        }
+        catch (const H5::FileIException&)
+        {
+            group = h5file.createGroup(outputDatasetName.substr(0, needSubGroup));
+        }
+        outputDataset = group.createDataSet(outputDatasetName.substr(needSubGroup + 1), H5::PredType::NATIVE_FLOAT,
+                                            outputSpace);
+    }
 
     astro::processing::maxStacking(inputsDataset, outputDataset);
     astro::ImageTypePtr result = astro::hdf5::extractFrom(outputDataset);

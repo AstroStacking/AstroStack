@@ -41,6 +41,17 @@ void maxStacking(const H5::DataSet& inputs, H5::DataSet& output)
                                  std::to_string(Traits<ImageType>::LastDim));
     }
 
+    if (dimsInput[2] != dimsOutput[1])
+    {
+        throw std::runtime_error("Input dimension 2 doesn't match output dimension 1, got " +
+                                 std::to_string(dimsInput[2]) + " and " + std::to_string(dimsOutput[1]));
+    }
+    if (dimsInput[3] != dimsOutput[2])
+    {
+        throw std::runtime_error("Input dimension 3 doesn't match output dimension 2, got " +
+                                 std::to_string(dimsInput[3]) + " and " + std::to_string(dimsOutput[2]));
+    }
+
     hsize_t countInput[4]{dimsInput[0], 1, dimsInput[2], dimsInput[3]};
     std::vector<UnderlyingPixelType> inputSlab(dimsInput[0] * dimsInput[2] * dimsInput[3]);
 
