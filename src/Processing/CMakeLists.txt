@@ -6,6 +6,7 @@ FILE(GLOB ASTRO_PROCESSING_SRC
     Processing/lightpollution.cpp
     Processing/maxstacking.cpp
     Processing/rldeconvolution.cpp
+    Processing/stardetection.cpp
 )
 
 FILE(GLOB ASTRO_PROCESSING_HEADERS
@@ -17,6 +18,7 @@ FILE(GLOB ASTRO_PROCESSING_HEADERS
     Processing/lightpollution.h
     Processing/maxstacking.h
     Processing/rldeconvolution.h
+    Processing/stardetection.h
 )
 
 ASTRO_add_library(

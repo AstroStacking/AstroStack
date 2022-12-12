@@ -68,7 +68,7 @@ int main(int argc, char** argv)
         throw std::runtime_error("Wrong pixel dimension");
     }
 
-    astro::ImageTypePtr result;
+    astro::ScalarImageTypePtr result;
     size_t needSubGroup = outputDatasetName.rfind("/");
     if (needSubGroup == std::string::npos)
     {
