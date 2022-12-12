@@ -7,6 +7,6 @@ namespace astro
 {
 namespace processing
 {
-ASTRO_PROCESSING_EXPORT AstroImage RLDeconvolution(AstroImage img, int filterSize, float sigma);
+ASTRO_PROCESSING_EXPORT ImageTypePtr RLDeconvolution(const ImageTypePtr& img, int filterSize, float sigma);
 }
 } // namespace astro

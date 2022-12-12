@@ -39,7 +39,7 @@ RLDeconvolutionGUI::~RLDeconvolutionGUI() = default;
 
 AstroImage RLDeconvolutionGUI::process(AstroImage img, QPromise<void>& promise)
 {
-    img = processing::RLDeconvolution(img, m_ui->filterSize->value(), m_ui->sigma->value());
+    img.setImg(processing::RLDeconvolution(img.getImg(), m_ui->filterSize->value(), m_ui->sigma->value()));
 
     emit save(img);
 

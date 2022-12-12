@@ -7,17 +7,16 @@ namespace astro
 {
 namespace processing
 {
-ASTRO_PROCESSING_EXPORT AstroImage exponential(AstroImage img, float exponent)
+ASTRO_PROCESSING_EXPORT ImageTypePtr exponential(const ImageTypePtr& img, float exponent)
 {
     using DuplicatorType = itk::ImageDuplicator<ImageType>;
     auto duplicator = DuplicatorType::New();
-    duplicator->SetInputImage(img.getImg());
+    duplicator->SetInputImage(img);
     duplicator->Update();
 
-    img.setImg(duplicator->GetOutput());
     using IteratorType = itk::ImageRegionIterator<ImageType>;
 
-    IteratorType it(img.getImg(), img.getImg()->GetRequestedRegion());
+    IteratorType it(duplicator->GetOutput(), duplicator->GetOutput()->GetRequestedRegion());
     it.GoToBegin();
 
     while (!it.IsAtEnd())
@@ -31,7 +30,7 @@ ASTRO_PROCESSING_EXPORT AstroImage exponential(AstroImage img, float exponent)
         ++it;
     }
 
-    return img;
+    return duplicator->GetOutput();
 }
 } // namespace processing
 } // namespace astro

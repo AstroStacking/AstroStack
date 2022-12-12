@@ -54,7 +54,7 @@ void ChromaSmoothingGUI::setApproximateSkewValue(int val)
 
 AstroImage ChromaSmoothingGUI::process(AstroImage img, QPromise<void>& promise)
 {
-    img = processing::chromaSmoothing(img, m_ui->variance->value());
+    img.setImg(processing::chromaSmoothing(img.getImg(), m_ui->variance->value()));
 
     emit save(img);
 

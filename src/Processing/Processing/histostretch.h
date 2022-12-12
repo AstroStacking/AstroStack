@@ -7,6 +7,7 @@ namespace astro
 {
 namespace processing
 {
-ASTRO_PROCESSING_EXPORT AstroImage histoStretch(AstroImage img, float red, float green, float blue, bool relative);
+ASTRO_PROCESSING_EXPORT ImageTypePtr histoStretch(const ImageTypePtr& img, float red, float green, float blue,
+                                                  bool relative);
 }
 } // namespace astro

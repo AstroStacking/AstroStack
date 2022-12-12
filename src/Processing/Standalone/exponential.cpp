@@ -55,7 +55,7 @@ int main(int argc, char** argv)
 
     astro::AstroImage img = astro::enrichImage(input, astro::io::open(input));
 
-    img = astro::processing::exponential(img, exponential);
+    img.setImg(astro::processing::exponential(img.getImg(), exponential));
 
     if (highdef)
     {

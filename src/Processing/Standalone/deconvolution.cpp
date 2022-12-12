@@ -59,7 +59,7 @@ int main(int argc, char** argv)
 
     astro::AstroImage img = astro::enrichImage(input, astro::io::open(input));
 
-    img = astro::processing::RLDeconvolution(img, filterSize, sigma);
+    img.setImg(astro::processing::RLDeconvolution(img.getImg(), filterSize, sigma));
 
     if (highdef)
     {

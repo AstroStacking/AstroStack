@@ -7,6 +7,6 @@ namespace astro
 {
 namespace processing
 {
-ASTRO_PROCESSING_EXPORT AstroImage exponential(AstroImage img, float exponent);
+ASTRO_PROCESSING_EXPORT ImageTypePtr exponential(const ImageTypePtr& img, float exponent);
 }
 } // namespace astro

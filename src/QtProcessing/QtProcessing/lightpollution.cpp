@@ -42,7 +42,7 @@ LightPollutionGUI::~LightPollutionGUI() = default;
 
 AstroImage LightPollutionGUI::process(AstroImage img, QPromise<void>& promise)
 {
-    img = processing::lightPollution(img);
+    img.setImg(processing::lightPollution(img.getImg()));
 
     emit save(img);
 

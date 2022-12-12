@@ -54,7 +54,7 @@ void ExponentialGUI::setApproximateSkewValue(int val)
 
 AstroImage ExponentialGUI::process(AstroImage img, QPromise<void>& promise)
 {
-    img = processing::exponential(img, m_ui->skew->value());
+    img.setImg(processing::exponential(img.getImg(), m_ui->skew->value()));
 
     emit save(img);
 

@@ -9,7 +9,7 @@ namespace astro
 {
 namespace processing
 {
-AstroImage RLDeconvolution(AstroImage img, int filterSize, float sigma)
+ImageTypePtr RLDeconvolution(const ImageTypePtr& img, int filterSize, float sigma)
 {
     ScalarImageTypePtr kernel = ScalarImageType::New();
     ScalarImageType::SizeType size;
@@ -44,13 +44,13 @@ AstroImage RLDeconvolution(AstroImage img, int filterSize, float sigma)
     auto indexSelectionFilter2 = IndexSelectionType::New();
 
     indexSelectionFilter0->SetIndex(0);
-    indexSelectionFilter0->SetInput(img.getImg());
+    indexSelectionFilter0->SetInput(img);
     indexSelectionFilter0->Update();
     indexSelectionFilter1->SetIndex(1);
-    indexSelectionFilter1->SetInput(img.getImg());
+    indexSelectionFilter1->SetInput(img);
     indexSelectionFilter1->Update();
     indexSelectionFilter2->SetIndex(2);
-    indexSelectionFilter2->SetInput(img.getImg());
+    indexSelectionFilter2->SetInput(img);
     indexSelectionFilter2->Update();
 
     auto deconvolutionFilter0 = DeconvolutionFilterType::New();
@@ -74,9 +74,7 @@ AstroImage RLDeconvolution(AstroImage img, int filterSize, float sigma)
     composeFilter->SetInput3(deconvolutionFilter2->GetOutput());
 
     composeFilter->Update();
-    img.setImg(composeFilter->GetOutput());
-
-    return img;
+    return composeFilter->GetOutput();
 }
 } // namespace processing
 } // namespace astro

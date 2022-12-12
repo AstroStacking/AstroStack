@@ -70,7 +70,7 @@ int main(int argc, char** argv)
 
     astro::AstroImage img = astro::enrichImage(input, astro::io::open(input));
 
-    img = astro::processing::histoStretch(img, red, green, blue, relative);
+    img.setImg(astro::processing::histoStretch(img.getImg(), red, green, blue, relative));
 
     if (highdef)
     {

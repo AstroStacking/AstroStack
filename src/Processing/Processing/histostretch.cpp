@@ -94,19 +94,18 @@ std::array<float, 4> getLimits(const ImageTypePtr& img, float red, float green, 
 }
 } // namespace
 
-AstroImage histoStretch(AstroImage img, float red, float green, float blue, bool relative)
+ImageTypePtr histoStretch(const ImageTypePtr& img, float red, float green, float blue, bool relative)
 {
-    std::array<float, 4> shift = getLimits(img.getImg(), red, green, blue, relative);
+    std::array<float, 4> shift = getLimits(img, red, green, blue, relative);
 
     using DuplicatorType = itk::ImageDuplicator<ImageType>;
     auto duplicator = DuplicatorType::New();
-    duplicator->SetInputImage(img.getImg());
+    duplicator->SetInputImage(img);
     duplicator->Update();
 
-    img.setImg(duplicator->GetOutput());
     using IteratorType = itk::ImageRegionIterator<ImageType>;
 
-    IteratorType it(img.getImg(), img.getImg()->GetRequestedRegion());
+    IteratorType it(duplicator->GetOutput(), duplicator->GetOutput()->GetRequestedRegion());
     it.GoToBegin();
 
     while (!it.IsAtEnd())
@@ -120,7 +119,7 @@ AstroImage histoStretch(AstroImage img, float red, float green, float blue, bool
         ++it;
     }
 
-    return img;
+    return duplicator->GetOutput();
 }
 } // namespace processing
 } // namespace astro

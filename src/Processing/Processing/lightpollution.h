@@ -7,6 +7,6 @@ namespace astro
 {
 namespace processing
 {
-ASTRO_PROCESSING_EXPORT AstroImage lightPollution(AstroImage img);
+ASTRO_PROCESSING_EXPORT ImageTypePtr lightPollution(const ImageTypePtr& img);
 }
 } // namespace astro

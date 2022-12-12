@@ -51,8 +51,7 @@ int main(int argc, char** argv)
     float variance = parser.value(varianceOption).toFloat();
 
     astro::AstroImage img = astro::enrichImage(input, astro::io::open(input));
-
-    img = astro::processing::chromaSmoothing(img, variance);
+    img.setImg(astro::processing::chromaSmoothing(img.getImg(), variance));
 
     if (highdef)
     {

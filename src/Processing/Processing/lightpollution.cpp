@@ -8,20 +8,18 @@ namespace astro
 {
 namespace processing
 {
-AstroImage lightPollution(AstroImage img)
+ImageTypePtr lightPollution(const ImageTypePtr& img)
 {
-    ImageTypePtr light = estimateGradient(img.getImg());
+    ImageTypePtr light = estimateGradient(img);
 
     using SubtractImageFilterType = itk::SubtractImageFilter<ImageType, ImageType>;
 
     auto subtractFilter = SubtractImageFilterType::New();
-    subtractFilter->SetInput1(img.getImg());
+    subtractFilter->SetInput1(img);
     subtractFilter->SetInput2(light);
     subtractFilter->Update();
 
-    img.setImg(subtractFilter->GetOutput());
-
-    return img;
+    return subtractFilter->GetOutput();
 }
 } // namespace processing
 } // namespace astro

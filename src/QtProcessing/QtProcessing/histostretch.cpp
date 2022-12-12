@@ -75,8 +75,8 @@ void HistoStretchGUI::setApproximateGreenValue(int val)
 
 AstroImage HistoStretchGUI::process(AstroImage img, QPromise<void>& promise)
 {
-    img = processing::histoStretch(img, m_ui->red->value(), m_ui->green->value(), m_ui->blue->value(),
-                                   m_ui->relative->isChecked());
+    img.setImg(processing::histoStretch(img.getImg(), m_ui->red->value(), m_ui->green->value(), m_ui->blue->value(),
+                                        m_ui->relative->isChecked()));
 
     emit save(img);
 

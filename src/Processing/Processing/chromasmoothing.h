@@ -7,6 +7,6 @@ namespace astro
 {
 namespace processing
 {
-ASTRO_PROCESSING_EXPORT AstroImage chromaSmoothing(AstroImage img, float variance);
+ASTRO_PROCESSING_EXPORT ImageTypePtr chromaSmoothing(const ImageTypePtr& img, float variance);
 }
 } // namespace astro

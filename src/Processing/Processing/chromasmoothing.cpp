@@ -15,7 +15,7 @@ namespace astro
 {
 namespace processing
 {
-ASTRO_PROCESSING_EXPORT AstroImage chromaSmoothing(AstroImage img, float variance)
+ASTRO_PROCESSING_EXPORT ImageTypePtr chromaSmoothing(const ImageTypePtr& img, float variance)
 {
 
     using IndexSelectionType = itk::VectorIndexSelectionCastImageFilter<ImageType, ScalarImageType>;
@@ -27,13 +27,13 @@ ASTRO_PROCESSING_EXPORT AstroImage chromaSmoothing(AstroImage img, float varianc
     auto indexSelectionFilter2 = IndexSelectionType::New();
 
     indexSelectionFilter0->SetIndex(0);
-    indexSelectionFilter0->SetInput(img.getImg());
+    indexSelectionFilter0->SetInput(img);
     indexSelectionFilter0->Update();
     indexSelectionFilter1->SetIndex(1);
-    indexSelectionFilter1->SetInput(img.getImg());
+    indexSelectionFilter1->SetInput(img);
     indexSelectionFilter1->Update();
     indexSelectionFilter2->SetIndex(2);
-    indexSelectionFilter2->SetInput(img.getImg());
+    indexSelectionFilter2->SetInput(img);
     indexSelectionFilter2->Update();
 
     // Create and setup a Gaussian filter
@@ -59,7 +59,7 @@ ASTRO_PROCESSING_EXPORT AstroImage chromaSmoothing(AstroImage img, float varianc
     using RGB2HSLConvertor = itk::ImageAdaptor<ImageType, filters::convertors::HSLPixelAccessor>;
     auto originalImg = RGB2HSLConvertor::New();
     auto smoothImg = RGB2HSLConvertor::New();
-    originalImg->SetImage(img.getImg());
+    originalImg->SetImage(img);
     smoothImg->SetImage(composeFilter->GetOutput());
     originalImg->Update();
     smoothImg->Update();
@@ -80,7 +80,7 @@ ASTRO_PROCESSING_EXPORT AstroImage chromaSmoothing(AstroImage img, float varianc
     castFilter->SetInput(finalImg);
     castFilter->Update();
 
-    return img;
+    return castFilter->GetOutput();
 }
 } // namespace processing
 } // namespace astro

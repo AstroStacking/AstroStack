@@ -41,7 +41,7 @@ int main(int argc, char** argv)
 
     astro::AstroImage img = astro::enrichImage(input, astro::io::open(input));
 
-    img = astro::processing::lightPollution(img);
+    img.setImg(astro::processing::lightPollution(img.getImg()));
 
     if (highdef)
     {
