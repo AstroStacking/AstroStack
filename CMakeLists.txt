@@ -20,6 +20,8 @@ find_package(HDF5 COMPONENTS CXX)
 find_package(Eigen3 REQUIRED)
 find_package(GTest REQUIRED)
 
+enable_testing()
+
 if(ENABLE_EXIV2)
     find_package(Exiv2)
 endif()

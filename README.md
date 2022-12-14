@@ -16,6 +16,8 @@ On Windows, you can also use the package that are packaged in a release.
 Otherwise, launch the CMake GUI and set ITK_DIR, Eigen_DIR and Qt6_DIR. Then build the project and run it.
 Installation process should install all AstroStack libraries and plugins at the proper locations.
 
+On MacOS, set CMAKE_XCODE_CODESIGN_IDENTITY and CMAKE_XCODE_ATTRIBUTE_DEVELOPMENT_TEAM.
+
 ## How to use AstroStack and what's available
 
 Currently only processing one photo at a time is possible. The future stacking process will be based on the Python code prototype in [the Stack project](https://github.com/AstroStacking/Stack).
