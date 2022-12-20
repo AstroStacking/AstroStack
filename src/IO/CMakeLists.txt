@@ -27,3 +27,5 @@ ASTRO_add_library(
     HEADERS ${ASTRO_IO_HEADERS}
     LIBRARIES ${ASTRO_IO_LIBS} hdf5::hdf5_cpp
 )
+
+add_subdirectory(Tests)

@@ -233,10 +233,13 @@ ASTRO_add_executable(${PREFIX}
 if(ENABLE_TEST_DISCOVERY)
   gtest_discover_tests(${${PREFIX}_NAME}
     TEST_PREFIX ${${PREFIX}_TESTNAME}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
   )
 else()
   add_test(NAME ${${PREFIX}_TESTNAME}
-     COMMAND ${${PREFIX}_NAME})
+     COMMAND ${${PREFIX}_NAME}
+     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  )
 endif()
 
 set_target_properties(${${PREFIX}_NAME} PROPERTIES

@@ -1,7 +1,10 @@
 FILE(GLOB TESTS_PROCESSING_SRC
+    grey.cpp
 )
 
 FILE(GLOB TESTS_PROCESSING_HEADERS
+    simple.png
+    simple_greyed.png
 )
 
 ASTRO_add_test(
