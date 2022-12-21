@@ -27,7 +27,7 @@ ASTRO_add_library(
     FOLDER Processing
     SRC ${ASTRO_PROCESSING_SRC}
     HEADERS ${ASTRO_PROCESSING_HEADERS}
-    LIBRARIES AstroAlgorithms AstroIO ${ITK_LIBRARIES} hdf5::hdf5_cpp hdf5::hdf5
+    LIBRARIES AstroAlgorithms AstroIO ${ITK_LIBRARIES} hdf5::hdf5_cpp
 )
 
 add_subdirectory(Standalone)

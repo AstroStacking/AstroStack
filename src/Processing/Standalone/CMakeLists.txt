@@ -70,18 +70,6 @@ ASTRO_add_executable(
     LIBRARIES AstroProcessing Qt6::Core
 )
 
-FILE(GLOB ASTRO_PROCESSING_READ
-    read.cpp
-)
-
-ASTRO_add_executable(
-    Read
-    NAME Read
-    FOLDER Processing/Standalone
-    SRC ${ASTRO_PROCESSING_READ}
-    LIBRARIES AstroProcessing Qt6::Core
-)
-
 FILE(GLOB ASTRO_PROCESSING_REGISTER
     register.cpp
 )
