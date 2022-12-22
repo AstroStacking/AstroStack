@@ -12,7 +12,7 @@ TEST(ITK, Input)
     ASSERT_EQ(img->GetRequestedRegion().GetSize(), size);
 
     astro::PixelType black(0.f);
-    
+
     using IteratorType = itk::ImageRegionIterator<astro::ImageType>;
     IteratorType it(img, img->GetRequestedRegion());
     it.GoToBegin();
@@ -27,6 +27,23 @@ TEST(ITK, Input)
 
 TEST(ITK, Output)
 {
-/*    itk::Size<astro::Dimension> size{10, 20};
-    astro::hdf5::readTo({"black.png"}, size, file.createGroup("test"), "inputs");*/
+    auto img = astro::io::open("black.png");
+    astro::io::save<uint8_t>(img, "black_bis.png");
+
+    img = astro::io::open("black_bis.png");
+    itk::Size<astro::Dimension> size{20, 10};
+    ASSERT_EQ(img->GetRequestedRegion().GetSize(), size);
+
+    astro::PixelType black(0.f);
+
+    using IteratorType = itk::ImageRegionIterator<astro::ImageType>;
+    IteratorType it(img, img->GetRequestedRegion());
+    it.GoToBegin();
+
+    while (!it.IsAtEnd())
+    {
+        auto value = it.Get();
+        ASSERT_EQ(value, black);
+        ++it;
+    }
 }
