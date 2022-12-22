@@ -1,8 +1,10 @@
 FILE(GLOB TESTS_IO_SRC
-    read.cpp
+    hdf5.cpp
+    itk.cpp
 )
 
 FILE(GLOB TESTS_IO_HEADERS
+    black.png
     gradient.png
     gradient_greyed.png
 )
