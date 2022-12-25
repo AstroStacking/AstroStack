@@ -68,7 +68,7 @@ TEST(ITK, InputGradient)
         int j = pixel % 256;
         for (int k = 0; k < 3; ++k)
         {
-            ASSERT_NEAR(value[k], k == i ? j / 255. : 0, 0.00001);
+            ASSERT_NEAR(value[k], k == i ? j / 255.f : 0, 0.00001);
         }
         ++it;
         ++pixel;
@@ -93,7 +93,7 @@ TEST(ITK, InputGradientGreyed)
         int j = pixel % 256;
         for (int k = 0; k < 3; ++k)
         {
-            ASSERT_NEAR(value[k], j / 255., 0.00001);
+            ASSERT_NEAR(value[k], j / 255.f, 0.00001);
         }
         ++it;
         ++pixel;
