@@ -15,8 +15,6 @@ TEST_F(HDF5TestSuite, ProcessGrey)
 
     ASSERT_EQ(result->GetRequestedRegion().GetSize(), size);
 
-    astro::PixelType black(0.f);
-
     using IteratorType = itk::ImageRegionIterator<astro::ScalarImageType>;
     IteratorType it(result, result->GetRequestedRegion());
     it.GoToBegin();

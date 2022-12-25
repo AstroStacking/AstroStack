@@ -1,4 +1,5 @@
 FILE(GLOB TESTS_PROCESSING_SRC
+    exponential.cpp
     grey.cpp
 )
 
