@@ -1,6 +1,6 @@
+#include <Algos/Filters/Convertors/RGB2HSL.h>
 #include <IO/itkinput.h>
 #include <Processing/chromasmoothing.h>
-#include <Algos/Filters/Convertors/RGB2HSL.h>
 
 #include <gtest/gtest.h>
 
@@ -11,7 +11,7 @@ TEST(Processing, ChromaSmoothing)
     auto img = astro::io::open("rgb.png");
 
     constexpr double variance = 5;
-    
+
     auto result = astro::processing::chromaSmoothing(img, variance);
 
     using IteratorType = itk::ImageRegionIterator<astro::ImageType>;

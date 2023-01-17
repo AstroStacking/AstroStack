@@ -68,7 +68,7 @@ float getMaxHistogram(const ImageTypePtr& img, double ratio)
     return (justBelow.base() - histFilt.begin()) / static_cast<float>(BINS);
 }
 
-std::array<float, 4> getRelativeLimits(const ImageTypePtr& img, float red, float green, float blue)
+std::array<float, 3> getRelativeLimits(const ImageTypePtr& img, float red, float green, float blue)
 {
     using IndexSelectionRed = itk::ImageAdaptor<ImageType, RedChannelPixelAccessor>;
     auto indexSelectionFilter0 = IndexSelectionRed::New();
@@ -81,23 +81,22 @@ std::array<float, 4> getRelativeLimits(const ImageTypePtr& img, float red, float
     indexSelectionFilter2->SetImage(img);
 
     return {{getMaxHistogram(indexSelectionFilter0, red), getMaxHistogram(indexSelectionFilter1, green),
-             getMaxHistogram(indexSelectionFilter2, blue), 1}};
+             getMaxHistogram(indexSelectionFilter2, blue)}};
 }
 
-std::array<float, 4> getLimits(const ImageTypePtr& img, float red, float green, float blue, bool relative)
+std::array<float, 3> getLimits(const ImageTypePtr& img, float red, float green, float blue, bool relative)
 {
     if (relative)
     {
         return getRelativeLimits(img, red, green, blue);
     }
-    return {{red, green, blue, 1}};
+    return {{red, green, blue}};
 }
 } // namespace
 
 ImageTypePtr histoStretch(const ImageTypePtr& img, float red, float green, float blue, bool relative)
 {
-    std::array<float, 4> shift = getLimits(img, red, green, blue, relative);
-
+    std::array<float, 3> shift = getLimits(img, red, green, blue, relative);
     using DuplicatorType = itk::ImageDuplicator<ImageType>;
     auto duplicator = DuplicatorType::New();
     duplicator->SetInputImage(img);

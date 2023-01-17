@@ -10,7 +10,7 @@ TEST(Processing, Exponential)
     auto img = astro::io::open("gradient.png");
 
     constexpr double exponent = 10;
-    
+
     auto result = astro::processing::exponential(img, exponent);
 
     using IteratorType = itk::ImageRegionIterator<astro::ImageType>;
