@@ -1,6 +1,12 @@
 FILE(GLOB TESTS_PROCESSING_SRC
+    chromasmoothing.cpp
     exponential.cpp
+    histostretch.cpp
     grey.cpp
+    lightpollution.cpp
+    maxstacking.cpp
+    rldeconvolution.cpp
+    stardetection.cpp
 )
 
 FILE(GLOB TESTS_PROCESSING_HEADERS
