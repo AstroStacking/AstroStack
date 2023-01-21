@@ -9,7 +9,9 @@ namespace astro
 {
 namespace processing
 {
-ImageTypePtr RLDeconvolution(const ImageTypePtr& img, int filterSize, float sigma)
+namespace
+{
+ScalarImageTypePtr generateKernel(int filterSize, float sigma)
 {
     ScalarImageTypePtr kernel = ScalarImageType::New();
     ScalarImageType::SizeType size;
@@ -34,7 +36,12 @@ ImageTypePtr RLDeconvolution(const ImageTypePtr& img, int filterSize, float sigm
                                       (sigma * sigma)));
         }
     }
+    return kernel;
+}
+} // namespace
 
+ImageTypePtr RLDeconvolution(const ImageTypePtr& img, const ScalarImageTypePtr& kernel)
+{
     using IndexSelectionType = itk::VectorIndexSelectionCastImageFilter<ImageType, ScalarImageType>;
     using DeconvolutionFilterType = itk::RichardsonLucyDeconvolutionImageFilter<ScalarImageType>;
     using ComposeFilterType = itk::ComposeImageFilter<ScalarImageType, ImageType>;
@@ -75,6 +82,12 @@ ImageTypePtr RLDeconvolution(const ImageTypePtr& img, int filterSize, float sigm
 
     composeFilter->Update();
     return composeFilter->GetOutput();
+}
+
+ImageTypePtr RLDeconvolution(const ImageTypePtr& img, int filterSize, float sigma)
+{
+    ScalarImageTypePtr kernel = generateKernel(filterSize, sigma);
+    return RLDeconvolution(img, kernel);
 }
 } // namespace processing
 } // namespace astro
