@@ -158,14 +158,14 @@ H5::DataSet readTo(const std::vector<std::string>& filenames, itk::Size<Dimensio
     return dataset;
 }
 
-H5::DataSet createDataset(const std::string& outputDatasetName, const H5::DataSpace& outputSpace,
+H5::DataSet createDataset(const std::string& outputDatasetName, const H5::DataSpace& outputSpace, H5::PredType type,
                           const H5::H5File& h5file)
 {
     H5::DataSet outputDataset;
     size_t needSubGroup = outputDatasetName.rfind("/");
     if (needSubGroup == std::string::npos)
     {
-        outputDataset = h5file.createDataSet(outputDatasetName, H5::PredType::NATIVE_FLOAT, outputSpace);
+        outputDataset = h5file.createDataSet(outputDatasetName, type, outputSpace);
     }
     else
     {
@@ -178,8 +178,7 @@ H5::DataSet createDataset(const std::string& outputDatasetName, const H5::DataSp
         {
             group = h5file.createGroup(outputDatasetName.substr(0, needSubGroup));
         }
-        outputDataset = group.createDataSet(outputDatasetName.substr(needSubGroup + 1), H5::PredType::NATIVE_FLOAT,
-                                            outputSpace);
+        outputDataset = group.createDataSet(outputDatasetName.substr(needSubGroup + 1), type, outputSpace);
     }
     return outputDataset;
 }

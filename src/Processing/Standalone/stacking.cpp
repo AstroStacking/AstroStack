@@ -63,7 +63,8 @@ int main(int argc, char** argv)
 
     hsize_t outputImgDim[3]{dims[1], dims[2], astro::PixelDimension};
     H5::DataSpace outputSpace(3, outputImgDim);
-    H5::DataSet outputDataset = astro::hdf5::createDataset(outputDatasetName, outputSpace, h5file);
+    H5::DataSet outputDataset =
+            astro::hdf5::createDataset(outputDatasetName, outputSpace, H5::PredType::NATIVE_FLOAT, h5file);
     astro::processing::maxStacking(inputsDataset, outputDataset);
     astro::ImageTypePtr result = astro::hdf5::extractFrom(outputDataset);
 
