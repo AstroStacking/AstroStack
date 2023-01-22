@@ -14,5 +14,7 @@ ASTRO_IO_EXPORT H5::DataSet writeTo(const ImageType& img, const H5::Group& group
 ASTRO_IO_EXPORT H5::DataSet writeTo(const ScalarImageType& img, const H5::Group& group, const std::string& datasetName);
 ASTRO_IO_EXPORT H5::DataSet readTo(const std::vector<std::string>& filenames, itk::Size<Dimension> size,
                                    const H5::Group& group, const std::string& datasetName);
+ASTRO_IO_EXPORT H5::DataSet createDataset(const std::string& outputDatasetName, const H5::DataSpace& outputSpace,
+                                          const H5::H5File& h5file);
 } // namespace hdf5
 } // namespace astro

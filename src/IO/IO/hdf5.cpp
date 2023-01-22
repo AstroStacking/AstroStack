@@ -157,5 +157,31 @@ H5::DataSet readTo(const std::vector<std::string>& filenames, itk::Size<Dimensio
 
     return dataset;
 }
+
+H5::DataSet createDataset(const std::string& outputDatasetName, const H5::DataSpace& outputSpace,
+                          const H5::H5File& h5file)
+{
+    H5::DataSet outputDataset;
+    size_t needSubGroup = outputDatasetName.rfind("/");
+    if (needSubGroup == std::string::npos)
+    {
+        outputDataset = h5file.createDataSet(outputDatasetName, H5::PredType::NATIVE_FLOAT, outputSpace);
+    }
+    else
+    {
+        H5::Group group;
+        try
+        {
+            group = h5file.openGroup(outputDatasetName.substr(0, needSubGroup));
+        }
+        catch (const H5::FileIException&)
+        {
+            group = h5file.createGroup(outputDatasetName.substr(0, needSubGroup));
+        }
+        outputDataset = group.createDataSet(outputDatasetName.substr(needSubGroup + 1), H5::PredType::NATIVE_FLOAT,
+                                            outputSpace);
+    }
+    return outputDataset;
+}
 } // namespace hdf5
 } // namespace astro
