@@ -17,10 +17,13 @@ using UnderlyingPixelType = float;
 constexpr unsigned int Dimension = 2;
 using PixelType = itk::RGBPixel<UnderlyingPixelType>;
 constexpr unsigned int PixelDimension = PixelType::Length;
+
 using ImageType = itk::Image<PixelType, Dimension>;
 using ScalarImageType = itk::Image<UnderlyingPixelType, Dimension>;
+using ScalarIntegerImageType = itk::Image<int32_t, Dimension>;
 using ImageTypePtr = itk::SmartPointer<ImageType>;
 using ScalarImageTypePtr = itk::SmartPointer<ScalarImageType>;
+using ScalarIntegerImageTypePtr = itk::SmartPointer<ScalarIntegerImageType>;
 
 class RedChannelPixelAccessor
 {

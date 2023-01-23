@@ -5,8 +5,8 @@
 #include <itkImageRegionIterator.h>
 #include <itkImageToHistogramFilter.h>
 #include <itkMinimumMaximumImageCalculator.h>
-#include <itkMultiplyImageFilter.h>
 #include <itkMultiThreaderBase.h>
+#include <itkMultiplyImageFilter.h>
 
 #include <numeric>
 

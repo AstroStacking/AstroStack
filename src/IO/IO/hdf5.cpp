@@ -116,6 +116,51 @@ ASTRO_IO_EXPORT ImageTypePtr extractFrom(const H5::DataSet& dataset, size_t inde
     return castFilter->GetOutput();
 }
 
+ScalarImageTypePtr extractScalarFrom(const H5::DataSet& dataset)
+{
+    H5::DataSpace dataspace = dataset.getSpace();
+    int ndims = dataspace.getSimpleExtentNdims();
+    if (ndims != 2)
+    {
+        throw std::runtime_error("Wrong number of dimensions");
+    }
+    hsize_t dims[2];
+    ndims = dataspace.getSimpleExtentDims(dims, nullptr);
+
+    using ImportFilterType = itk::ImportImageFilter<astro::UnderlyingPixelType, astro::Dimension>;
+    auto importFilter = ImportFilterType::New();
+    ImportFilterType::SizeType regionSize;
+
+    regionSize[0] = dims[0]; // size along X
+    regionSize[1] = dims[1]; // size along Y
+
+    ImportFilterType::IndexType start;
+    start.Fill(0);
+
+    ImportFilterType::RegionType region;
+    region.SetIndex(start);
+    region.SetSize(regionSize);
+    importFilter->SetRegion(region);
+
+    const itk::SpacePrecisionType origin[astro::Dimension] = {0.0, 0.0};
+    importFilter->SetOrigin(origin);
+    const itk::SpacePrecisionType spacing[astro::Dimension] = {1.0, 1.0};
+    importFilter->SetSpacing(spacing);
+
+    const bool importImageFilterWillOwnTheBuffer = false;
+    std::vector<astro::UnderlyingPixelType> buffer(dims[0] * dims[1]);
+    dataset.read(buffer.data(), H5::PredType::NATIVE_FLOAT, dataspace, dataspace);
+
+    importFilter->SetImportPointer(buffer.data(), buffer.size(), importImageFilterWillOwnTheBuffer);
+    importFilter->Update();
+
+    using CastFilterType = itk::CastImageFilter<ScalarImageType, ScalarImageType>;
+    auto castFilter = CastFilterType::New();
+    castFilter->SetInput(importFilter->GetOutput());
+    castFilter->Update();
+    return castFilter->GetOutput();
+}
+
 H5::DataSet writeTo(const ImageType& img, const H5::Group& group, const std::string& datasetName)
 {
     itk::Size<Dimension> size = img.GetRequestedRegion().GetSize();
