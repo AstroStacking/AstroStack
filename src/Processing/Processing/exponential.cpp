@@ -2,6 +2,7 @@
 
 #include <itkImageDuplicator.h>
 #include <itkImageRegionIterator.h>
+#include <itkMultiThreaderBase.h>
 
 namespace astro
 {
@@ -13,24 +14,27 @@ ASTRO_PROCESSING_EXPORT ImageTypePtr exponential(const ImageTypePtr& img, float 
     auto duplicator = DuplicatorType::New();
     duplicator->SetInputImage(img);
     duplicator->Update();
+    auto outImage = duplicator->GetOutput();
 
-    using IteratorType = itk::ImageRegionIterator<ImageType>;
-
-    IteratorType it(duplicator->GetOutput(), duplicator->GetOutput()->GetRequestedRegion());
-    it.GoToBegin();
-
-    while (!it.IsAtEnd())
-    {
-        auto value = it.Get();
-        for (unsigned int i = 0; i < PixelDimension; ++i)
-        {
-            value.SetElement(i, std::pow(value.GetElement(i), exponent));
-        }
-        it.Set(value);
-        ++it;
-    }
-
-    return duplicator->GetOutput();
+    itk::MultiThreaderBase::Pointer mt = itk::MultiThreaderBase::New();
+    mt->ParallelizeImageRegion<Dimension>(
+            outImage->GetRequestedRegion(),
+            [&outImage, exponent](const ImageType::RegionType& region)
+            {
+                itk::ImageRegionIterator<ImageType> it(outImage, region);
+                for (; !it.IsAtEnd(); ++it)
+                {
+                    auto value = it.Get();
+                    for (unsigned int i = 0; i < PixelDimension; ++i)
+                    {
+                        value.SetElement(i, std::pow(value.GetElement(i), exponent));
+                    }
+                    it.Set(value);
+                    ++it;
+                }
+            },
+            nullptr);
+    return outImage;
 }
 } // namespace processing
 } // namespace astro
