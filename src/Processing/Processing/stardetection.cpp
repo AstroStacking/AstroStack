@@ -2,8 +2,8 @@
 
 #include <Algos/Filters/Stackers/max.h>
 #include <Algos/Filters/multifunctorimagefilter.h>
-#include <IO/traits.h>
 #include <IO/hdf5.h>
+#include <IO/traits.h>
 
 #include <itkBinaryThresholdImageFilter.h>
 #include <itkConnectedComponentImageFilter.h>
@@ -37,11 +37,11 @@ void starDetection(const H5::DataSet& input, H5::DataSet& output, const std::str
         segmented->Update();
         connected->Update();
 
-        if(connected->GetObjectCount() < minStars)
+        if (connected->GetObjectCount() < minStars)
         {
             threshold *= .9;
         }
-        else if(connected->GetObjectCount() > maxStars)
+        else if (connected->GetObjectCount() > maxStars)
         {
             threshold *= 1.05;
         }

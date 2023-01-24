@@ -93,3 +93,15 @@ ASTRO_add_executable(
     SRC ${ASTRO_PROCESSING_STACKING}
     LIBRARIES AstroProcessing Qt6::Core
 )
+
+FILE(GLOB ASTRO_PROCESSING_STARDETECTION
+    stardetection.cpp
+)
+
+ASTRO_add_executable(
+    StarDetection
+    NAME StarDetection
+    FOLDER Processing/Standalone
+    SRC ${ASTRO_PROCESSING_STARDETECTION}
+    LIBRARIES AstroProcessing Qt6::Core
+)
