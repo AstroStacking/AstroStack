@@ -1,6 +1,5 @@
+#include <IO/hdf5.h>
 #include <IO/io.h>
-#include <IO/itkinput.h>
-#include <IO/itkoutput.h>
 #include <Processing/stardetection.h>
 
 #include <QtCore/QCommandLineOption>
@@ -36,12 +35,14 @@ int main(int argc, char** argv)
     parser.process(app);
     std::string input = parser.value(inputOption).toStdString();
     std::string inputDatasetName = parser.value(inputDatasetOption).toStdString();
+    std::string outputDatasetName = parser.value(outputDatasetOption).toStdString();
 
     H5::H5File h5file(input, H5F_ACC_RDWR);
 
     H5::DataSet inputDataset = h5file.openDataSet(inputDatasetName);
+    H5::Group outputDataset = astro::hdf5::getOrCreateGroup(outputDatasetName, h5file);
 
-    astro::processing::starDetection(inputDataset, parser.value(minStarsOption).toInt(),
+    astro::processing::starDetection(inputDataset, outputDataset, "", parser.value(minStarsOption).toInt(),
                                      parser.value(maxStarsOption).toInt());
 
     return 0;

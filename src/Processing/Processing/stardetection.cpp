@@ -12,8 +12,8 @@ namespace astro
 {
 namespace processing
 {
-void starDetection(const H5::DataSet& input, H5::DataSet& output, const std::string& dataset, int32_t minStars,
-                   int32_t maxStars)
+void starDetection(const H5::DataSet& input, H5::Group& output, const std::string& dataset,
+                   int32_t minStars, int32_t maxStars)
 {
     auto inputImg = astro::hdf5::extractScalarFrom(input);
 
@@ -33,6 +33,7 @@ void starDetection(const H5::DataSet& input, H5::DataSet& output, const std::str
 
     while (true)
     {
+        std::cout << "trying " << threshold << std::endl;
         segmented->SetLowerThreshold(threshold);
         segmented->Update();
         connected->Update();
@@ -49,7 +50,7 @@ void starDetection(const H5::DataSet& input, H5::DataSet& output, const std::str
         {
             break;
         }
-        
+        std::cout << connected->GetObjectCount() << std::endl;
     }
 
     // compute star stats

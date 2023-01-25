@@ -15,7 +15,7 @@ option(ENABLE_EXIV2 "Enable exiv2 support" OFF)
 
 find_package(Git REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Charts Linguist)
-find_package(ITK REQUIRED COMPONENTS ITKIOImageBase ITKIOJPEG ITKIOPNG ITKIOTIFF ITKStatistics ITKFFT)
+find_package(ITK REQUIRED COMPONENTS ITKIOImageBase ITKIOJPEG ITKIOPNG ITKIOTIFF ITKConvolution ITKStatistics ITKFFT)
 find_package(HDF5 COMPONENTS CXX)
 find_package(Eigen3 REQUIRED)
 find_package(GTest REQUIRED)
