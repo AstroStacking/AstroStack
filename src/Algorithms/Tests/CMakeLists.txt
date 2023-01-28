@@ -4,29 +4,29 @@ FILE(GLOB TESTS_ALGORITHMS_SRC
     ransac.cpp
     Filters/Convertors/HSL2RGB.cpp
     Filters/Convertors/RGB2HSL.cpp
-    optim/powell.cpp
-    optim/quadratic.cpp
-    optim/rosenbrock.cpp
-    optim/state.cpp
-    optim/criteria/composite.cpp
-    optim/criteria/criteria.cpp
-    optim/helper/quadratic.cpp
-    optim/line_search/backtracking.cpp
-    optim/line_search/damped.cpp
-    optim/line_search/golden_section.cpp
-    optim/line_search/simple.cpp
-    optim/optimizer/standard.cpp
-    optim/step/conjugate_gradient.cpp
-    optim/step/gradient.cpp
-    optim/step/newton.cpp
+    Optim/powell.cpp
+    Optim/quadratic.cpp
+    Optim/rosenbrock.cpp
+    Optim/state.cpp
+    Optim/Criteria/composite.cpp
+    Optim/Criteria/criteria.cpp
+    Optim/Helper/quadratic.cpp
+    Optim/LineSearch/backtracking.cpp
+    Optim/LineSearch/damped.cpp
+    Optim/LineSearch/golden_section.cpp
+    Optim/LineSearch/simple.cpp
+    Optim/Optimizer/standard.cpp
+    Optim/Step/conjugate_gradient.cpp
+    Optim/Step/gradient.cpp
+    Optim/Step/newton.cpp
 )
 
 FILE(GLOB TESTS_ALGORITHMS_HEADERS
     affinemodel.h
-    optim/powell.h
-    optim/quadratic.h
-    optim/rosenbrock.h
-    optim/simple.h
+    Optim/powell.h
+    Optim/quadratic.h
+    Optim/rosenbrock.h
+    Optim/simple.h
 )
 
 ASTRO_add_test(

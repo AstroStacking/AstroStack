@@ -1,6 +1,6 @@
-#include <Algos/optim/line_search/backtracking.h>
+#include <Algos/Optim/LineSearch/backtracking.h>
 
-#include <optim/simple.h>
+#include <Optim/simple.h>
 
 #include <gtest/gtest.h>
 

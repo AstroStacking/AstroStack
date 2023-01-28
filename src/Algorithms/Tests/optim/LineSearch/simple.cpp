@@ -1,6 +1,6 @@
-#include <Algos/optim/line_search/simple.h>
+#include <Algos/Optim/LineSearch/simple.h>
 
-#include <optim/simple.h>
+#include <Optim/simple.h>
 
 #include <gtest/gtest.h>
 

@@ -1,8 +1,8 @@
-#include <Algos/optim/step/conjugate_gradient.h>
+#include <Algos/Optim/Step/conjugate_gradient.h>
+
+#include <Optim/simple.h>
 
 #include <gtest/gtest.h>
-
-#include <optim/simple.h>
 
 namespace
 {

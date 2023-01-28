@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Algos/optim/state.h>
+#include <Algos/Optim/state.h>
 
 #include <cmath>
 #include <cstddef>

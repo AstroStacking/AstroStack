@@ -1,4 +1,4 @@
-#include <Algos/optim/helper/quadratic.h>
+#include <Algos/Optim/Helper/quadratic.h>
 
 #include <gtest/gtest.h>
 

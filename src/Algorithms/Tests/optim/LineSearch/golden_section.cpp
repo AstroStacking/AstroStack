@@ -1,6 +1,6 @@
-#include <Algos/optim/line_search/golden_section.h>
+#include <Algos/Optim/LineSearch/golden_section.h>
 
-#include <optim/simple.h>
+#include <Optim/simple.h>
 
 #include <gtest/gtest.h>
 

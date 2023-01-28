@@ -11,18 +11,19 @@ FILE(GLOB ASTRO_ALGORITHMS_HEADERS
     Algos/Filters/Stackers/max.h
     Algos/Filters/mergehslfilter.h
     Algos/Filters/multifunctorimagefilter.h
-    Algos/optim/state.h
-    Algos/optim/criteria/composite.h
-    Algos/optim/criteria/criteria.h
-    Algos/optim/line_search/backtracking.h
-    Algos/optim/line_search/damped.h
-    Algos/optim/line_search/golden_section.h
-    Algos/optim/line_search/simple.h
-    Algos/optim/helper/quadratic.h
-    Algos/optim/optimizer/standard.h
-    Algos/optim/step/conjugate_gradient.h
-    Algos/optim/step/gradient.h
-    Algos/optim/step/newton.h
+    Algos/ImageStatistics/image_statistics.h
+    Algos/Optim/state.h
+    Algos/Optim/Criteria/composite.h
+    Algos/Optim/Criteria/criteria.h
+    Algos/Optim/LineSearch/backtracking.h
+    Algos/Optim/LineSearch/damped.h
+    Algos/Optim/LineSearch/golden_section.h
+    Algos/Optim/LineSearch/simple.h
+    Algos/Optim/Helper/quadratic.h
+    Algos/Optim/Optimizer/standard.h
+    Algos/Optim/Step/conjugate_gradient.h
+    Algos/Optim/Step/gradient.h
+    Algos/Optim/Step/newton.h
 )
 
 ASTRO_add_library(

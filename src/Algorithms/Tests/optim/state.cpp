@@ -1,4 +1,4 @@
-#include <Algos/optim/criteria/criteria.h>
+#include <Algos/Optim/Criteria/criteria.h>
 
 #include <gtest/gtest.h>
 

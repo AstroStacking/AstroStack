@@ -26,7 +26,7 @@ ASTRO_add_library(
     FOLDER IO
     SRC ${ASTRO_IO_SRC}
     HEADERS ${ASTRO_IO_HEADERS}
-    LIBRARIES ${ASTRO_IO_LIBS} hdf5::hdf5_cpp  hdf5::hdf5
+    LIBRARIES ${ASTRO_IO_LIBS} hdf5::hdf5_cpp hdf5::hdf5
 )
 
 add_subdirectory(Standalone)

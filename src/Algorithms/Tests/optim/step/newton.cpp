@@ -1,8 +1,8 @@
-#include <Algos/optim/step/newton.h>
+#include <Algos/Optim/Step/newton.h>
+
+#include <Optim/powell.h>
 
 #include <gtest/gtest.h>
-
-#include <optim/powell.h>
 
 TEST(NewtonStep, Powell)
 {

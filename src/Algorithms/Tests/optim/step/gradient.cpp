@@ -1,8 +1,8 @@
-#include <Algos/optim/step/gradient.h>
+#include <Algos/Optim/Step/gradient.h>
+
+#include <Optim/powell.h>
 
 #include <gtest/gtest.h>
-
-#include <optim/powell.h>
 
 TEST(GradientStep, Powell)
 {

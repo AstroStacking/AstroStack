@@ -1,6 +1,6 @@
-#include <Algos/optim/line_search/damped.h>
+#include <Algos/Optim/LineSearch/damped.h>
 
-#include <optim/simple.h>
+#include <Optim/simple.h>
 
 #include <gtest/gtest.h>
 

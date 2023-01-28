@@ -1,13 +1,13 @@
-#include <Algos/optim/criteria/composite.h>
-#include <Algos/optim/criteria/criteria.h>
-#include <Algos/optim/line_search/simple.h>
-#include <Algos/optim/optimizer/standard.h>
-#include <Algos/optim/step/gradient.h>
-#include <Algos/optim/step/newton.h>
+#include <Algos/Optim/Criteria/composite.h>
+#include <Algos/Optim/Criteria/criteria.h>
+#include <Algos/Optim/LineSearch/simple.h>
+#include <Algos/Optim/Optimizer/standard.h>
+#include <Algos/Optim/Step/gradient.h>
+#include <Algos/Optim/Step/newton.h>
+
+#include <Optim/rosenbrock.h>
 
 #include <gtest/gtest.h>
-
-#include <optim/rosenbrock.h>
 
 TEST(Optimizer, Rosenbrock_SimpleGradient)
 {
