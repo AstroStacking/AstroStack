@@ -7,13 +7,19 @@
 
 #include <itkBinaryThresholdImageFilter.h>
 #include <itkConnectedComponentImageFilter.h>
+#include <itkMultiplyImageFilter.h>
 
 namespace astro
 {
 namespace processing
 {
-void starDetection(const H5::DataSet& input, H5::Group& output, const std::string& dataset,
-                   int32_t minStars, int32_t maxStars)
+namespace
+{
+constexpr int MAX_ITERATIONS{50};
+}
+
+ScalarImageTypePtr starDetection(const H5::DataSet& input, H5::Group& output, const std::string& dataset,
+                                 int32_t minStars, int32_t maxStars)
 {
     auto inputImg = astro::hdf5::extractScalarFrom(input);
 
@@ -28,15 +34,17 @@ void starDetection(const H5::DataSet& input, H5::Group& output, const std::strin
     segmented->SetInput(inputImg);
     segmented->SetUpperThreshold(1);
     segmented->SetOutsideValue(0);
-    segmented->SetInsideValue(1);
+    segmented->SetInsideValue(std::numeric_limits<UnderlyingScalarPixelType>::max());
     connected->SetInput(segmented->GetOutput());
 
+    int counter = 0;
     while (true)
     {
         std::cout << "trying " << threshold << std::endl;
         segmented->SetLowerThreshold(threshold);
         segmented->Update();
         connected->Update();
+        std::cout << connected->GetObjectCount() << std::endl;
 
         if (connected->GetObjectCount() < minStars)
         {
@@ -45,12 +53,17 @@ void starDetection(const H5::DataSet& input, H5::Group& output, const std::strin
         else if (connected->GetObjectCount() > maxStars)
         {
             threshold *= 1.05;
+            threshold = std::min(threshold, 1.f);
         }
         else
         {
             break;
         }
-        std::cout << connected->GetObjectCount() << std::endl;
+        if(counter > MAX_ITERATIONS && connected->GetObjectCount() > minStars)
+        {
+            break;
+        }
+        ++counter;
     }
 
     // compute star stats
@@ -61,6 +74,14 @@ void starDetection(const H5::DataSet& input, H5::Group& output, const std::strin
     // output list
     //H5::DataSet outputDataset =
     //        astro::hdf5::createDataset(outputDatasetName, outputSpace, H5::PredType::NATIVE_INT64, h5file);
+
+    using FilterType = itk::MultiplyImageFilter<ScalarIntegerImageType, ScalarImageType, ScalarImageType>;
+    auto filter = FilterType::New();
+    filter->SetInput(segmented->GetOutput());
+    filter->SetConstant(1 / static_cast<UnderlyingPixelType>(std::numeric_limits<UnderlyingScalarPixelType>::max()));
+    filter->Update();
+
+    return filter->GetOutput();
 }
 } // namespace processing
 } // namespace astro

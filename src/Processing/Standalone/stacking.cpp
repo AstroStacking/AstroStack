@@ -22,7 +22,7 @@ int main(int argc, char** argv)
     QCommandLineOption inputDatasetOption("dataset", QCoreApplication::translate("main", "Input Dataset."), "inputs",
                                           "inputs");
     parser.addOption(inputDatasetOption);
-    QCommandLineOption outputDatasetOption("outputDataset", QCoreApplication::translate("main", "Output Dataset."),
+    QCommandLineOption outputDatasetOption("output-dataset", QCoreApplication::translate("main", "Output Dataset."),
                                            "stack", "stack");
     parser.addOption(outputDatasetOption);
     QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output image."), "output");

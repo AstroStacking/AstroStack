@@ -1,5 +1,6 @@
 #include <IO/hdf5.h>
 #include <IO/io.h>
+#include <IO/itkoutput.h>
 #include <Processing/stardetection.h>
 
 #include <QtCore/QCommandLineOption>
@@ -24,6 +25,8 @@ int main(int argc, char** argv)
     QCommandLineOption outputDatasetOption("outputDataset", QCoreApplication::translate("main", "Output Dataset."),
                                            "stars", "stars");
     parser.addOption(outputDatasetOption);
+    QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output binary Image."), "output");
+    parser.addOption(outputOption);
     QCommandLineOption minStarsOption("minStars", QCoreApplication::translate("main", "Minimum number of stars."),
                                       "minStars", "80");
     parser.addOption(minStarsOption);
@@ -35,15 +38,25 @@ int main(int argc, char** argv)
     parser.process(app);
     std::string input = parser.value(inputOption).toStdString();
     std::string inputDatasetName = parser.value(inputDatasetOption).toStdString();
+    std::string output = parser.value(outputOption).toStdString();
     std::string outputDatasetName = parser.value(outputDatasetOption).toStdString();
 
     H5::H5File h5file(input, H5F_ACC_RDWR);
 
     H5::DataSet inputDataset = h5file.openDataSet(inputDatasetName);
-    H5::Group outputDataset = astro::hdf5::getOrCreateGroup(outputDatasetName, h5file);
+    size_t needSubGroup = outputDatasetName.rfind("/");
+    H5::Group group = h5file;
+    if (needSubGroup != std::string::npos)
+    {
+        group = astro::hdf5::getOrCreateGroup(outputDatasetName.substr(0, needSubGroup), h5file);
+        outputDatasetName = outputDatasetName.substr(needSubGroup + 1);
+    }
 
-    astro::processing::starDetection(inputDataset, outputDataset, "", parser.value(minStarsOption).toInt(),
-                                     parser.value(maxStarsOption).toInt());
+    auto binaryOutput = astro::processing::starDetection(inputDataset, group, outputDatasetName,
+                                                         parser.value(minStarsOption).toInt(),
+                                                         parser.value(maxStarsOption).toInt());
+
+    astro::io::save<uint8_t>(binaryOutput, output);
 
     return 0;
 }

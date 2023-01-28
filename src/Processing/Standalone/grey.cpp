@@ -25,10 +25,10 @@ int main(int argc, char** argv)
     QCommandLineOption indexOption("index", QCoreApplication::translate("main", "Image Index for the Dataset."),
                                    "index");
     parser.addOption(indexOption);
-    QCommandLineOption outputDatasetOption("outputDataset", QCoreApplication::translate("main", "Output Dataset."),
+    QCommandLineOption outputDatasetOption("output-dataset", QCoreApplication::translate("main", "Output Dataset."),
                                            "grey", "grey");
     parser.addOption(outputDatasetOption);
-    QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output image."), "output");
+    QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output Image."), "output");
     parser.addOption(outputOption);
     QCommandLineOption highdefOption("high-def", QCoreApplication::translate("main", "Save in 16bits."));
     parser.addOption(highdefOption);
