@@ -1,7 +1,10 @@
 #include "stardetection.h"
 
+#include <Algos/ImageStats/center.h>
 #include <Algos/ImageStats/image_statistics.h>
 #include <Algos/ImageStats/mean.h>
+#include <Algos/ImageStats/minmax_position.h>
+#include <Algos/ImageStats/size.h>
 #include <IO/hdf5.h>
 #include <IO/traits.h>
 
@@ -66,7 +69,9 @@ ScalarImageTypePtr starDetection(const H5::DataSet& input, H5::Group& output, co
 
     using IntegerIteratorType = itk::ImageRegionIterator<ScalarIntegerImageType>;
     using IteratorType = itk::ImageRegionIterator<ScalarImageType>;
-    image_statistics::ImageStatistics<image_statistics::Mean> stats(connected->GetObjectCount());
+    using Stats = image_statistics::ImageStatistics<image_statistics::Center, image_statistics::Mean,
+                                                    image_statistics::MinMaxPosition, image_statistics::Size>;
+    Stats stats(connected->GetObjectCount());
 
     IntegerIteratorType integerIt(connected->GetOutput(), connected->GetOutput()->GetRequestedRegion());
     IteratorType it(inputImg, inputImg->GetRequestedRegion());
@@ -83,8 +88,7 @@ ScalarImageTypePtr starDetection(const H5::DataSet& input, H5::Group& output, co
     stats.compute();
 
     // Output data
-    hsize_t outputImgDim[2]{connected->GetObjectCount(),
-                            image_statistics::ImageStatistics<image_statistics::Mean>::getNbStats()};
+    hsize_t outputImgDim[2]{connected->GetObjectCount(), stats.getSize()};
     H5::DataSpace outputSpace(2, outputImgDim);
     // output list
     H5::DataSet outputDataset = output.createDataSet(dataset, H5::PredType::NATIVE_DOUBLE, outputSpace);

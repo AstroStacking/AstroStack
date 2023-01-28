@@ -9,6 +9,9 @@ namespace astro
 {
 namespace image_statistics
 {
+/**
+ * Computes statistics over a labeled image
+ */
 template<class... Stats>
 class ImageStatistics : public Stats...
 {
@@ -33,6 +36,7 @@ public:
 
     void compute() { Traits<Stats...>::compute(*this, m_entries); }
 
+    size_t getSize() const { return m_entries; }
     const std::vector<double>& getData() const { return m_data; }
     void setData(double value, size_t index) { m_data[index] = value; }
 

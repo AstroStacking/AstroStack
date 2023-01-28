@@ -9,20 +9,18 @@ namespace astro
 {
 namespace image_statistics
 {
-/// Computes the mean of a label
-class Mean
+/// Computes the size of a label
+class Size
 {
     /// Cumulative values
     std::vector<double> m_cumulative;
-    // Number of accumulated values
-    std::vector<double> m_nb;
 
 public:
-    Mean(size_t entries);
+    Size(size_t entries);
 
     static constexpr size_t getNbStats() { return 1; }
 
-    void compute();
+    void compute() {}
     void process(double value, int32_t index, ScalarIntegerImageType::IndexType position);
     double getData(size_t index, size_t stat) { return m_cumulative[index * getNbStats() + stat]; }
 };
