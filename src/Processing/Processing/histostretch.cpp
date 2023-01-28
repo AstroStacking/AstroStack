@@ -5,7 +5,6 @@
 #include <itkImageRegionIterator.h>
 #include <itkImageToHistogramFilter.h>
 #include <itkMinimumMaximumImageCalculator.h>
-#include <itkMultiThreaderBase.h>
 #include <itkMultiplyImageFilter.h>
 
 #include <numeric>
@@ -104,25 +103,22 @@ ImageTypePtr histoStretch(const ImageTypePtr& img, float red, float green, float
     duplicator->Update();
 
     auto outImage = duplicator->GetOutput();
+    using IteratorType = itk::ImageRegionIterator<ImageType>;
 
-    itk::MultiThreaderBase::Pointer mt = itk::MultiThreaderBase::New();
-    mt->ParallelizeImageRegion<Dimension>(
-            outImage->GetRequestedRegion(),
-            [&outImage, shift](const ImageType::RegionType& region)
-            {
-                itk::ImageRegionIterator<ImageType> it(outImage, region);
-                for (; !it.IsAtEnd(); ++it)
-                {
-                    auto value = it.Get();
-                    for (unsigned int i = 0; i < PixelDimension; ++i)
-                    {
-                        value.SetElement(i, std::max((value.GetElement(i) - shift[i]) / (1 - shift[i]), 0.f));
-                    }
-                    it.Set(value);
-                    ++it;
-                }
-            },
-            nullptr);
+    IteratorType it(duplicator->GetOutput(), duplicator->GetOutput()->GetRequestedRegion());
+    it.GoToBegin();
+
+    while (!it.IsAtEnd())
+    {
+        auto value = it.Get();
+        for (unsigned int i = 0; i < PixelDimension; ++i)
+        {
+            value.SetElement(i, std::max((value.GetElement(i) - shift[i]) / (1 - shift[i]), 0.f));
+        }
+        it.Set(value);
+        ++it;
+    }
+
     return outImage;
 }
 } // namespace processing
