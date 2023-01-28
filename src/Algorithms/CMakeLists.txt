@@ -1,4 +1,5 @@
 FILE(GLOB ASTRO_ALGORITHMS_SRC
+    Algos/ImageStats/mean.cpp
     Algos/model.cpp
 )
 
@@ -12,6 +13,7 @@ FILE(GLOB ASTRO_ALGORITHMS_HEADERS
     Algos/Filters/mergehslfilter.h
     Algos/Filters/multifunctorimagefilter.h
     Algos/ImageStats/image_statistics.h
+    Algos/ImageStats/mean.h
     Algos/ImageStats/traits.h
     Algos/Optim/state.h
     Algos/Optim/Criteria/composite.h

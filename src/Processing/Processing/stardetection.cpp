@@ -1,7 +1,7 @@
 #include "stardetection.h"
 
-#include <Algos/Filters/Stackers/max.h>
-#include <Algos/Filters/multifunctorimagefilter.h>
+#include <Algos/ImageStats/image_statistics.h>
+#include <Algos/ImageStats/mean.h>
 #include <IO/hdf5.h>
 #include <IO/traits.h>
 
@@ -64,7 +64,23 @@ ScalarImageTypePtr starDetection(const H5::DataSet& input, H5::Group& output, co
         ++counter;
     }
 
-    // compute star stats
+    using IntegerIteratorType = itk::ImageRegionIterator<ScalarIntegerImageType>;
+    using IteratorType = itk::ImageRegionIterator<ScalarImageType>;
+    image_statistics::ImageStatistics<image_statistics::Mean> stats(connected->GetObjectCount());
+
+    IntegerIteratorType integerIt(connected->GetOutput(), connected->GetOutput()->GetRequestedRegion());
+    IteratorType it(inputImg, inputImg->GetRequestedRegion());
+    it.GoToBegin();
+    integerIt.GoToBegin();
+
+    while (!it.IsAtEnd())
+    {
+        stats.process(it.Get(), integerIt.Get(), it.GetIndex());
+        ++it;
+        ++integerIt;
+    }
+    
+    stats.compute();
 
     // Output data
     //hsize_t outputImgDim[3]{2, properties.size(), nbDims};
