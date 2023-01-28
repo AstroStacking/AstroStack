@@ -1,4 +1,5 @@
 FILE(GLOB ASTRO_ALGORITHMS_SRC
+    Algos/Graph/full_matching.cpp
     Algos/ImageStats/center.cpp
     Algos/ImageStats/mean.cpp
     Algos/ImageStats/minmax_position.cpp
@@ -15,6 +16,7 @@ FILE(GLOB ASTRO_ALGORITHMS_HEADERS
     Algos/Filters/Stackers/max.h
     Algos/Filters/mergehslfilter.h
     Algos/Filters/multifunctorimagefilter.h
+    Algos/Graph/full_matching.h
     Algos/ImageStats/center.h
     Algos/ImageStats/image_statistics.h
     Algos/ImageStats/mean.h

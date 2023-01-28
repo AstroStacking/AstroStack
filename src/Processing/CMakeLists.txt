@@ -1,6 +1,7 @@
 FILE(GLOB ASTRO_PROCESSING_SRC
     Processing/chromasmoothing.cpp
     Processing/exponential.cpp
+    Processing/graphmatching.cpp
     Processing/grey.cpp
     Processing/histostretch.cpp
     Processing/lightpollution.cpp
@@ -13,6 +14,7 @@ FILE(GLOB ASTRO_PROCESSING_HEADERS
     Processing/config.h
     Processing/chromasmoothing.h
     Processing/exponential.h
+    Processing/graphmatching.h
     Processing/grey.h
     Processing/histostretch.h
     Processing/lightpollution.h

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Algos/ImageStats/traits.h>
+#include <Algos/config.h>
 #include <IO/io.h>
 
 #include <array>
@@ -11,7 +12,7 @@ namespace astro
 namespace image_statistics
 {
 /// Computes the center of a label
-class Center
+ASTRO_ALGORITHMS_EXPORT class Center
 {
     /// Cumulative values
     std::vector<std::array<double, 2>> m_cumulative;

@@ -34,15 +34,15 @@ ASTRO_add_executable(
     LIBRARIES AstroProcessing Qt6::Core
 )
 
-FILE(GLOB ASTRO_PROCESSING_HISTOSTRETCH
-    histostretch.cpp
+FILE(GLOB ASTRO_PROCESSING_GRAPH_MATCHING
+    graphmatching.cpp
 )
 
 ASTRO_add_executable(
-    HistoStretch
-    NAME HistoStretch
+    GraphMatching
+    NAME GraphMatching
     FOLDER Processing/Standalone
-    SRC ${ASTRO_PROCESSING_HISTOSTRETCH}
+    SRC ${ASTRO_PROCESSING_GRAPH_MATCHING}
     LIBRARIES AstroProcessing Qt6::Core
 )
 
@@ -55,6 +55,18 @@ ASTRO_add_executable(
     NAME Grey
     FOLDER Processing/Standalone
     SRC ${ASTRO_PROCESSING_GREY}
+    LIBRARIES AstroProcessing Qt6::Core
+)
+
+FILE(GLOB ASTRO_PROCESSING_HISTOSTRETCH
+    histostretch.cpp
+)
+
+ASTRO_add_executable(
+    HistoStretch
+    NAME HistoStretch
+    FOLDER Processing/Standalone
+    SRC ${ASTRO_PROCESSING_HISTOSTRETCH}
     LIBRARIES AstroProcessing Qt6::Core
 )
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Algos/ImageStats/traits.h>
+#include <Algos/config.h>
 #include <IO/io.h>
 
 #include <array>
@@ -11,7 +12,7 @@ namespace astro
 namespace image_statistics
 {
 /// Computes the min/max pixels of the label
-class MinMaxPosition
+ASTRO_ALGORITHMS_EXPORT class MinMaxPosition
 {
     /// (minX, maxX, minY, maxY)
     std::vector<std::array<double, 4>> m_position;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Algos/ImageStats/traits.h>
+#include <Algos/config.h>
 #include <IO/io.h>
 
 #include <vector>
@@ -10,7 +11,7 @@ namespace astro
 namespace image_statistics
 {
 /// Computes the size of a label
-class Size
+ASTRO_ALGORITHMS_EXPORT class Size
 {
     /// Cumulative values
     std::vector<double> m_cumulative;
