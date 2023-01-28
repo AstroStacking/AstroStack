@@ -13,11 +13,13 @@ template<class... Stats>
 class ImageStatistics : public Stats...
 {
     std::vector<double> m_data;
+    const size_t m_entries;
 
 public:
     ImageStatistics(size_t entries)
         : Stats(entries)...
         , m_data(entries * Traits<Stats...>::getNbStats())
+        , m_entries(entries)
     {
     }
 
@@ -29,10 +31,10 @@ public:
         }
     }
 
-    void compute()
-    {
-        Traits<Stats...>::compute(*this);
-    }
+    void compute() { Traits<Stats...>::compute(*this, m_entries); }
+
+    const std::vector<double>& getData() const { return m_data; }
+    void setData(double value, size_t index) { m_data[index] = value; }
 
     //double get
 };

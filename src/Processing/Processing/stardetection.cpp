@@ -79,15 +79,16 @@ ScalarImageTypePtr starDetection(const H5::DataSet& input, H5::Group& output, co
         ++it;
         ++integerIt;
     }
-    
+
     stats.compute();
 
     // Output data
-    //hsize_t outputImgDim[3]{2, properties.size(), nbDims};
-    //H5::DataSpace outputSpace(3, outputImgDim);
+    hsize_t outputImgDim[2]{connected->GetObjectCount(),
+                            image_statistics::ImageStatistics<image_statistics::Mean>::getNbStats()};
+    H5::DataSpace outputSpace(2, outputImgDim);
     // output list
-    //H5::DataSet outputDataset =
-    //        astro::hdf5::createDataset(outputDatasetName, outputSpace, H5::PredType::NATIVE_INT64, h5file);
+    H5::DataSet outputDataset = output.createDataSet(dataset, H5::PredType::NATIVE_DOUBLE, outputSpace);
+    outputDataset.write(stats.getData().data(), H5::PredType::NATIVE_DOUBLE, outputSpace, outputSpace);
 
     using FilterType = itk::MultiplyImageFilter<ScalarIntegerImageType, ScalarImageType, ScalarImageType>;
     auto filter = FilterType::New();
