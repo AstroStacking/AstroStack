@@ -40,11 +40,9 @@ ScalarImageTypePtr starDetection(const H5::DataSet& input, H5::Group& output, co
     int counter = 0;
     while (true)
     {
-        std::cout << "trying " << threshold << std::endl;
         segmented->SetLowerThreshold(threshold);
         segmented->Update();
         connected->Update();
-        std::cout << connected->GetObjectCount() << std::endl;
 
         if (connected->GetObjectCount() < minStars)
         {
@@ -59,7 +57,7 @@ ScalarImageTypePtr starDetection(const H5::DataSet& input, H5::Group& output, co
         {
             break;
         }
-        if(counter > MAX_ITERATIONS && connected->GetObjectCount() > minStars)
+        if (counter > MAX_ITERATIONS && connected->GetObjectCount() > minStars)
         {
             break;
         }

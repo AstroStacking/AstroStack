@@ -11,7 +11,8 @@ FILE(GLOB ASTRO_ALGORITHMS_HEADERS
     Algos/Filters/Stackers/max.h
     Algos/Filters/mergehslfilter.h
     Algos/Filters/multifunctorimagefilter.h
-    Algos/ImageStatistics/image_statistics.h
+    Algos/ImageStats/image_statistics.h
+    Algos/ImageStats/traits.h
     Algos/Optim/state.h
     Algos/Optim/Criteria/composite.h
     Algos/Optim/Criteria/criteria.h

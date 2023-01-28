@@ -1,3 +1,4 @@
+#include <Algos/ImageStats/image_statistics.h>
 #include <IO/hdf5.h>
 #include <IO/io.h>
 #include <IO/itkoutput.h>
