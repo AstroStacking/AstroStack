@@ -5,8 +5,8 @@ namespace astro
 namespace image_statistics
 {
 Mean::Mean(size_t entries)
-    : m_cumulative(entries)
-    , m_nb(entries)
+    : m_cumulative(entries, 0)
+    , m_nb(entries, 0)
 {
 }
 

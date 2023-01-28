@@ -88,7 +88,7 @@ ScalarImageTypePtr starDetection(const H5::DataSet& input, H5::Group& output, co
     stats.compute();
 
     // Output data
-    hsize_t outputImgDim[2]{connected->GetObjectCount(), stats.getSize()};
+    hsize_t outputImgDim[2]{stats.getSize(), stats.getComponents()};
     H5::DataSpace outputSpace(2, outputImgDim);
     // output list
     H5::DataSet outputDataset = output.createDataSet(dataset, H5::PredType::NATIVE_DOUBLE, outputSpace);

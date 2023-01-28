@@ -37,6 +37,7 @@ public:
     void compute() { Traits<Stats...>::compute(*this, m_entries); }
 
     size_t getSize() const { return m_entries; }
+    size_t getComponents() const { return Traits<Stats...>::getNbStats(); }
     const std::vector<double>& getData() const { return m_data; }
     void setData(double value, size_t index) { m_data[index] = value; }
 

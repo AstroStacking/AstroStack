@@ -5,7 +5,8 @@ namespace astro
 namespace image_statistics
 {
 MinMaxPosition::MinMaxPosition(size_t entries)
-    : m_position(entries, {std::numeric_limits<double>::max(), -1, std::numeric_limits<double>::max(), -1})
+    : m_position(entries, {std::numeric_limits<double>::max(), std::numeric_limits<double>::lowest(),
+                           std::numeric_limits<double>::max(), std::numeric_limits<double>::lowest()})
 {
 }
 

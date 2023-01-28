@@ -4,6 +4,11 @@ FILE(GLOB TESTS_ALGORITHMS_SRC
     ransac.cpp
     Filters/Convertors/HSL2RGB.cpp
     Filters/Convertors/RGB2HSL.cpp
+    ImageStats/center.cpp
+    ImageStats/image_statistics.cpp
+    ImageStats/mean.cpp
+    ImageStats/minmax_position.cpp
+    ImageStats/size.cpp
     Optim/powell.cpp
     Optim/quadratic.cpp
     Optim/rosenbrock.cpp

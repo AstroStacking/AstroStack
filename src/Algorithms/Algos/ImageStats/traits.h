@@ -30,9 +30,17 @@ public:
     }
 
     template<typename... AllStats>
-    static void compute(ImageStatistics<AllStats...>& instance, size_t m_entries)
+    static void compute(ImageStatistics<AllStats...>& instance, size_t entries)
     {
         static_cast<Stat&>(instance).compute();
+        for (size_t i = 0; i < entries; ++i)
+        {
+            for (size_t stat = 0; stat < Stat::getNbStats(); ++stat)
+            {
+                instance.setData(static_cast<Stat&>(instance).getData(i, stat),
+                                 (i+1) * instance.getComponents() - getNbStats() + stat);
+            }
+        }
     }
 };
 
@@ -48,20 +56,22 @@ public:
                         ScalarIntegerImageType::IndexType position)
     {
         static_cast<Stat&>(instance).process(value, index, position);
+        Traits<Stats...>::template process(instance, value, index, position);
     }
 
     template<typename... AllStats>
-    static void compute(ImageStatistics<AllStats...>& instance, size_t m_entries)
+    static void compute(ImageStatistics<AllStats...>& instance, size_t entries)
     {
         static_cast<Stat&>(instance).compute();
-        for (size_t i = 0; i < m_entries; ++i)
+        for (size_t i = 0; i < entries; ++i)
         {
-            for (size_t stat = 0; stat < getNbStats(); ++stat)
+            for (size_t stat = 0; stat < Stat::getNbStats(); ++stat)
             {
                 instance.setData(static_cast<Stat&>(instance).getData(i, stat),
-                                 i * m_entries + m_entries - getNbStats() + stat);
+                                 (i+1) * instance.getComponents() - getNbStats() + stat);
             }
         }
+        Traits<Stats...>::template compute<AllStats...>(instance, entries);
     }
 };
 
