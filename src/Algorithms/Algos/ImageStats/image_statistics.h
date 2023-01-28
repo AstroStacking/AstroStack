@@ -15,9 +15,6 @@ namespace image_statistics
 template<class... Stats>
 class ImageStatistics : public Stats...
 {
-    std::vector<double> m_data;
-    const size_t m_entries;
-
 public:
     ImageStatistics(size_t entries)
         : Stats(entries)...
@@ -37,11 +34,13 @@ public:
     void compute() { Traits<Stats...>::compute(*this, m_entries); }
 
     size_t getSize() const { return m_entries; }
-    size_t getComponents() const { return Traits<Stats...>::getNbStats(); }
-    const std::vector<double>& getData() const { return m_data; }
-    void setData(double value, size_t index) { m_data[index] = value; }
+    static constexpr size_t getComponents() { return Traits<Stats...>::getNbStats(); }
+    const std::vector<std::array<double, getComponents()>>& getData() const { return m_data; }
+    void setData(double value, size_t index, size_t component) { m_data[index][component] = value; }
 
-    //double get
+private:
+    std::vector<std::array<double, getComponents()>> m_data;
+    const size_t m_entries;
 };
 } // namespace image_statistics
 } // namespace astro

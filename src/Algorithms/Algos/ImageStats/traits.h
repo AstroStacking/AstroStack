@@ -37,8 +37,8 @@ public:
         {
             for (size_t stat = 0; stat < Stat::getNbStats(); ++stat)
             {
-                instance.setData(static_cast<Stat&>(instance).getData(i, stat),
-                                 (i+1) * instance.getComponents() - getNbStats() + stat);
+                instance.setData(static_cast<Stat&>(instance).getData(i, stat), i,
+                                 instance.getComponents() - getNbStats() + stat);
             }
         }
     }
@@ -67,8 +67,8 @@ public:
         {
             for (size_t stat = 0; stat < Stat::getNbStats(); ++stat)
             {
-                instance.setData(static_cast<Stat&>(instance).getData(i, stat),
-                                 (i+1) * instance.getComponents() - getNbStats() + stat);
+                instance.setData(static_cast<Stat&>(instance).getData(i, stat), i,
+                                 instance.getComponents() - getNbStats() + stat);
             }
         }
         Traits<Stats...>::template compute<AllStats...>(instance, entries);
