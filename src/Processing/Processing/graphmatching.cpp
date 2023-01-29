@@ -9,7 +9,6 @@ namespace processing
 {
 namespace
 {
-constexpr int MAX_ITERATIONS{50};
 }
 
 void graphmatching(const H5::DataSet& input, H5::Group& output, const std::string& dataset, int32_t minStars,
