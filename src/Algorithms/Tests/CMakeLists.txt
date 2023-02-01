@@ -6,6 +6,7 @@ FILE(GLOB TESTS_ALGORITHMS_SRC
     Filters/Convertors/RGB2HSL.cpp
     Graph/distance.cpp
     Graph/full_matching.cpp
+    Graph/partial_matching.cpp
     ImageStats/center.cpp
     ImageStats/image_statistics.cpp
     ImageStats/mean.cpp
