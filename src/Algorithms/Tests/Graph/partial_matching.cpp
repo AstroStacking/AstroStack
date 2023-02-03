@@ -7,8 +7,7 @@
 TEST(Graph_PartialMatching, no_match)
 {
     std::vector<std::pair<double, double>> graph1{{0, 0}, {1, 1}, {2, 0}, {1, -1}, {100, 200}, {1000, 2000}, {-2, 0}};
-    std::vector<std::pair<double, double>> graph2{{0, 0},      {-1, -1}, {6, 0},       {1, -1},
-                                                  {-100, 200}, {-3, -1}, {1000, -2000}};
+    std::vector<std::pair<double, double>> graph2{{0, 0}, {-1, -1}, {6, 0}, {1, -1}, {-100, 200}, {-3, -1}};
 
     std::vector<std::pair<size_t, size_t>> initialGraph{{0, 1}, {1, 0}, {2, 3}};
 
