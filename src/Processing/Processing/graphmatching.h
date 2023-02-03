@@ -9,7 +9,8 @@ namespace astro
 {
 namespace processing
 {
-ASTRO_PROCESSING_EXPORT void graphmatching(const H5::DataSet& input, H5::Group& output, const std::string& dataset,
-                                           int32_t minStars, int32_t maxStars);
+ASTRO_PROCESSING_EXPORT std::vector<std::pair<size_t, size_t>>
+graphmatching(const std::vector<std::pair<double, double>>& graph1,
+              const std::vector<std::pair<double, double>>& graph2, int fullGraphMatch, double maxRatio);
 }
 } // namespace astro

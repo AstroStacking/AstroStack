@@ -12,7 +12,7 @@ TEST(Graph_PartialMatching, no_match)
     std::vector<std::pair<size_t, size_t>> initialGraph{{0, 1}, {1, 0}, {2, 3}};
 
     std::vector<std::pair<size_t, size_t>> fullGraph =
-            astro::graph::matchPartialGraph(initialGraph, graph1, graph2, 4, 0.0001);
+            astro::graph::matchPartialGraph(initialGraph, graph1, graph2, 0.0001);
 
     ASSERT_EQ(fullGraph.size(), 4);
     ASSERT_EQ(fullGraph[3].first, 6);

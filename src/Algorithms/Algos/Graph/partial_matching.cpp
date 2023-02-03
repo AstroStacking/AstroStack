@@ -14,7 +14,7 @@ namespace graph
 std::vector<std::pair<size_t, size_t>> matchPartialGraph(std::vector<std::pair<size_t, size_t>> initialGraph,
                                                          const std::vector<std::pair<double, double>>& graph1,
                                                          const std::vector<std::pair<double, double>>& graph2,
-                                                         size_t graphSize, double maxRatio)
+                                                         double maxRatio)
 {
     std::unordered_set<size_t> originalSet;
     std::unordered_set<size_t> matchSet;
@@ -49,17 +49,18 @@ std::vector<std::pair<size_t, size_t>> matchPartialGraph(std::vector<std::pair<s
             for (size_t k = 0; k < initialGraph.size(); ++k)
             {
                 double ratio = std::abs(distanceMatrix1[initialGraph[k].first * graph1.size() + i] /
-                        distanceMatrix2[initialGraph[k].second * graph2.size() + j] - 1);
+                                                distanceMatrix2[initialGraph[k].second * graph2.size() + j] -
+                                        1);
                 maxRatio = std::max(maxRatio, ratio);
             }
 
-            if(maxRatio < best)
+            if (maxRatio < best)
             {
                 best = maxRatio;
                 bestTrial = std::make_pair(i, j);
             }
         }
-        if(best < maxRatio)
+        if (best < maxRatio)
         {
             initialGraph.push_back(bestTrial);
         }

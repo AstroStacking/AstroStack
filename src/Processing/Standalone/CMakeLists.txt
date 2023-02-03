@@ -34,18 +34,6 @@ ASTRO_add_executable(
     LIBRARIES AstroProcessing Qt6::Core
 )
 
-FILE(GLOB ASTRO_PROCESSING_GRAPH_MATCHING
-    graphmatching.cpp
-)
-
-ASTRO_add_executable(
-    GraphMatching
-    NAME GraphMatching
-    FOLDER Processing/Standalone
-    SRC ${ASTRO_PROCESSING_GRAPH_MATCHING}
-    LIBRARIES AstroProcessing Qt6::Core
-)
-
 FILE(GLOB ASTRO_PROCESSING_GREY
     grey.cpp
 )
@@ -86,13 +74,13 @@ FILE(GLOB ASTRO_PROCESSING_REGISTER
     register.cpp
 )
 
-#ASTRO_add_executable(
-#    Register
-#    NAME Register
-#    FOLDER Processing/Standalone
-#    SRC ${ASTRO_PROCESSING_REGISTER}
-#    LIBRARIES AstroProcessing Qt6::Core
-#)
+ASTRO_add_executable(
+    Register
+    NAME Register
+    FOLDER Processing/Standalone
+    SRC ${ASTRO_PROCESSING_REGISTER}
+    LIBRARIES AstroProcessing Qt6::Core
+)
 
 FILE(GLOB ASTRO_PROCESSING_STACKING
     stacking.cpp

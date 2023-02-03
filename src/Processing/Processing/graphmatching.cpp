@@ -1,19 +1,19 @@
 #include "graphmatching.h"
 
-#include <IO/hdf5.h>
-#include <IO/traits.h>
+#include <Algos/Graph/full_matching.h>
+#include <Algos/Graph/partial_matching.h>
 
 namespace astro
 {
 namespace processing
 {
-namespace
+std::vector<std::pair<size_t, size_t>> graphmatching(const std::vector<std::pair<double, double>>& graph1,
+                                                     const std::vector<std::pair<double, double>>& graph2,
+                                                     int fullGraphMatch, double maxRatio)
 {
-}
-
-void graphmatching(const H5::DataSet& input, H5::Group& output, const std::string& dataset, int32_t minStars,
-                   int32_t maxStars)
-{
+    std::vector<std::pair<size_t, size_t>> graph =
+            astro::graph::matchFullGraph(graph1, graph2, fullGraphMatch, maxRatio);
+    return astro::graph::matchPartialGraph(graph, graph1, graph2, maxRatio);
 }
 } // namespace processing
 } // namespace astro
