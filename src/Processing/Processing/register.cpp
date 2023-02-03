@@ -1,6 +1,7 @@
 #include "register.h"
 
 #include <itkAffineTransform.h>
+#include <itkBSplineTransform.h>
 #include <itkComposeImageFilter.h>
 #include <itkLandmarkBasedTransformInitializer.h>
 #include <itkResampleImageFilter.h>
@@ -10,19 +11,22 @@ namespace astro
 {
 namespace processing
 {
+
+namespace
+{
+template<typename TransformType>
 ImageTypePtr registerImages(const ImageTypePtr& ref, const ImageTypePtr& target,
                             const std::vector<std::pair<double, double>> refStars,
                             const std::vector<std::pair<double, double>> targetStars)
 {
-    using TransformType = itk::AffineTransform<double, Dimension>;
     using LandmarkBasedTransformInitializerType =
             itk::LandmarkBasedTransformInitializer<TransformType, ImageType, ImageType>;
 
-    LandmarkBasedTransformInitializerType::Pointer landmarkBasedTransformInitializer =
+    typename LandmarkBasedTransformInitializerType::Pointer landmarkBasedTransformInitializer =
             LandmarkBasedTransformInitializerType::New();
     //  Create source and target landmarks.
-    using LandmarkContainerType = LandmarkBasedTransformInitializerType::LandmarkPointContainer;
-    using LandmarkPointType = LandmarkBasedTransformInitializerType::LandmarkPointType;
+    using LandmarkContainerType = typename LandmarkBasedTransformInitializerType::LandmarkPointContainer;
+    using LandmarkPointType = typename LandmarkBasedTransformInitializerType::LandmarkPointType;
 
     LandmarkContainerType fixedLandmarks;
     LandmarkContainerType movingLandmarks;
@@ -96,6 +100,21 @@ ImageTypePtr registerImages(const ImageTypePtr& ref, const ImageTypePtr& target,
     composeFilter->Update();
 
     return composeFilter->GetOutput();
+}
+}
+
+ImageTypePtr registerImages(const ImageTypePtr& ref, const ImageTypePtr& target,
+                            const std::vector<std::pair<double, double>> refStars,
+                            const std::vector<std::pair<double, double>> targetStars)
+{
+    return registerImages<itk::AffineTransform<double, Dimension>>(ref, target, refStars, targetStars);
+}
+
+ImageTypePtr registerImagesHighQuality(const ImageTypePtr& ref, const ImageTypePtr& target,
+                            const std::vector<std::pair<double, double>> refStars,
+                            const std::vector<std::pair<double, double>> targetStars)
+{
+    return registerImages<itk::BSplineTransform<double, Dimension>>(ref, target, refStars, targetStars);
 }
 
 } // namespace processing
