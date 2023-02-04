@@ -53,45 +53,45 @@ int main(int argc, char** argv)
     parser.setApplicationDescription("Register");
     parser.addHelpOption();
     parser.addVersionOption();
-    QCommandLineOption input1Option("input1", QCoreApplication::translate("main", "Input image."), "input1");
-    parser.addOption(input1Option);
-    QCommandLineOption input2Option("input2", QCoreApplication::translate("main", "Input image on which to register."),
-                                    "input2");
-    parser.addOption(input2Option);
+    QCommandLineOption referenceOption("reference", QCoreApplication::translate("main", "Reference image."),
+                                       "reference");
+    parser.addOption(referenceOption);
+    QCommandLineOption targetOption("target", QCoreApplication::translate("main", "Image to register."), "main");
+    parser.addOption(targetOption);
     QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output image."), "output");
     parser.addOption(outputOption);
     QCommandLineOption highdefOption("high-def", QCoreApplication::translate("main", "Save in 16bits."));
     parser.addOption(highdefOption);
     QCommandLineOption minStarsOption("min-stars", QCoreApplication::translate("main", "Minimum number of stars."),
-                                      "main", "80");
+                                      "80", "80");
     parser.addOption(minStarsOption);
     QCommandLineOption maxStarsOption("max-stars", QCoreApplication::translate("main", "Maximum number of stars."),
-                                      "main", "120");
+                                      "120", "120");
     parser.addOption(maxStarsOption);
     QCommandLineOption fullGraphOption("full-graph", QCoreApplication::translate("main", "Full graph matching size."),
-                                       "main", "5");
+                                       "5", "5");
     parser.addOption(fullGraphOption);
     QCommandLineOption maxRatioOption(
-            "max-ratio", QCoreApplication::translate("main", "Max allowed ratio during matching."), "main", ".01");
+            "max-ratio", QCoreApplication::translate("main", "Max allowed ratio during matching."), ".01", ".01");
     parser.addOption(maxRatioOption);
 
     // Process the actual command line arguments given by the user
     parser.process(app);
-    if (!parser.isSet(input1Option))
+    if (!parser.isSet(referenceOption))
     {
-        throw std::runtime_error("Missing input1 image");
+        throw std::runtime_error("Missing reference image");
     }
-    if (!parser.isSet(input2Option))
+    if (!parser.isSet(targetOption))
     {
-        throw std::runtime_error("Missing input2 image");
+        throw std::runtime_error("Missing target image");
     }
     if (!parser.isSet(outputOption))
     {
         throw std::runtime_error("Missing output image");
     }
 
-    std::string input1 = parser.value(input1Option).toStdString();
-    std::string input2 = parser.value(input2Option).toStdString();
+    std::string reference = parser.value(referenceOption).toStdString();
+    std::string target = parser.value(targetOption).toStdString();
     std::string output = parser.value(outputOption).toStdString();
 
     int32_t minStars = parser.value(minStarsOption).toInt();
@@ -101,8 +101,8 @@ int main(int argc, char** argv)
 
     bool highdef = parser.isSet(highdefOption);
 
-    astro::AstroImage refImg = astro::enrichImage(input1, astro::io::open(input1));
-    astro::AstroImage targetImg = astro::enrichImage(input2, astro::io::open(input2));
+    astro::AstroImage refImg = astro::enrichImage(reference, astro::io::open(reference));
+    astro::AstroImage targetImg = astro::enrichImage(target, astro::io::open(target));
     auto size = refImg.getImg()->GetRequestedRegion().GetSize();
 
     QTemporaryFile temp;
@@ -113,7 +113,7 @@ int main(int argc, char** argv)
         h5file = H5::H5File(temp.fileName().toStdString(), H5F_ACC_TRUNC);
     }
 
-    H5::DataSet inputs = astro::hdf5::readTo({input1, input2}, size, h5file, "inputs");
+    H5::DataSet inputs = astro::hdf5::readTo({reference, target}, size, h5file, "inputs");
 
     astro::ScalarImageTypePtr refGrey = astro::processing::grey(inputs, 0, h5file, "refGrey");
     astro::ScalarImageTypePtr targetGrey = astro::processing::grey(inputs, 1, h5file, "targetGrey");
@@ -121,18 +121,18 @@ int main(int argc, char** argv)
     astro::processing::starDetection(h5file.openDataSet("refGrey"), h5file, "refStar", minStars, maxStars);
     astro::processing::starDetection(h5file.openDataSet("targetGrey"), h5file, "targetStar", minStars, maxStars);
 
-    std::vector<std::pair<double, double>> graph1 = read(h5file.openDataSet("refStar"));
-    std::vector<std::pair<double, double>> graph2 = read(h5file.openDataSet("targetStar"));
+    std::vector<std::pair<double, double>> referenceGraph = read(h5file.openDataSet("refStar"));
+    std::vector<std::pair<double, double>> targetGraph = read(h5file.openDataSet("targetStar"));
 
     std::vector<std::pair<size_t, size_t>> matches =
-            astro::processing::graphmatching(graph1, graph2, fullGraph, maxRatio);
+            astro::processing::graphmatching(referenceGraph, targetGraph, fullGraph, maxRatio);
 
     std::vector<std::pair<double, double>> refStars;
     std::vector<std::pair<double, double>> targetStars;
     for (auto pair : matches)
     {
-        refStars.push_back(graph1[pair.first]);
-        targetStars.push_back(graph2[pair.second]);
+        refStars.push_back(referenceGraph[pair.first]);
+        targetStars.push_back(targetGraph[pair.second]);
     }
 
     astro::ImageTypePtr outputImg =
