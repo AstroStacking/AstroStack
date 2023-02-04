@@ -76,7 +76,6 @@ public:
     {
         std::vector<double> partialDistanceMatrix = extractDistance(m_distanceMatrix2, permutation, m_sizeGraph2);
         double d = 0;
-
         for (size_t i = 0; i < partialDistanceMatrix.size(); ++i)
         {
             if (m_distanceMatrix1[i] != 0)
@@ -84,6 +83,7 @@ public:
                 d = std::max(d, std::abs(partialDistanceMatrix[i] / m_distanceMatrix1[i] - 1));
             }
         }
+
         if (m_bestRatio > d)
         {
             m_bestRatio = d;
@@ -133,9 +133,10 @@ public:
         std::vector<size_t> indicesGraph2(m_sizeGraph * 2);
         std::iota(indicesGraph2.begin(), indicesGraph2.end(), 0);
 
-        std::vector<double> partialDistanceMatrix = extractDistance(m_distanceMatrix1, permutation, m_sizeGraph1);
-        PartialGraphMatch matching(partialDistanceMatrix, m_distanceMatrix2, m_sizeGraph2, m_maxRatio);
+        std::vector<double> partialDistanceMatrix = extractDistance(m_distanceMatrix1, permutation, m_sizeGraph * 2);
+        PartialGraphMatch matching(partialDistanceMatrix, m_distanceMatrix2, m_sizeGraph * 2, m_maxRatio);
         comb(std::vector<size_t>(), indicesGraph2, m_sizeGraph, matching);
+
         try
         {
             matching.best();

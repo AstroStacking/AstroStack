@@ -11,7 +11,7 @@ Size::Size(size_t entries)
 
 void Size::process(double value, int32_t index, ScalarIntegerImageType::IndexType position)
 {
-    m_cumulative[index] += value;
+    m_cumulative[index] += 1;
 }
 } // namespace image_statistics
 } // namespace astro

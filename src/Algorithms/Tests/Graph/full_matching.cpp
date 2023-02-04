@@ -16,7 +16,7 @@ TEST(Graph_FullMatching, some_match)
 {
     // clang-format off
     std::vector<std::pair<double, double>> graph1{{0, 0}, {1, 1}, {2, 0}, {1, -1}, {100, 200}, {1000, 2000}};
-    std::vector<std::pair<double, double>> graph2{{0, 0}, {-1, -1}, {6, 0}, {1, -1}, {-100, 200}, {1000, -2000}};
+    std::vector<std::pair<double, double>> graph2{{0, 0}, {-1, -1}, {6, 0}, {1, -1}, {-100, 200}, {1000, -2000}, {10000, -20000}};
     // clang-format on
 
     auto result = astro::graph::matchFullGraph(graph1, graph2, 3, 0.001);

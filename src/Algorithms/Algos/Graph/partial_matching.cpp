@@ -45,24 +45,26 @@ std::vector<std::pair<size_t, size_t>> matchPartialGraph(std::vector<std::pair<s
                 continue;
             }
 
-            double maxRatio = -std::numeric_limits<double>::infinity();
+            double currentMaxRatio = -std::numeric_limits<double>::infinity();
             for (size_t k = 0; k < initialGraph.size(); ++k)
             {
                 double ratio = std::abs(distanceMatrix1[initialGraph[k].first * graph1.size() + i] /
                                                 distanceMatrix2[initialGraph[k].second * graph2.size() + j] -
                                         1);
-                maxRatio = std::max(maxRatio, ratio);
+                currentMaxRatio = std::max(currentMaxRatio, ratio);
             }
 
             if (maxRatio < best)
             {
-                best = maxRatio;
+                best = currentMaxRatio;
                 bestTrial = std::make_pair(i, j);
             }
         }
         if (best < maxRatio)
         {
             initialGraph.push_back(bestTrial);
+            originalSet.insert(bestTrial.first);
+            matchSet.insert(bestTrial.second);
         }
     }
 

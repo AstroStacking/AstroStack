@@ -87,10 +87,14 @@ ScalarImageTypePtr starDetection(const H5::DataSet& input, H5::Group& output, co
 
     stats.compute();
     auto data = stats.getData();
-    std::sort(data.begin(), data.end(), [](const auto& r, const auto& l) { return r.back() > l.back(); });
+    {
+        std::sort(data.begin(), data.end(), [](const auto& r, const auto& l) { return r.back() > l.back(); });
+        auto it = std::remove_if(data.begin(), data.end(), [](const auto& el) { return el.back() == 0; });
+        data.erase(it, data.end());
+    }
 
     // Output data
-    hsize_t outputImgDim[2]{stats.getSize(), stats.getComponents()};
+    hsize_t outputImgDim[2]{data.size() / stats.getComponents(), stats.getComponents()};
     H5::DataSpace outputSpace(2, outputImgDim);
     // output list
     H5::DataSet outputDataset = output.createDataSet(dataset, H5::PredType::NATIVE_DOUBLE, outputSpace);

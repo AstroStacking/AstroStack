@@ -32,7 +32,7 @@ std::vector<std::pair<double, double>> read(H5::DataSet dataset)
     std::vector<double> buffer(dims[0] * dims[1]);
     dataset.read(buffer.data(), H5::PredType::NATIVE_DOUBLE, dataspace, dataspace);
 
-    std::vector<std::pair<double, double>> data(2 * dims[0]);
+    std::vector<std::pair<double, double>> data(dims[0]);
     for (size_t i = 0; i < dims[0]; ++i)
     {
         data[i].first = buffer[i * dims[1]];

@@ -36,5 +36,5 @@ TEST(ImageStats, build)
     ASSERT_NEAR(stats.getData()[1][4], 100, 0.00001);
     ASSERT_NEAR(stats.getData()[1][5], 20, 0.00001);
     ASSERT_NEAR(stats.getData()[1][6], 200, 0.00001);
-    ASSERT_NEAR(stats.getData()[1][7], .6, 0.00001);
+    ASSERT_NEAR(stats.getData()[1][7], 2, 0.00001);
 }
