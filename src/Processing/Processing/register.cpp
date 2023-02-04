@@ -33,14 +33,14 @@ ImageTypePtr registerImages(const ImageTypePtr& ref, const ImageTypePtr& target,
 
     for (auto pair : refStars)
     {
-        itk::Point<double, 2> point;
+        LandmarkPointType point;
         point[0] = pair.first;
         point[1] = pair.second;
         fixedLandmarks.push_back(point);
     }
     for (auto pair : targetStars)
     {
-        itk::Point<double, 2> point;
+        LandmarkPointType point;
         point[0] = pair.first;
         point[1] = pair.second;
         movingLandmarks.push_back(point);
