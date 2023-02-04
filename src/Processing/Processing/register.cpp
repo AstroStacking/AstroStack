@@ -101,7 +101,7 @@ ImageTypePtr registerImages(const ImageTypePtr& ref, const ImageTypePtr& target,
 
     return composeFilter->GetOutput();
 }
-}
+} // namespace
 
 ImageTypePtr registerImages(const ImageTypePtr& ref, const ImageTypePtr& target,
                             const std::vector<std::pair<double, double>> refStars,
@@ -111,8 +111,8 @@ ImageTypePtr registerImages(const ImageTypePtr& ref, const ImageTypePtr& target,
 }
 
 ImageTypePtr registerImagesHighQuality(const ImageTypePtr& ref, const ImageTypePtr& target,
-                            const std::vector<std::pair<double, double>> refStars,
-                            const std::vector<std::pair<double, double>> targetStars)
+                                       const std::vector<std::pair<double, double>> refStars,
+                                       const std::vector<std::pair<double, double>> targetStars)
 {
     return registerImages<itk::BSplineTransform<double, Dimension>>(ref, target, refStars, targetStars);
 }

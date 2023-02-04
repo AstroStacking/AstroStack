@@ -88,10 +88,6 @@ public:
         {
             m_bestRatio = d;
             m_bestTrial = permutation;
-            for (const auto& t : m_bestTrial)
-            {
-                std::cout << t << std::endl;
-            }
         }
     }
 

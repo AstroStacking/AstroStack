@@ -24,14 +24,20 @@ std::vector<std::pair<double, double>> read(H5::DataSet dataset)
     }
     hsize_t dims[2];
     ndims = dataspace.getSimpleExtentDims(dims, nullptr);
-    if (dims[1] != 2)
+    if (dims[1] <= 2)
     {
-        throw std::runtime_error("Wrong number of columns");
+        throw std::runtime_error("Wrong number of columns " + std::to_string(dims[1]));
     }
 
-    std::vector<std::pair<double, double>> data;
+    std::vector<double> buffer(dims[0] * dims[1]);
+    dataset.read(buffer.data(), H5::PredType::NATIVE_DOUBLE, dataspace, dataspace);
 
-    dataset.read(data.data(), H5::PredType::NATIVE_DOUBLE, dataspace, dataspace);
+    std::vector<std::pair<double, double>> data(2 * dims[0]);
+    for (size_t i = 0; i < dims[0]; ++i)
+    {
+        data[i].first = buffer[i * dims[1]];
+        data[i].second = buffer[i * dims[1] + 1];
+    }
 
     return data;
 }
