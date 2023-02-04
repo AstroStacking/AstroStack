@@ -29,10 +29,10 @@ int main(int argc, char** argv)
     QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output binary Image."), "output");
     parser.addOption(outputOption);
     QCommandLineOption minStarsOption("min-stars", QCoreApplication::translate("main", "Minimum number of stars."),
-                                      "main", "80");
+                                      "80", "80");
     parser.addOption(minStarsOption);
     QCommandLineOption maxStarsOption("max-stars", QCoreApplication::translate("main", "Maximum number of stars."),
-                                      "main", "120");
+                                      "120", "120");
     parser.addOption(maxStarsOption);
 
     // Process the actual command line arguments given by the user

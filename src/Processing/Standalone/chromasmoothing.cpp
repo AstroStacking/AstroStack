@@ -23,9 +23,9 @@ int main(int argc, char** argv)
     parser.addOption(outputOption);
     QCommandLineOption highdefOption("high-def", QCoreApplication::translate("main", "Save in 16bits."));
     parser.addOption(highdefOption);
-
     QCommandLineOption varianceOption(
-            "variance", QCoreApplication::translate("main", "Variance for the Hue and Saturation smoothing."), "2.0");
+            "variance", QCoreApplication::translate("main", "Variance for the Hue and Saturation smoothing."), "2.0",
+            "2.0");
     parser.addOption(varianceOption);
 
     // Process the actual command line arguments given by the user

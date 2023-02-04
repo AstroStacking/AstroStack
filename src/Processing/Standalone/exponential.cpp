@@ -23,12 +23,11 @@ int main(int argc, char** argv)
     parser.addOption(outputOption);
     QCommandLineOption highdefOption("high-def", QCoreApplication::translate("main", "Save in 16bits."));
     parser.addOption(highdefOption);
-
     QCommandLineOption exponentialOption(
             "exponential",
             QCoreApplication::translate("main",
                                         "Exponential parameter for the transform (must be positive and less than 1)."),
-            ".5");
+            ".5", ".5");
     parser.addOption(exponentialOption);
 
     // Process the actual command line arguments given by the user

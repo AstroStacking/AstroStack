@@ -23,11 +23,12 @@ int main(int argc, char** argv)
     parser.addOption(outputOption);
     QCommandLineOption highdefOption("high-def", QCoreApplication::translate("main", "Save in 16bits."));
     parser.addOption(highdefOption);
-
-    QCommandLineOption sizeOption(
-            "filter-size", QCoreApplication::translate("main", "Filter size to use for the Gaussian kernel."), "4");
+    QCommandLineOption sizeOption("filter-size",
+                                  QCoreApplication::translate("main", "Filter size to use for the Gaussian kernel."),
+                                  "4", "4");
     parser.addOption(sizeOption);
-    QCommandLineOption sigmaOption("sigma", QCoreApplication::translate("main", "Sigma of the Gaussian kernel."), "2");
+    QCommandLineOption sigmaOption("sigma", QCoreApplication::translate("main", "Sigma of the Gaussian kernel."), "2",
+                                   "2");
     parser.addOption(sigmaOption);
 
     // Process the actual command line arguments given by the user

@@ -24,13 +24,14 @@ int main(int argc, char** argv)
     QCommandLineOption highdefOption("high-def", QCoreApplication::translate("main", "Save in 16bits."));
     parser.addOption(highdefOption);
 
-    QCommandLineOption redOption("red", QCoreApplication::translate("main", "Coefficient for the red channel."), ".1");
+    QCommandLineOption redOption("red", QCoreApplication::translate("main", "Coefficient for the red channel."), ".1",
+                                 ".1");
     parser.addOption(redOption);
     QCommandLineOption greenOption("green", QCoreApplication::translate("main", "Coefficient for the green channel."),
-                                   ".1");
+                                   ".1", ".1");
     parser.addOption(greenOption);
     QCommandLineOption blueOption("blue", QCoreApplication::translate("main", "Coefficient for the blue channel."),
-                                  ".1");
+                                  ".1", ".1");
     parser.addOption(blueOption);
     QCommandLineOption relativeOption("relative", QCoreApplication::translate("main", "Use relative stretching."));
     parser.addOption(relativeOption);
