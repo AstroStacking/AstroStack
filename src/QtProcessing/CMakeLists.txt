@@ -1,37 +1,37 @@
 FILE(GLOB ASTRO_QTPROCESSING_SRC
-    QtProcessing/chromasmoothing.cpp
-    QtProcessing/chromasmoothing.ui
-    QtProcessing/exponential.cpp
-    QtProcessing/exponential.ui
-    QtProcessing/histostretch.cpp
-    QtProcessing/histostretch.ui
-    QtProcessing/lightpollution.cpp
-    QtProcessing/lightpollution.ui
+    QtProcessing/Mono2Mono/chromasmoothing.cpp
+    QtProcessing/Mono2Mono/chromasmoothing.ui
+    QtProcessing/Mono2Mono/exponential.cpp
+    QtProcessing/Mono2Mono/exponential.ui
+    QtProcessing/Mono2Mono/histostretch.cpp
+    QtProcessing/Mono2Mono/histostretch.ui
+    QtProcessing/Mono2Mono/lightpollution.cpp
+    QtProcessing/Mono2Mono/lightpollution.ui
+    QtProcessing/Mono2Mono/rldeconvolution.cpp
+    QtProcessing/Mono2Mono/rldeconvolution.ui
     QtProcessing/monointerface.cpp
     QtProcessing/multiinterface.cpp
-    QtProcessing/rldeconvolution.cpp
-    QtProcessing/rldeconvolution.ui
 )
 
 FILE(GLOB ASTRO_QTPROCESSING_HEADERS
+    QtProcessing/Mono2Mono/chromasmoothing.h
+    QtProcessing/Mono2Mono/exponential.h
+    QtProcessing/Mono2Mono/histostretch.h
+    QtProcessing/Mono2Mono/lightpollution.h
+    QtProcessing/Mono2Mono/rldeconvolution.h
     QtProcessing/config.h
-    QtProcessing/chromasmoothing.h
-    QtProcessing/exponential.h
-    QtProcessing/histostretch.h
-    QtProcessing/lightpollution.h
     QtProcessing/monointerface.h
     QtProcessing/multiinterface.h
-    QtProcessing/rldeconvolution.h
     QtProcessing/ui_monointerface.h
     QtProcessing/ui_multiinterface.h
 )
 
 FILE(GLOB ASTRO_QTPROCESSING_DOC
-    QtProcessing/chromasmoothing.md
-    QtProcessing/exponential.md
-    QtProcessing/histostretch.md
-    QtProcessing/lightpollution.md
-    QtProcessing/rldeconvolution.md
+    QtProcessing/Mono2Mono/chromasmoothing.md
+    QtProcessing/Mono2Mono/exponential.md
+    QtProcessing/Mono2Mono/histostretch.md
+    QtProcessing/Mono2Mono/lightpollution.md
+    QtProcessing/Mono2Mono/rldeconvolution.md
 )
 
 ASTRO_add_library(

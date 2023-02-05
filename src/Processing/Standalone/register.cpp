@@ -138,7 +138,6 @@ int main(int argc, char** argv)
     astro::ImageTypePtr outputImg =
             astro::processing::registerImages(refImg.getImg(), targetImg.getImg(), refStars, targetStars);
 
-
     if (highdef)
     {
         astro::io::save<uint16_t>(outputImg, output);

@@ -1,7 +1,6 @@
 #include "exponential.h"
 #include "ui_exponential.h"
-#include "ui_monointerface.h"
-
+#include "../ui_monointerface.h"
 #include <Processing/exponential.h>
 
 #include <QtWidgets/QDoubleSpinBox>

@@ -1,7 +1,6 @@
 #include "histostretch.h"
 #include "ui_histostretch.h"
-#include "ui_monointerface.h"
-
+#include "../ui_monointerface.h"
 #include <Processing/histostretch.h>
 
 namespace astro

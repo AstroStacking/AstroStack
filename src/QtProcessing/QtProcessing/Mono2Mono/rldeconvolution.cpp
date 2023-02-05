@@ -1,7 +1,6 @@
 #include "rldeconvolution.h"
-#include "ui_monointerface.h"
 #include "ui_rldeconvolution.h"
-
+#include "../ui_monointerface.h"
 #include <Processing/rldeconvolution.h>
 
 namespace astro

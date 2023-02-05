@@ -1,11 +1,11 @@
 #include "monointerface.h"
 #include "ui_monointerface.h"
 
-#include <QtProcessing/chromasmoothing.h>
-#include <QtProcessing/exponential.h>
-#include <QtProcessing/histostretch.h>
-#include <QtProcessing/lightpollution.h>
-#include <QtProcessing/rldeconvolution.h>
+#include <QtProcessing/Mono2Mono/chromasmoothing.h>
+#include <QtProcessing/Mono2Mono/exponential.h>
+#include <QtProcessing/Mono2Mono/histostretch.h>
+#include <QtProcessing/Mono2Mono/lightpollution.h>
+#include <QtProcessing/Mono2Mono/rldeconvolution.h>
 
 #include <Plugin/pluginfactory.h>
 #include <QtIO/output.h>
