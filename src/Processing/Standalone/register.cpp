@@ -53,11 +53,10 @@ int main(int argc, char** argv)
     parser.setApplicationDescription("Register");
     parser.addHelpOption();
     parser.addVersionOption();
-    QCommandLineOption referenceOption("reference", QCoreApplication::translate("main", "Reference image."),
-                                       "reference");
-    parser.addOption(referenceOption);
-    QCommandLineOption targetOption("target", QCoreApplication::translate("main", "Image to register."), "main");
-    parser.addOption(targetOption);
+    QCommandLineOption fixOption("fix", QCoreApplication::translate("main", "Fixed image."), "fix");
+    parser.addOption(fixOption);
+    QCommandLineOption movingOption("moving", QCoreApplication::translate("main", "Moving inage."), "main");
+    parser.addOption(movingOption);
     QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output image."), "output");
     parser.addOption(outputOption);
     QCommandLineOption highdefOption("high-def", QCoreApplication::translate("main", "Save in 16bits."));
@@ -77,21 +76,21 @@ int main(int argc, char** argv)
 
     // Process the actual command line arguments given by the user
     parser.process(app);
-    if (!parser.isSet(referenceOption))
+    if (!parser.isSet(fixOption))
     {
-        throw std::runtime_error("Missing reference image");
+        throw std::runtime_error("Missing fix image");
     }
-    if (!parser.isSet(targetOption))
+    if (!parser.isSet(movingOption))
     {
-        throw std::runtime_error("Missing target image");
+        throw std::runtime_error("Missing moving image");
     }
     if (!parser.isSet(outputOption))
     {
         throw std::runtime_error("Missing output image");
     }
 
-    std::string reference = parser.value(referenceOption).toStdString();
-    std::string target = parser.value(targetOption).toStdString();
+    std::string fix = parser.value(fixOption).toStdString();
+    std::string moving = parser.value(movingOption).toStdString();
     std::string output = parser.value(outputOption).toStdString();
 
     int32_t minStars = parser.value(minStarsOption).toInt();
@@ -101,9 +100,9 @@ int main(int argc, char** argv)
 
     bool highdef = parser.isSet(highdefOption);
 
-    astro::AstroImage refImg = astro::enrichImage(reference, astro::io::open(reference));
-    astro::AstroImage targetImg = astro::enrichImage(target, astro::io::open(target));
-    auto size = refImg.getImg()->GetRequestedRegion().GetSize();
+    astro::AstroImage fixImg = astro::enrichImage(fix, astro::io::open(fix));
+    astro::AstroImage movingImg = astro::enrichImage(moving, astro::io::open(moving));
+    auto size = fixImg.getImg()->GetRequestedRegion().GetSize();
 
     QTemporaryFile temp;
     H5::H5File h5file;
@@ -113,30 +112,30 @@ int main(int argc, char** argv)
         h5file = H5::H5File(temp.fileName().toStdString(), H5F_ACC_TRUNC);
     }
 
-    H5::DataSet inputs = astro::hdf5::readTo({reference, target}, size, h5file, "inputs");
+    H5::DataSet inputs = astro::hdf5::readTo({fix, moving}, size, h5file, "inputs");
 
-    astro::ScalarImageTypePtr refGrey = astro::processing::grey(inputs, 0, h5file, "refGrey");
-    astro::ScalarImageTypePtr targetGrey = astro::processing::grey(inputs, 1, h5file, "targetGrey");
+    astro::ScalarImageTypePtr fixGrey = astro::processing::grey(inputs, 0, h5file, "fixGrey");
+    astro::ScalarImageTypePtr movingGrey = astro::processing::grey(inputs, 1, h5file, "movingGrey");
 
-    astro::processing::starDetection(h5file.openDataSet("refGrey"), h5file, "refStar", minStars, maxStars);
-    astro::processing::starDetection(h5file.openDataSet("targetGrey"), h5file, "targetStar", minStars, maxStars);
+    astro::processing::starDetection(h5file.openDataSet("fixGrey"), h5file, "fixStar", minStars, maxStars);
+    astro::processing::starDetection(h5file.openDataSet("movingGrey"), h5file, "movingStar", minStars, maxStars);
 
-    std::vector<std::pair<double, double>> referenceGraph = read(h5file.openDataSet("refStar"));
-    std::vector<std::pair<double, double>> targetGraph = read(h5file.openDataSet("targetStar"));
+    std::vector<std::pair<double, double>> fixGraph = read(h5file.openDataSet("fixStar"));
+    std::vector<std::pair<double, double>> movingGraph = read(h5file.openDataSet("movingStar"));
 
     std::vector<std::pair<size_t, size_t>> matches =
-            astro::processing::graphmatching(referenceGraph, targetGraph, fullGraph, maxRatio);
+            astro::processing::graphmatching(fixGraph, movingGraph, fullGraph, maxRatio);
 
-    std::vector<std::pair<double, double>> refStars;
-    std::vector<std::pair<double, double>> targetStars;
+    std::vector<std::pair<double, double>> fixStars;
+    std::vector<std::pair<double, double>> movingStars;
     for (auto pair : matches)
     {
-        refStars.push_back(referenceGraph[pair.first]);
-        targetStars.push_back(targetGraph[pair.second]);
+        fixStars.push_back(fixGraph[pair.first]);
+        movingStars.push_back(movingGraph[pair.second]);
     }
 
     astro::ImageTypePtr outputImg =
-            astro::processing::registerImages(refImg.getImg(), targetImg.getImg(), refStars, targetStars);
+            astro::processing::registerImages(fixImg.getImg(), movingImg.getImg(), fixStars, movingStars);
 
     if (highdef)
     {
@@ -146,7 +145,7 @@ int main(int argc, char** argv)
     {
         astro::io::save<uint8_t>(outputImg, output);
     }
-    astro::saveEnrichedImage(output, refImg);
+    astro::saveEnrichedImage(output, fixImg);
 
     return 0;
 }

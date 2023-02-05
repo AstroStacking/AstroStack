@@ -7,13 +7,14 @@ namespace astro
 {
 namespace processing
 {
-ASTRO_PROCESSING_EXPORT ImageTypePtr registerImages(const ImageTypePtr& ref, const ImageTypePtr& target,
-                                                    const std::vector<std::pair<double, double>> refStars,
-                                                    const std::vector<std::pair<double, double>> targetStars,
+ASTRO_PROCESSING_EXPORT ImageTypePtr registerImages(const ImageTypePtr& fix, const ImageTypePtr& moving,
+                                                    const std::vector<std::pair<double, double>> fixStars,
+                                                    const std::vector<std::pair<double, double>> movingStars,
                                                     double defaultValue = std::numeric_limits<double>::quiet_NaN());
-ASTRO_PROCESSING_EXPORT ImageTypePtr registerImagesHighQuality(
-        const ImageTypePtr& ref, const ImageTypePtr& target, const std::vector<std::pair<double, double>> refStars,
-        const std::vector<std::pair<double, double>> targetStars,
-        double defaultValue = std::numeric_limits<double>::quiet_NaN());
+ASTRO_PROCESSING_EXPORT ImageTypePtr registerImages(const ImageTypePtr& fix, const ImageTypePtr& target,
+                                                    double defaultValue = std::numeric_limits<double>::quiet_NaN());
+ASTRO_PROCESSING_EXPORT ImageTypePtr
+registerImagesHighQuality(const ImageTypePtr& fix, const ImageTypePtr& moving,
+                          double defaultValue = std::numeric_limits<double>::quiet_NaN());
 } // namespace processing
 } // namespace astro

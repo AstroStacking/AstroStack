@@ -15,6 +15,15 @@ ScalarImageTypePtr grey(const H5::DataSet& input, size_t index, const H5::Group&
 {
     ImageTypePtr img = hdf5::extractFrom(input, index);
 
+    auto outputImg = grey(img);
+
+    hdf5::writeTo(*outputImg, output, dataset);
+
+    return outputImg;
+}
+
+ScalarImageTypePtr grey(const ImageTypePtr& img)
+{
     using RGB2LConvertor = itk::ImageAdaptor<ImageType, filters::convertors::LPixelAccessor>;
     auto finalImg = RGB2LConvertor::New();
     finalImg->SetImage(img);
@@ -24,9 +33,6 @@ ScalarImageTypePtr grey(const H5::DataSet& input, size_t index, const H5::Group&
     auto castFilter = CastFilterType::New();
     castFilter->SetInput(finalImg);
     castFilter->Update();
-
-    hdf5::writeTo(*castFilter->GetOutput(), output, dataset);
-
     return castFilter->GetOutput();
 }
 } // namespace processing
