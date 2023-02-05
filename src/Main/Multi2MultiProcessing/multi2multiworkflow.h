@@ -8,11 +8,11 @@ namespace astro
 class Explorer;
 class MultiInterface;
 
-class MultiWorkflow : public QObject
+class Multi2MultiWorkflow : public QObject
 {
     Q_OBJECT
 public:
-    MultiWorkflow(QString name, Explorer* explorer);
+    Multi2MultiWorkflow(QString name, Explorer* explorer);
     void addStep(MultiInterface* plugin, QJsonObject object);
 
 public slots:
@@ -23,6 +23,6 @@ private:
     std::vector<std::pair<MultiInterface*, QJsonObject>> m_steps;
 
 public:
-    static std::vector<std::unique_ptr<MultiWorkflow>> getMultiWorkflows(Explorer* explorer);
+    static std::vector<std::unique_ptr<Multi2MultiWorkflow>> getMultiWorkflows(Explorer* explorer);
 };
 } // namespace astro

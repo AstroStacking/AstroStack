@@ -1,5 +1,5 @@
 #pragma once
-#include <QtProcessing/monointerface.h>
+#include <QtProcessing/mono2monointerface.h>
 
 namespace Ui
 {

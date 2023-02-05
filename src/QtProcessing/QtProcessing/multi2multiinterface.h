@@ -1,7 +1,6 @@
 #pragma once
-#include <QtProcessing/config.h>
-
 #include <IO/io.h>
+#include <QtProcessing/config.h>
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QPromise>

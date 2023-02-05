@@ -1,6 +1,6 @@
 #include "lightpollution.h"
+#include "../ui_mono2monointerface.h"
 #include "ui_lightpollution.h"
-#include "../ui_monointerface.h"
 #include <Processing/lightpollution.h>
 
 #include <QtWidgets/QDoubleSpinBox>

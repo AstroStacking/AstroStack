@@ -1,6 +1,6 @@
 #include "chromasmoothing.h"
+#include "../ui_mono2monointerface.h"
 #include "ui_chromasmoothing.h"
-#include "../ui_monointerface.h"
 #include <Processing/chromasmoothing.h>
 
 #include <QtWidgets/QDoubleSpinBox>

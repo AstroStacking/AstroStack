@@ -1,6 +1,5 @@
-#include "multiinterface.h"
-#include "ui_multiinterface.h"
-
+#include "multi2multiinterface.h"
+#include "ui_multi2multiinterface.h"
 #include <Plugin/pluginfactory.h>
 #include <QtIO/output.h>
 

@@ -1,40 +1,39 @@
-#include "multiworkflow.h"
-
+#include "mono2monoworkflow.h"
 #include <Explorer/explorer.h>
-#include <MultiProcessing/multiprocessing.h>
+#include <Mono2MonoProcessing/mono2monoprocessing.h>
 #include <Plugin/pluginfactory.h>
-#include <QtProcessing/multiinterface.h>
+#include <QtProcessing/mono2monointerface.h>
 
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 
 namespace astro
 {
-MultiWorkflow::MultiWorkflow(QString name, Explorer* explorer)
+Mono2MonoWorkflow::Mono2MonoWorkflow(QString name, Explorer* explorer)
     : m_explorer(explorer)
 {
     setObjectName(name);
 }
 
-void MultiWorkflow::openProcess()
+void Mono2MonoWorkflow::openProcess()
 {
     QString file = m_explorer->getSelectedFile();
 
-    MultiProcessing* widget = new MultiProcessing(file);
+    MonoProcessing* widget = new MonoProcessing(file);
     m_explorer->addSubWindow(widget);
     widget->setupWorkflow(m_steps);
 }
 
-void MultiWorkflow::addStep(MultiInterface* plugin, QJsonObject object)
+void Mono2MonoWorkflow::addStep(MonoInterface* plugin, QJsonObject object)
 {
     m_steps.emplace_back(plugin, object);
 }
 
-std::vector<std::unique_ptr<MultiWorkflow>> MultiWorkflow::getMultiWorkflows(Explorer* explorer)
+std::vector<std::unique_ptr<Mono2MonoWorkflow>> Mono2MonoWorkflow::getMonoWorkflows(Explorer* explorer)
 {
-    std::vector<std::unique_ptr<MultiWorkflow>> workflows;
+    std::vector<std::unique_ptr<Mono2MonoWorkflow>> workflows;
 
-    const std::map<QString, MultiInterface*>& plugins = MultiInterface::getPlugins();
+    const std::map<QString, MonoInterface*>& plugins = MonoInterface::getPlugins();
 
     QDir directory = PluginFactory::getRootPath();
     directory.cd("workflows");
@@ -46,11 +45,11 @@ std::vector<std::unique_ptr<MultiWorkflow>> MultiWorkflow::getMultiWorkflows(Exp
         loadFile.open(QIODevice::ReadOnly);
         QByteArray jsonData = loadFile.readAll();
         QJsonDocument loadDoc(QJsonDocument::fromJson(jsonData));
-        if (loadDoc["Type"].toString() != "Multi")
+        if (loadDoc["Type"].toString() != "Mono")
         {
             continue;
         }
-        workflows.push_back(std::make_unique<MultiWorkflow>(loadDoc["Name"].toString(), explorer));
+        workflows.push_back(std::make_unique<Mono2MonoWorkflow>(loadDoc["Name"].toString(), explorer));
         for (auto step : loadDoc["Steps"].toArray())
         {
             auto object = step.toObject();

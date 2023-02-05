@@ -9,8 +9,8 @@ FILE(GLOB ASTRO_QTPROCESSING_SRC
     QtProcessing/Mono2Mono/lightpollution.ui
     QtProcessing/Mono2Mono/rldeconvolution.cpp
     QtProcessing/Mono2Mono/rldeconvolution.ui
-    QtProcessing/monointerface.cpp
-    QtProcessing/multiinterface.cpp
+    QtProcessing/mono2monointerface.cpp
+    QtProcessing/multi2multiinterface.cpp
 )
 
 FILE(GLOB ASTRO_QTPROCESSING_HEADERS
@@ -20,10 +20,10 @@ FILE(GLOB ASTRO_QTPROCESSING_HEADERS
     QtProcessing/Mono2Mono/lightpollution.h
     QtProcessing/Mono2Mono/rldeconvolution.h
     QtProcessing/config.h
-    QtProcessing/monointerface.h
-    QtProcessing/multiinterface.h
-    QtProcessing/ui_monointerface.h
-    QtProcessing/ui_multiinterface.h
+    QtProcessing/mono2monointerface.h
+    QtProcessing/multi2multiinterface.h
+    QtProcessing/ui_mono2monointerface.h
+    QtProcessing/ui_multi2multiinterface.h
 )
 
 FILE(GLOB ASTRO_QTPROCESSING_DOC

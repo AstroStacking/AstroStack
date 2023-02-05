@@ -2,8 +2,8 @@
 #include "ui_explorer.h"
 
 #include <Common/imagedata.h>
-#include <MonoProcessing/monoprocessing.h>
-#include <MonoProcessing/monoworkflow.h>
+#include <Mono2MonoProcessing/mono2monoprocessing.h>
+#include <Mono2MonoProcessing/mono2monoworkflow.h>
 #include <mainwindow.h>
 
 #include <QtCore/QDir>
@@ -16,7 +16,7 @@ namespace astro
 Explorer::Explorer(MainWindow* mainWindow)
     : m_ui(std::make_unique<Ui::Explorer>())
     , m_mainWindow(mainWindow)
-    , m_workflows(MonoWorkflow::getMonoWorkflows(this))
+    , m_workflows(Mono2MonoWorkflow::getMonoWorkflows(this))
 {
     m_ui->setupUi(this);
 
@@ -65,7 +65,7 @@ void Explorer::createContextMenu()
     {
         QAction* processAct = new QAction(workflow->objectName(), this);
         processAct->setStatusTip(workflow->objectName());
-        connect(processAct, &QAction::triggered, workflow.get(), &MonoWorkflow::openProcess);
+        connect(processAct, &QAction::triggered, workflow.get(), &Mono2MonoWorkflow::openProcess);
         m_menu->addAction(processAct);
     }
 }

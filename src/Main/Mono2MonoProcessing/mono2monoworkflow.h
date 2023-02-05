@@ -8,11 +8,11 @@ namespace astro
 class Explorer;
 class MonoInterface;
 
-class MonoWorkflow : public QObject
+class Mono2MonoWorkflow : public QObject
 {
     Q_OBJECT
 public:
-    MonoWorkflow(QString name, Explorer* explorer);
+    Mono2MonoWorkflow(QString name, Explorer* explorer);
     void addStep(MonoInterface* plugin, QJsonObject object);
 
 public slots:
@@ -23,6 +23,6 @@ private:
     std::vector<std::pair<MonoInterface*, QJsonObject>> m_steps;
 
 public:
-    static std::vector<std::unique_ptr<MonoWorkflow>> getMonoWorkflows(Explorer* explorer);
+    static std::vector<std::unique_ptr<Mono2MonoWorkflow>> getMonoWorkflows(Explorer* explorer);
 };
 } // namespace astro

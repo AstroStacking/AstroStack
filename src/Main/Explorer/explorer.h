@@ -11,7 +11,7 @@ class QFileSystemModel;
 namespace astro
 {
 class MainWindow;
-class MonoWorkflow;
+class Mono2MonoWorkflow;
 
 class Explorer : public QWidget
 {
@@ -44,6 +44,6 @@ private:
     std::unique_ptr<QFileSystemModel> m_model;
     MainWindow* m_mainWindow{};
     QMenu* m_menu{};
-    std::vector<std::unique_ptr<MonoWorkflow>> m_workflows;
+    std::vector<std::unique_ptr<Mono2MonoWorkflow>> m_workflows;
 };
 } // namespace astro

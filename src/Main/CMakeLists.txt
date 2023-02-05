@@ -8,12 +8,12 @@ FILE(GLOB ASTRO_MAIN_SRC
     Explorer/explorer.ui
     Explorer/imagedisplay.cpp
     Explorer/imagedisplay.ui
-    MonoProcessing/monoprocessing.cpp
-    MonoProcessing/monoprocessing.ui
-    MonoProcessing/monoworkflow.cpp
-    MultiProcessing/multiprocessing.cpp
-    MultiProcessing/multiprocessing.ui
-    MultiProcessing/multiworkflow.cpp
+    Mono2MonoProcessing/mono2monoprocessing.cpp
+    Mono2MonoProcessing/mono2monoprocessing.ui
+    Mono2MonoProcessing/mono2monoworkflow.cpp
+    Multi2MultiProcessing/multi2multiprocessing.cpp
+    Multi2MultiProcessing/multi2multiprocessing.ui
+    Multi2MultiProcessing/multi2multiworkflow.cpp
     mainwindow.ui
     mainwindow.cpp
     main.cpp
@@ -25,10 +25,10 @@ FILE(GLOB ASTRO_MAIN_HEADERS
     Common/imagedata.h
     Explorer/explorer.h
     Explorer/imagedisplay.h
-    MonoProcessing/monoprocessing.h
-    MonoProcessing/monoworkflow.h
-    MultiProcessing/multiprocessing.h
-    MultiProcessing/multiworkflow.h
+    Mono2MonoProcessing/mono2monoprocessing.h
+    Mono2MonoProcessing/mono2monoworkflow.h
+    Multi2MultiProcessing/multi2multiprocessing.h
+    Multi2MultiProcessing/multi2multiworkflow.h
     mainwindow.h
 )
 

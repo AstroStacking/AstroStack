@@ -1,14 +1,12 @@
-#include "monointerface.h"
-#include "ui_monointerface.h"
-
+#include "mono2monointerface.h"
+#include "ui_mono2monointerface.h"
+#include <Plugin/pluginfactory.h>
+#include <QtIO/output.h>
 #include <QtProcessing/Mono2Mono/chromasmoothing.h>
 #include <QtProcessing/Mono2Mono/exponential.h>
 #include <QtProcessing/Mono2Mono/histostretch.h>
 #include <QtProcessing/Mono2Mono/lightpollution.h>
 #include <QtProcessing/Mono2Mono/rldeconvolution.h>
-
-#include <Plugin/pluginfactory.h>
-#include <QtIO/output.h>
 
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>

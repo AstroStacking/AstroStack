@@ -1,10 +1,9 @@
-#include "multiprocessing.h"
-#include "ui_multiprocessing.h"
-
+#include "multi2multiprocessing.h"
+#include "ui_multi2multiprocessing.h"
 #include <Common/imagedata.h>
 #include <QtIO/input.h>
 #include <QtIO/output.h>
-#include <QtProcessing/multiinterface.h>
+#include <QtProcessing/multi2multiinterface.h>
 
 #include <QtConcurrent/QtConcurrentRun>
 #include <QtCore/QDir>
