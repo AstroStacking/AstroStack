@@ -20,13 +20,13 @@ QString ChromaSmoothing::explanation() const
     return tr("Raises the image values to the power of a parameter");
 }
 
-MonoInterfaceGUI* ChromaSmoothing::generateGUI(QWidget* parent) const
+Mono2MonoInterfaceGUI* ChromaSmoothing::generateGUI(QWidget* parent) const
 {
     return new ChromaSmoothingGUI(parent);
 }
 
 ChromaSmoothingGUI::ChromaSmoothingGUI(QWidget* parent)
-    : MonoInterfaceGUI(parent)
+    : Mono2MonoInterfaceGUI(parent)
     , m_ui(std::make_unique<Ui::ChromaSmoothing>())
 {
     QWidget* child = new QWidget(this);

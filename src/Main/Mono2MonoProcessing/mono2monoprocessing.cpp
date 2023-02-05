@@ -16,26 +16,26 @@
 
 namespace astro
 {
-MonoProcessing::MonoProcessing(QString filename, QWidget* parent)
+Mono2MonoProcessing::Mono2MonoProcessing(QString filename, QWidget* parent)
     : QWidget(parent)
-    , m_ui(std::make_unique<Ui::MonoProcessing>())
+    , m_ui(std::make_unique<Ui::Mono2MonoProcessing>())
 {
     m_ui->setupUi(this);
     setWindowTitle(filename);
-    connect(this, &MonoProcessing::finished, this, &MonoProcessing::hasFinished);
-    connect(m_ui->execute, &QPushButton::clicked, this, &MonoProcessing::run);
-    connect(m_ui->saveAs, &QPushButton::clicked, this, &MonoProcessing::saveAs);
+    connect(this, &Mono2MonoProcessing::finished, this, &Mono2MonoProcessing::hasFinished);
+    connect(m_ui->execute, &QPushButton::clicked, this, &Mono2MonoProcessing::run);
+    connect(m_ui->saveAs, &QPushButton::clicked, this, &Mono2MonoProcessing::saveAs);
 
     restore();
     loadFile(filename);
 }
 
-MonoProcessing::~MonoProcessing()
+Mono2MonoProcessing::~Mono2MonoProcessing()
 {
     save();
 }
 
-void MonoProcessing::loadFile(QString file)
+void Mono2MonoProcessing::loadFile(QString file)
 {
     m_progressDialog = new QProgressDialog(tr("Loading in progress."), tr("Cancel"), 0, 3, this);
     m_progressDialog->setAttribute(Qt::WA_DeleteOnClose);
@@ -47,7 +47,7 @@ void MonoProcessing::loadFile(QString file)
     m_progressDialog->show();
 }
 
-void MonoProcessing::processLoadFile(QString file, QPromise<void>& promise)
+void Mono2MonoProcessing::processLoadFile(QString file, QPromise<void>& promise)
 {
     m_processedImg = m_img = InputInterface::loadImg(file, this);
     promise.setProgressValue(1);
@@ -66,7 +66,7 @@ void MonoProcessing::processLoadFile(QString file, QPromise<void>& promise)
     }
 }
 
-void MonoProcessing::setupWorkflow(const std::vector<std::pair<MonoInterface*, QJsonObject>>& steps)
+void Mono2MonoProcessing::setupWorkflow(const std::vector<std::pair<Mono2MonoInterface*, QJsonObject>>& steps)
 {
     for (const auto& step : steps)
     {
@@ -78,7 +78,7 @@ void MonoProcessing::setupWorkflow(const std::vector<std::pair<MonoInterface*, Q
     m_ui->contentLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding));
 }
 
-void MonoProcessing::run()
+void Mono2MonoProcessing::run()
 {
     if (check())
     {
@@ -92,7 +92,7 @@ void MonoProcessing::run()
     }
 }
 
-bool MonoProcessing::check()
+bool Mono2MonoProcessing::check()
 {
     for (auto task : m_tasks)
     {
@@ -104,7 +104,7 @@ bool MonoProcessing::check()
     return true;
 }
 
-void MonoProcessing::execute()
+void Mono2MonoProcessing::execute()
 {
     m_ui->frame->setEnabled(false);
 
@@ -115,7 +115,7 @@ void MonoProcessing::execute()
     connect(&m_watcher, &QFutureWatcher<void>::progressValueChanged, m_progressDialog, &QProgressDialog::setValue);
     connect(&m_watcher, &QFutureWatcher<void>::finished, m_progressDialog, &QProgressDialog::close);
 
-    std::vector<MonoInterfaceGUI*> activeTasks;
+    std::vector<Mono2MonoInterfaceGUI*> activeTasks;
     for (auto task : m_tasks)
     {
         if (task->isActive())
@@ -147,16 +147,16 @@ void MonoProcessing::execute()
     m_progressDialog->show();
 }
 
-void MonoProcessing::hasFinished()
+void Mono2MonoProcessing::hasFinished()
 {
     m_ui->frame->setEnabled(true);
     setFocus();
 }
 
-void MonoProcessing::saveAs()
+void Mono2MonoProcessing::saveAs()
 {
     QSettings settings("AstroStack", "AstroStack");
-    settings.beginGroup("MonoProcessing");
+    settings.beginGroup("Mono2MonoProcessing");
     QString filename = settings.value("saveAs", "").toString();
 
     filename = QFileDialog::getSaveFileName(this, tr("Save output"), filename);
@@ -167,13 +167,13 @@ void MonoProcessing::saveAs()
     }
 }
 
-void MonoProcessing::restore()
+void Mono2MonoProcessing::restore()
 {
     m_ui->input->restore("ImageDisplayInput");
     m_ui->output->restore("ImageDisplayOutput");
 
     QSettings settings("AstroStack", "AstroStack");
-    settings.beginGroup("MonoProcessing");
+    settings.beginGroup("Mono2MonoProcessing");
     if (!settings.contains("geometry"))
     {
         return;
@@ -183,10 +183,10 @@ void MonoProcessing::restore()
     settings.endGroup();
 }
 
-void MonoProcessing::save()
+void Mono2MonoProcessing::save()
 {
     QSettings settings("AstroStack", "AstroStack");
-    settings.beginGroup("MonoProcessing");
+    settings.beginGroup("Mono2MonoProcessing");
     settings.setValue("geometry", saveGeometry());
     settings.setValue("splitter", m_ui->splitter->saveState());
     settings.endGroup();

@@ -20,13 +20,13 @@ QString Exponential::explanation() const
     return tr("Raises the image values to the power of a parameter");
 }
 
-MonoInterfaceGUI* Exponential::generateGUI(QWidget* parent) const
+Mono2MonoInterfaceGUI* Exponential::generateGUI(QWidget* parent) const
 {
     return new ExponentialGUI(parent);
 }
 
 ExponentialGUI::ExponentialGUI(QWidget* parent)
-    : MonoInterfaceGUI(parent)
+    : Mono2MonoInterfaceGUI(parent)
     , m_ui(std::make_unique<Ui::Exponential>())
 {
     QWidget* child = new QWidget(this);

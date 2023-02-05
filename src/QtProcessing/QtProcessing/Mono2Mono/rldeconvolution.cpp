@@ -17,13 +17,13 @@ QString RLDeconvolution::explanation() const
     return tr("Raises the image values to the power of a parameter");
 }
 
-MonoInterfaceGUI* RLDeconvolution::generateGUI(QWidget* parent) const
+Mono2MonoInterfaceGUI* RLDeconvolution::generateGUI(QWidget* parent) const
 {
     return new RLDeconvolutionGUI(parent);
 }
 
 RLDeconvolutionGUI::RLDeconvolutionGUI(QWidget* parent)
-    : MonoInterfaceGUI(parent)
+    : Mono2MonoInterfaceGUI(parent)
     , m_ui(std::make_unique<Ui::RLDeconvolution>())
 {
     QWidget* child = new QWidget(this);

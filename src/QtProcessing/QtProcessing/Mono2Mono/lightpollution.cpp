@@ -20,13 +20,13 @@ QString LightPollution::explanation() const
     return tr("Estiates and removes the light pollution");
 }
 
-MonoInterfaceGUI* LightPollution::generateGUI(QWidget* parent) const
+Mono2MonoInterfaceGUI* LightPollution::generateGUI(QWidget* parent) const
 {
     return new LightPollutionGUI(parent);
 }
 
 LightPollutionGUI::LightPollutionGUI(QWidget* parent)
-    : MonoInterfaceGUI(parent)
+    : Mono2MonoInterfaceGUI(parent)
     , m_ui(std::make_unique<Ui::LightPollution>())
 {
     QWidget* child = new QWidget(this);

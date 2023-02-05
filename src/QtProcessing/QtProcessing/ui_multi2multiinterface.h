@@ -77,7 +77,7 @@ public:
 
 namespace Ui
 {
-class MultiInterface : public Ui_MultiInterface
+class Multi2MultiInterface : public Ui_MultiInterface
 {
 };
 } // namespace Ui

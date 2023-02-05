@@ -19,12 +19,12 @@ void Multi2MultiWorkflow::openProcess()
 {
     QString file = m_explorer->getSelectedFile();
 
-    MultiProcessing* widget = new MultiProcessing(file);
+    Multi2MultiProcessing* widget = new Multi2MultiProcessing(file);
     m_explorer->addSubWindow(widget);
     widget->setupWorkflow(m_steps);
 }
 
-void Multi2MultiWorkflow::addStep(MultiInterface* plugin, QJsonObject object)
+void Multi2MultiWorkflow::addStep(Multi2MultiInterface* plugin, QJsonObject object)
 {
     m_steps.emplace_back(plugin, object);
 }
@@ -33,7 +33,7 @@ std::vector<std::unique_ptr<Multi2MultiWorkflow>> Multi2MultiWorkflow::getMultiW
 {
     std::vector<std::unique_ptr<Multi2MultiWorkflow>> workflows;
 
-    const std::map<QString, MultiInterface*>& plugins = MultiInterface::getPlugins();
+    const std::map<QString, Multi2MultiInterface*>& plugins = Multi2MultiInterface::getPlugins();
 
     QDir directory = PluginFactory::getRootPath();
     directory.cd("workflows");

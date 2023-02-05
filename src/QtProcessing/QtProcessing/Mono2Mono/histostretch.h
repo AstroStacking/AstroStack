@@ -14,7 +14,7 @@ namespace astro
  */
 class HistoStretch
     : public QObject
-    , public MonoInterface
+    , public Mono2MonoInterface
 {
     Q_OBJECT
 public:
@@ -24,13 +24,13 @@ public:
 
     QString explanation() const override;
 
-    MonoInterfaceGUI* generateGUI(QWidget* parent) const override;
+    Mono2MonoInterfaceGUI* generateGUI(QWidget* parent) const override;
 };
 
 /**
  * QWidgets that will be displayed in the stack
  */
-class HistoStretchGUI : public MonoInterfaceGUI
+class HistoStretchGUI : public Mono2MonoInterfaceGUI
 {
     Q_OBJECT
 public:

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MonoProcessing</class>
- <widget class="QWidget" name="MonoProcessing">
+ <class>Mono2MonoProcessing</class>
+ <widget class="QWidget" name="Mono2MonoProcessing">
   <property name="geometry">
    <rect>
     <x>0</x>

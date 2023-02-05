@@ -8,7 +8,7 @@
 
 namespace Ui
 {
-class MonoInterface;
+class Mono2MonoInterface;
 }
 
 namespace astro
@@ -16,12 +16,12 @@ namespace astro
 /**
  QWidgets that will be displayed in the stack
  */
-class MonoInterfaceGUI : public QGroupBox
+class Mono2MonoInterfaceGUI : public QGroupBox
 {
     Q_OBJECT
 public:
-    ASTRO_QTPROCESSING_EXPORT MonoInterfaceGUI(QWidget* parent);
-    ASTRO_QTPROCESSING_EXPORT virtual ~MonoInterfaceGUI();
+    ASTRO_QTPROCESSING_EXPORT Mono2MonoInterfaceGUI(QWidget* parent);
+    ASTRO_QTPROCESSING_EXPORT virtual ~Mono2MonoInterfaceGUI();
 
     /// Process a single image based on a promise.
     virtual AstroImage process(AstroImage img, QPromise<void>& promise) = 0;
@@ -44,7 +44,7 @@ private slots:
     void saveImg(const AstroImage& img);
 
 protected:
-    std::unique_ptr<Ui::MonoInterface> m_monoUi;
+    std::unique_ptr<Ui::Mono2MonoInterface> m_monoUi;
     QString m_name;
 
 private:
@@ -54,22 +54,22 @@ private:
 /**
   Interface to process one image at a time
  */
-class ASTRO_QTPROCESSING_EXPORT MonoInterface
+class ASTRO_QTPROCESSING_EXPORT Mono2MonoInterface
 {
 public:
-    MonoInterface();
-    virtual ~MonoInterface();
+    Mono2MonoInterface();
+    virtual ~Mono2MonoInterface();
     /// Name of the interface
     virtual QString name() const = 0;
     /// Return a string explaining what this interface does
     virtual QString explanation() const = 0;
     /// Generate a GUI to be added to the stack
-    virtual MonoInterfaceGUI* generateGUI(QWidget* parent) const = 0;
+    virtual Mono2MonoInterfaceGUI* generateGUI(QWidget* parent) const = 0;
 
-    static const std::map<QString, MonoInterface*>& getPlugins();
+    static const std::map<QString, Mono2MonoInterface*>& getPlugins();
 };
 } // namespace astro
 
 QT_BEGIN_NAMESPACE
-Q_DECLARE_INTERFACE(astro::MonoInterface, "org.Astro.Processing.MonoInterface")
+Q_DECLARE_INTERFACE(astro::Mono2MonoInterface, "org.Astro.Processing.Mono2MonoInterface")
 QT_END_NAMESPACE

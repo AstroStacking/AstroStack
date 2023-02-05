@@ -10,7 +10,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class Ui_MonoInterface
+class Ui_Mono2MonoInterface
 {
 public:
     QVBoxLayout* verticalLayout;
@@ -77,7 +77,7 @@ public:
 
 namespace Ui
 {
-class MonoInterface : public Ui_MonoInterface
+class Mono2MonoInterface : public Ui_Mono2MonoInterface
 {
 };
 } // namespace Ui

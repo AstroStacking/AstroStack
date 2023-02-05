@@ -8,7 +8,7 @@
 
 namespace Ui
 {
-class Mono2MonoProcessing;
+class MultiProcessing;
 }
 
 class QFileSystemModel;
@@ -16,18 +16,18 @@ class QProgressDialog;
 
 namespace astro
 {
-class Mono2MonoInterface;
-class Mono2MonoInterfaceGUI;
+class MultiInterface;
+class MultiInterfaceGUI;
 
-class Mono2MonoProcessing : public QWidget
+class MultiProcessing : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit Mono2MonoProcessing(QString filename, QWidget* parent = nullptr);
-    ~Mono2MonoProcessing();
+    explicit MultiProcessing(QString filename, QWidget* parent = nullptr);
+    ~MultiProcessing();
 
-    void setupWorkflow(const std::vector<std::pair<Mono2MonoInterface*, QJsonObject>>& steps);
+    void setupWorkflow(const std::vector<std::pair<MultiInterface*, QJsonObject>>& steps);
 
 signals:
     void enable(bool enabled);
@@ -46,12 +46,12 @@ private:
     bool check();
     void execute();
 
-    std::unique_ptr<Ui::Mono2MonoProcessing> m_ui;
+    std::unique_ptr<Ui::MultiProcessing> m_ui;
     AstroImage m_img;
     AstroImage m_processedImg;
     QProgressDialog* m_progressDialog{};
     QFutureWatcher<void> m_watcher;
 
-    std::vector<Mono2MonoInterfaceGUI*> m_tasks;
+    std::vector<MultiInterfaceGUI*> m_tasks;
 };
 } // namespace astro

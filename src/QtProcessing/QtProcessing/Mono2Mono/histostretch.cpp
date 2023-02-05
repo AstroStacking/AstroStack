@@ -17,13 +17,13 @@ QString HistoStretch::explanation() const
     return tr("Stretches the histogram to maximise low light contrast");
 }
 
-MonoInterfaceGUI* HistoStretch::generateGUI(QWidget* parent) const
+Mono2MonoInterfaceGUI* HistoStretch::generateGUI(QWidget* parent) const
 {
     return new HistoStretchGUI(parent);
 }
 
 HistoStretchGUI::HistoStretchGUI(QWidget* parent)
-    : MonoInterfaceGUI(parent)
+    : Mono2MonoInterfaceGUI(parent)
     , m_ui(std::make_unique<Ui::HistoStretch>())
 {
     QWidget* child = new QWidget(this);

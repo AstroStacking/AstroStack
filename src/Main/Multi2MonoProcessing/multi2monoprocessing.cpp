@@ -16,26 +16,26 @@
 
 namespace astro
 {
-Multi2MultiProcessing::Multi2MultiProcessing(QString filename, QWidget* parent)
+MultiProcessing::MultiProcessing(QString filename, QWidget* parent)
     : QWidget(parent)
-    , m_ui(std::make_unique<Ui::Multi2MultiProcessing>())
+    , m_ui(std::make_unique<Ui::MultiProcessing>())
 {
     m_ui->setupUi(this);
     setWindowTitle(filename);
-    connect(this, &Multi2MultiProcessing::finished, this, &Multi2MultiProcessing::hasFinished);
-    connect(m_ui->execute, &QPushButton::clicked, this, &Multi2MultiProcessing::run);
-    connect(m_ui->saveAs, &QPushButton::clicked, this, &Multi2MultiProcessing::saveAs);
+    connect(this, &MultiProcessing::finished, this, &MultiProcessing::hasFinished);
+    connect(m_ui->execute, &QPushButton::clicked, this, &MultiProcessing::run);
+    connect(m_ui->saveAs, &QPushButton::clicked, this, &MultiProcessing::saveAs);
 
     restore();
     loadFile(filename);
 }
 
-Multi2MultiProcessing::~Multi2MultiProcessing()
+MultiProcessing::~MultiProcessing()
 {
     save();
 }
 
-void Multi2MultiProcessing::loadFile(QString file)
+void MultiProcessing::loadFile(QString file)
 {
     m_progressDialog = new QProgressDialog(tr("Loading in progress."), tr("Cancel"), 0, 3, this);
     m_progressDialog->setAttribute(Qt::WA_DeleteOnClose);
@@ -47,7 +47,7 @@ void Multi2MultiProcessing::loadFile(QString file)
     m_progressDialog->show();
 }
 
-void Multi2MultiProcessing::processLoadFile(QString file, QPromise<void>& promise)
+void MultiProcessing::processLoadFile(QString file, QPromise<void>& promise)
 {
     m_processedImg = m_img = InputInterface::loadImg(file, this);
     promise.setProgressValue(1);
@@ -66,7 +66,7 @@ void Multi2MultiProcessing::processLoadFile(QString file, QPromise<void>& promis
     }
 }
 
-void Multi2MultiProcessing::setupWorkflow(const std::vector<std::pair<Multi2MultiInterface*, QJsonObject>>& steps)
+void MultiProcessing::setupWorkflow(const std::vector<std::pair<MultiInterface*, QJsonObject>>& steps)
 {
     for (const auto& step : steps)
     {
@@ -78,7 +78,7 @@ void Multi2MultiProcessing::setupWorkflow(const std::vector<std::pair<Multi2Mult
     m_ui->contentLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding));
 }
 
-void Multi2MultiProcessing::run()
+void MultiProcessing::run()
 {
     if (check())
     {
@@ -92,7 +92,7 @@ void Multi2MultiProcessing::run()
     }
 }
 
-bool Multi2MultiProcessing::check()
+bool MultiProcessing::check()
 {
     for (auto task : m_tasks)
     {
@@ -104,7 +104,7 @@ bool Multi2MultiProcessing::check()
     return true;
 }
 
-void Multi2MultiProcessing::execute()
+void MultiProcessing::execute()
 {
     m_ui->frame->setEnabled(false);
 
@@ -115,7 +115,7 @@ void Multi2MultiProcessing::execute()
     connect(&m_watcher, &QFutureWatcher<void>::progressValueChanged, m_progressDialog, &QProgressDialog::setValue);
     connect(&m_watcher, &QFutureWatcher<void>::finished, m_progressDialog, &QProgressDialog::close);
 
-    std::vector<Multi2MultiInterfaceGUI*> activeTasks;
+    std::vector<MultiInterfaceGUI*> activeTasks;
     for (auto task : m_tasks)
     {
         if (task->isActive())
@@ -147,16 +147,16 @@ void Multi2MultiProcessing::execute()
     m_progressDialog->show();
 }
 
-void Multi2MultiProcessing::hasFinished()
+void MultiProcessing::hasFinished()
 {
     m_ui->frame->setEnabled(true);
     setFocus();
 }
 
-void Multi2MultiProcessing::saveAs()
+void MultiProcessing::saveAs()
 {
     QSettings settings("AstroStack", "AstroStack");
-    settings.beginGroup("Multi2MultiProcessing");
+    settings.beginGroup("MultiProcessing");
     QString filename = settings.value("saveAs", "").toString();
 
     filename = QFileDialog::getSaveFileName(this, tr("Save output"), filename);
@@ -167,13 +167,13 @@ void Multi2MultiProcessing::saveAs()
     }
 }
 
-void Multi2MultiProcessing::restore()
+void MultiProcessing::restore()
 {
     m_ui->input->restore("ImageDisplayInput");
     m_ui->output->restore("ImageDisplayOutput");
 
     QSettings settings("AstroStack", "AstroStack");
-    settings.beginGroup("Multi2MultiProcessing");
+    settings.beginGroup("MultiProcessing");
     if (!settings.contains("geometry"))
     {
         return;
@@ -183,10 +183,10 @@ void Multi2MultiProcessing::restore()
     settings.endGroup();
 }
 
-void Multi2MultiProcessing::save()
+void MultiProcessing::save()
 {
     QSettings settings("AstroStack", "AstroStack");
-    settings.beginGroup("Multi2MultiProcessing");
+    settings.beginGroup("MultiProcessing");
     settings.setValue("geometry", saveGeometry());
     settings.setValue("splitter", m_ui->splitter->saveState());
     settings.endGroup();

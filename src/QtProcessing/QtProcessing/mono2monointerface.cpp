@@ -16,9 +16,9 @@ namespace astro
 
 namespace
 {
-std::map<QString, MonoInterface*> scanPlugins()
+std::map<QString, Mono2MonoInterface*> scanPlugins()
 {
-    std::map<QString, MonoInterface*> plugins;
+    std::map<QString, Mono2MonoInterface*> plugins;
     {
         auto* chromasmoothing = new ChromaSmoothing();
         plugins.emplace(chromasmoothing->name(), chromasmoothing);
@@ -39,60 +39,60 @@ std::map<QString, MonoInterface*> scanPlugins()
         auto* rldeconvolution = new RLDeconvolution();
         plugins.emplace(rldeconvolution->name(), rldeconvolution);
     }
-    for (auto object : PluginFactory::get().getPluginsFor<MonoInterface*>())
+    for (auto object : PluginFactory::get().getPluginsFor<Mono2MonoInterface*>())
     {
-        auto* plugin = qobject_cast<MonoInterface*>(object);
+        auto* plugin = qobject_cast<Mono2MonoInterface*>(object);
         plugins.emplace(plugin->name(), plugin);
     }
     return plugins;
 }
 } // namespace
 
-MonoInterface::MonoInterface() = default;
-MonoInterface::~MonoInterface() = default;
+Mono2MonoInterface::Mono2MonoInterface() = default;
+Mono2MonoInterface::~Mono2MonoInterface() = default;
 
-const std::map<QString, MonoInterface*>& MonoInterface::getPlugins()
+const std::map<QString, Mono2MonoInterface*>& Mono2MonoInterface::getPlugins()
 {
-    static std::map<QString, MonoInterface*> plugins = scanPlugins();
+    static std::map<QString, Mono2MonoInterface*> plugins = scanPlugins();
     return plugins;
 }
 
-MonoInterfaceGUI::MonoInterfaceGUI(QWidget* parent)
+Mono2MonoInterfaceGUI::Mono2MonoInterfaceGUI(QWidget* parent)
     : QGroupBox(parent)
-    , m_monoUi(std::make_unique<Ui::MonoInterface>())
+    , m_monoUi(std::make_unique<Ui::Mono2MonoInterface>())
 {
 }
 
-MonoInterfaceGUI::~MonoInterfaceGUI() = default;
+Mono2MonoInterfaceGUI::~Mono2MonoInterfaceGUI() = default;
 
-void MonoInterfaceGUI::setup(QJsonObject data)
+void Mono2MonoInterfaceGUI::setup(QJsonObject data)
 {
     m_name = data["Name"].toString();
 }
 
-void MonoInterfaceGUI::setupSlots()
+void Mono2MonoInterfaceGUI::setupSlots()
 {
-    connect(m_monoUi->saveOutput, &QCheckBox::stateChanged, this, &MonoInterfaceGUI::outputStateChanged);
-    connect(m_monoUi->filenameOpen, &QPushButton::clicked, this, &MonoInterfaceGUI::outputFileBoxOpen);
-    connect(this, &MonoInterfaceGUI::save, this, &MonoInterfaceGUI::saveImg);
+    connect(m_monoUi->saveOutput, &QCheckBox::stateChanged, this, &Mono2MonoInterfaceGUI::outputStateChanged);
+    connect(m_monoUi->filenameOpen, &QPushButton::clicked, this, &Mono2MonoInterfaceGUI::outputFileBoxOpen);
+    connect(this, &Mono2MonoInterfaceGUI::save, this, &Mono2MonoInterfaceGUI::saveImg);
 }
 
-bool MonoInterfaceGUI::isActive()
+bool Mono2MonoInterfaceGUI::isActive()
 {
     return isChecked();
 }
-void MonoInterfaceGUI::outputStateChanged(int state)
+void Mono2MonoInterfaceGUI::outputStateChanged(int state)
 {
     m_monoUi->filename->setEnabled(state != Qt::Unchecked);
     m_monoUi->filenameOpen->setEnabled(state != Qt::Unchecked);
 }
 
-void MonoInterfaceGUI::outputFileBoxOpen()
+void Mono2MonoInterfaceGUI::outputFileBoxOpen()
 {
     m_monoUi->filename->setText(QFileDialog::getSaveFileName(this, tr("Save output"), m_monoUi->filename->text()));
 }
 
-bool MonoInterfaceGUI::check()
+bool Mono2MonoInterfaceGUI::check()
 {
     QFileInfo info(m_monoUi->filename->text());
     if (!info.exists())
@@ -125,7 +125,7 @@ bool MonoInterfaceGUI::check()
     return true;
 }
 
-void MonoInterfaceGUI::setNextFilename(QFileInfo info, QString basename, long inc)
+void Mono2MonoInterfaceGUI::setNextFilename(QFileInfo info, QString basename, long inc)
 {
     while (true)
     {
@@ -140,7 +140,7 @@ void MonoInterfaceGUI::setNextFilename(QFileInfo info, QString basename, long in
     }
 }
 
-void MonoInterfaceGUI::saveImg(const AstroImage& img)
+void Mono2MonoInterfaceGUI::saveImg(const AstroImage& img)
 {
     QFileInfo info(m_monoUi->filename->text());
     if (m_monoUi->saveOutput->checkState() == Qt::Checked && (!info.exists() || m_overwriteIfExists))

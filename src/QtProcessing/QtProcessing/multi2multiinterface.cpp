@@ -11,58 +11,58 @@ namespace astro
 
 namespace
 {
-std::map<QString, MultiInterface*> scanPlugins()
+std::map<QString, Multi2MultiInterface*> scanPlugins()
 {
-    std::map<QString, MultiInterface*> plugins;
+    std::map<QString, Multi2MultiInterface*> plugins;
     return plugins;
 }
 } // namespace
 
-MultiInterface::MultiInterface() = default;
-MultiInterface::~MultiInterface() = default;
+Multi2MultiInterface::Multi2MultiInterface() = default;
+Multi2MultiInterface::~Multi2MultiInterface() = default;
 
-const std::map<QString, MultiInterface*>& MultiInterface::getPlugins()
+const std::map<QString, Multi2MultiInterface*>& Multi2MultiInterface::getPlugins()
 {
-    static std::map<QString, MultiInterface*> plugins = scanPlugins();
+    static std::map<QString, Multi2MultiInterface*> plugins = scanPlugins();
     return plugins;
 }
 
-MultiInterfaceGUI::MultiInterfaceGUI(QWidget* parent)
+Multi2MultiInterfaceGUI::Multi2MultiInterfaceGUI(QWidget* parent)
     : QGroupBox(parent)
-    , m_multiUi(std::make_unique<Ui::MultiInterface>())
+    , m_multiUi(std::make_unique<Ui::Multi2MultiInterface>())
 {
 }
 
-MultiInterfaceGUI::~MultiInterfaceGUI() = default;
+Multi2MultiInterfaceGUI::~Multi2MultiInterfaceGUI() = default;
 
-void MultiInterfaceGUI::setup(QJsonObject data)
+void Multi2MultiInterfaceGUI::setup(QJsonObject data)
 {
     m_name = data["Name"].toString();
 }
 
-void MultiInterfaceGUI::setupSlots()
+void Multi2MultiInterfaceGUI::setupSlots()
 {
-    connect(m_multiUi->saveOutput, &QCheckBox::stateChanged, this, &MultiInterfaceGUI::outputStateChanged);
-    connect(m_multiUi->filenameOpen, &QPushButton::clicked, this, &MultiInterfaceGUI::outputFileBoxOpen);
-    connect(this, &MultiInterfaceGUI::save, this, &MultiInterfaceGUI::saveImg);
+    connect(m_multiUi->saveOutput, &QCheckBox::stateChanged, this, &Multi2MultiInterfaceGUI::outputStateChanged);
+    connect(m_multiUi->filenameOpen, &QPushButton::clicked, this, &Multi2MultiInterfaceGUI::outputFileBoxOpen);
+    connect(this, &Multi2MultiInterfaceGUI::save, this, &Multi2MultiInterfaceGUI::saveImg);
 }
 
-bool MultiInterfaceGUI::isActive()
+bool Multi2MultiInterfaceGUI::isActive()
 {
     return isChecked();
 }
-void MultiInterfaceGUI::outputStateChanged(int state)
+void Multi2MultiInterfaceGUI::outputStateChanged(int state)
 {
     m_multiUi->filename->setEnabled(state != Qt::Unchecked);
     m_multiUi->filenameOpen->setEnabled(state != Qt::Unchecked);
 }
 
-void MultiInterfaceGUI::outputFileBoxOpen()
+void Multi2MultiInterfaceGUI::outputFileBoxOpen()
 {
     m_multiUi->filename->setText(QFileDialog::getSaveFileName(this, tr("Save output"), m_multiUi->filename->text()));
 }
 
-bool MultiInterfaceGUI::check()
+bool Multi2MultiInterfaceGUI::check()
 {
     QFileInfo info(m_multiUi->filename->text());
     if (!info.exists())
@@ -95,7 +95,7 @@ bool MultiInterfaceGUI::check()
     return true;
 }
 
-void MultiInterfaceGUI::setNextFilename(QFileInfo info, QString basename, long inc)
+void Multi2MultiInterfaceGUI::setNextFilename(QFileInfo info, QString basename, long inc)
 {
     while (true)
     {
@@ -110,7 +110,7 @@ void MultiInterfaceGUI::setNextFilename(QFileInfo info, QString basename, long i
     }
 }
 
-void MultiInterfaceGUI::saveImg(const AstroImage& img)
+void Multi2MultiInterfaceGUI::saveImg(const AstroImage& img)
 {
     QFileInfo info(m_multiUi->filename->text());
     if (m_multiUi->saveOutput->checkState() == Qt::Checked && (!info.exists() || m_overwriteIfExists))
