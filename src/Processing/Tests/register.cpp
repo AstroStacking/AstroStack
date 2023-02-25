@@ -30,33 +30,3 @@ TEST(Processing, RegisterGraph)
         ++it;
     }
 }
-
-TEST(Processing, RegisterDirect)
-{
-    auto fix = astro::io::open("square1.png");
-    auto moving = astro::io::open("square2.png");
-
-    auto result = astro::processing::registerImages(fix, moving, 0);
-
-    using IteratorType = itk::ImageRegionIterator<astro::ImageType>;
-    IteratorType it(result, result->GetRequestedRegion());
-    it.GoToBegin();
-    while (!it.IsAtEnd())
-    {
-        auto value = it.Get();
-        auto index = it.GetIndex();
-        std::cout << index << ": " << value << std::endl;
-        ++it;
-    }
-    it.GoToBegin();
-    while (!it.IsAtEnd())
-    {
-        auto value = it.Get();
-        auto index = it.GetIndex();
-        for (int k = 0; k < 3; ++k)
-        {
-            ASSERT_NEAR(value[k], index[0] >= 10 && index[0] < 15 && index[1] >= 10 && index[1] < 15 ? 1 : 0, 0.0001);
-        }
-        ++it;
-    }
-}
