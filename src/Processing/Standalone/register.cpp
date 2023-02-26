@@ -47,7 +47,7 @@ int main(int argc, char** argv)
 {
     QCoreApplication app(argc, argv);
     QCoreApplication::setApplicationName("Register");
-    QCoreApplication::setApplicationVersion("0.2.0");
+    QCoreApplication::setApplicationVersion("0.3.0");
 
     QCommandLineParser parser;
     parser.setApplicationDescription("Register");

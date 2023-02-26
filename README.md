@@ -24,11 +24,14 @@ Currently only processing one photo at a time is possible. The future stacking p
 
 ### Processing plugins
 
-* [ChromaSmoothing](src/QtProcessing/QtProcessing/chromasmoothing.md)
-* [Exponential](src/QtProcessing/QtProcessing/exponential.md)
-* [Histogram Stretch](src/QtProcessing/QtProcessing/histostretch.md)
-* [Light Pollution](src/QtProcessing/QtProcessing/lightpollution.md)
-* [Richardson Lucy Deconvolve](src/QtProcessing/QtProcessing/rldeconvolution.md)
+* Mono image plugins:
+    * [ChromaSmoothing](src/QtProcessing/QtProcessing/Mono2Mono/chromasmoothing.md)
+    * [Exponential](src/QtProcessing/QtProcessing/Mono2Mono/exponential.md)
+    * [Histogram Stretch](src/QtProcessing/QtProcessing/Mono2Mono/histostretch.md)
+    * [Light Pollution](src/QtProcessing/QtProcessing/Mono2Mono/lightpollution.md)
+    * [Richardson Lucy Deconvolve](src/QtProcessing/QtProcessing/Mono2Mono/rldeconvolution.md)
+* Multi images plugins:
+* Multi images to mono plugins:
 
 ### Processing workflows
 
@@ -38,9 +41,16 @@ The current shipped ones are:
 
 * [Cleanup](workflows/Cleanup.md)
 * [Deconvolve](workflows/Deconvolve.md)
-* [Histogram Stretch](workflows/HistoStretech.md)
+* [Histogram Stretch](workflows/HistoStretch.md)
 
 ## Changelog
+### 0.3.0
+
+* Fix documentation with pandoc 3.1
+* More command line tools:
+  * Stacking
+  * Registration by star detection
+
 ### 0.2.0
 
 * Expose the processes as command line tools
