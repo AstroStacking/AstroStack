@@ -31,7 +31,11 @@ Currently only processing one photo at a time is possible. The future stacking p
     * [Light Pollution](src/QtProcessing/QtProcessing/Mono2Mono/lightpollution.md)
     * [Richardson Lucy Deconvolve](src/QtProcessing/QtProcessing/Mono2Mono/rldeconvolution.md)
 * Multi images plugins:
+    * [Register](src/QtProcessing/QtProcessing/Multi2Multi/register.md)
 * Multi images to mono plugins:
+    * [MaxStacking](src/QtProcessing/QtProcessing/Multi2Mono/maxstacking.md)
+    * [MedianStacking](src/QtProcessing/QtProcessing/Multi2Mono/medianstacking.md)
+    * [RobustMeanStacking](src/QtProcessing/QtProcessing/Multi2Mono/robustmeanstacking.md)
 
 ### Processing workflows
 

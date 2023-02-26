@@ -4,6 +4,9 @@ FILE(GLOB TESTS_ALGORITHMS_SRC
     ransac.cpp
     Filters/Convertors/HSL2RGB.cpp
     Filters/Convertors/RGB2HSL.cpp
+    Filters/Stackers/max.cpp
+    Filters/Stackers/median.cpp
+    Filters/Stackers/robustmean.cpp
     Graph/distance.cpp
     Graph/full_matching.cpp
     Graph/partial_matching.cpp

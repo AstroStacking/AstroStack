@@ -1,5 +1,5 @@
 /**
- * \file max.h
+ * \file robustmean.h
  */
 
 #pragma once
@@ -16,10 +16,10 @@ namespace filters
 namespace stackers
 {
 template<typename Type>
-class Max
+class RobustMean
 {
 public:
-    Type operator()(const std::vector<Type>& values) const { return *std::max_element(values.begin(), values.end()); }
+    Type operator()(std::vector<Type>& values) const { return *std::max_element(values.begin(), values.end()); }
 };
 } // namespace stackers
 } // namespace filters

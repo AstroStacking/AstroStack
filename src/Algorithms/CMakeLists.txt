@@ -16,6 +16,8 @@ FILE(GLOB ASTRO_ALGORITHMS_HEADERS
     Algos/Filters/Convertors/HSL2RGB.h
     Algos/Filters/Convertors/RGB2HSL.h
     Algos/Filters/Stackers/max.h
+    Algos/Filters/Stackers/median.h
+    Algos/Filters/Stackers/robustmean.h
     Algos/Filters/mergehslfilter.h
     Algos/Filters/multifunctorimagefilter.h
     Algos/Graph/distance.h

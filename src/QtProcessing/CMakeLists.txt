@@ -32,6 +32,9 @@ FILE(GLOB ASTRO_QTPROCESSING_DOC
     QtProcessing/Mono2Mono/histostretch.md
     QtProcessing/Mono2Mono/lightpollution.md
     QtProcessing/Mono2Mono/rldeconvolution.md
+    QtProcessing/Multi2Mono/maxstacking.md
+    QtProcessing/Multi2Mono/medianstacking.md
+    QtProcessing/Multi2Mono/robustmeanstacking.md
 )
 
 ASTRO_add_library(
