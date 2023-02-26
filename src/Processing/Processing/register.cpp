@@ -22,17 +22,17 @@ ImageTypePtr registerImages(const ImageTypePtr& fix, const ImageTypePtr& moving,
                             const std::vector<std::pair<double, double>> movingStars, double defaultValue)
 {
     using LandmarkBasedTransformInitializerType =
-    itk::LandmarkBasedTransformInitializer<TransformType, ImageType, ImageType>;
-    
+            itk::LandmarkBasedTransformInitializer<TransformType, ImageType, ImageType>;
+
     typename LandmarkBasedTransformInitializerType::Pointer landmarkBasedTransformInitializer =
-    LandmarkBasedTransformInitializerType::New();
+            LandmarkBasedTransformInitializerType::New();
     //  Create source and target landmarks.
     using LandmarkContainerType = typename LandmarkBasedTransformInitializerType::LandmarkPointContainer;
     using LandmarkPointType = typename LandmarkBasedTransformInitializerType::LandmarkPointType;
-    
+
     LandmarkContainerType fixedLandmarks;
     LandmarkContainerType movingLandmarks;
-    
+
     for (auto pair : fixStars)
     {
         LandmarkPointType point;
@@ -47,10 +47,10 @@ ImageTypePtr registerImages(const ImageTypePtr& fix, const ImageTypePtr& moving,
         point[1] = pair.second;
         movingLandmarks.push_back(point);
     }
-    
+
     landmarkBasedTransformInitializer->SetFixedLandmarks(fixedLandmarks);
     landmarkBasedTransformInitializer->SetMovingLandmarks(movingLandmarks);
-    
+
     auto transform = TransformType::New();
     transform->SetIdentity();
     landmarkBasedTransformInitializer->SetTransform(transform);
@@ -59,7 +59,7 @@ ImageTypePtr registerImages(const ImageTypePtr& fix, const ImageTypePtr& moving,
     ImageType::SpacingType spacing{{1, 1}};
     fix->SetSpacing(spacing);
     moving->SetSpacing(spacing);
-    
+
     using ResampleFilterType = itk::ResampleImageFilter<ImageType, ImageType, double>;
     auto resampleFilter = ResampleFilterType::New();
     resampleFilter->SetInput(moving);
@@ -68,7 +68,7 @@ ImageTypePtr registerImages(const ImageTypePtr& fix, const ImageTypePtr& moving,
     resampleFilter->SetReferenceImage(fix);
     resampleFilter->SetDefaultPixelValue(defaultValue);
     resampleFilter->Update();
-    
+
     auto output = resampleFilter->GetOutput();
     output->SetSpacing(oldSpacing);
     return output;
@@ -83,8 +83,8 @@ ImageTypePtr registerImages(const ImageTypePtr& fix, const ImageTypePtr& moving,
 }
 
 ImageTypePtr registerImagesBSpline(const ImageTypePtr& fix, const ImageTypePtr& moving,
-                            const std::vector<std::pair<double, double>> fixStars,
-                            const std::vector<std::pair<double, double>> movingStars, double defaultValue)
+                                   const std::vector<std::pair<double, double>> fixStars,
+                                   const std::vector<std::pair<double, double>> movingStars, double defaultValue)
 {
     return registerImages<itk::BSplineTransform<double, Dimension>>(fix, moving, fixStars, movingStars, defaultValue);
 }

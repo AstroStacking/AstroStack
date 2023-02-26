@@ -8,6 +8,7 @@ namespace astro
 {
 namespace processing
 {
-ASTRO_PROCESSING_EXPORT void maxStacking(const H5::DataSet& inputs, H5::DataSet& output);
+template<typename Stacker>
+ASTRO_PROCESSING_EXPORT void stacking(const H5::DataSet& inputs, H5::DataSet& output);
 }
 } // namespace astro

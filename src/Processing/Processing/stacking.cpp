@@ -1,4 +1,4 @@
-#include "maxstacking.h"
+#include "stacking.h"
 
 #include <Algos/Filters/Stackers/max.h>
 #include <Algos/Filters/multifunctorimagefilter.h>
@@ -8,7 +8,8 @@ namespace astro
 {
 namespace processing
 {
-void maxStacking(const H5::DataSet& inputs, H5::DataSet& output)
+template<typename Stacker>
+void stacking(const H5::DataSet& inputs, H5::DataSet& output)
 {
     H5::DataSpace inputDataspace = inputs.getSpace();
     int ndimsInput = inputDataspace.getSimpleExtentNdims();
@@ -71,17 +72,19 @@ void maxStacking(const H5::DataSet& inputs, H5::DataSet& output)
 
         for (size_t j = 0; j < outputSlab.size(); ++j)
         {
-            float value = 0;
+            std::vector<float> values;
             for (size_t k = 0; k < dimsInput[0]; ++k)
             {
-                value = std::max(value, inputSlab[k * outputSlab.size() + j]);
+                values.push_back(inputSlab[k * outputSlab.size() + j]);
             }
-            outputSlab[j] = value;
+            outputSlab[j] = Stacker()(values);
         }
         hsize_t startOutput[4]{i, 0, 0};
         outputDataspace.selectHyperslab(H5S_SELECT_SET, countOutput, startOutput);
         output.write(outputSlab.data(), H5::PredType::NATIVE_FLOAT, memoryOutputSpace, outputDataspace);
     }
 }
+
+template void stacking<astro::filters::stackers::Max<float>>(const H5::DataSet& inputs, H5::DataSet& output);
 } // namespace processing
 } // namespace astro

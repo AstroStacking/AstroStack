@@ -1,7 +1,8 @@
+#include <Algos/Filters/Stackers/max.h>
 #include <IO/hdf5.h>
 #include <IO/io.h>
 #include <IO/itkoutput.h>
-#include <Processing/maxstacking.h>
+#include <Processing/stacking.h>
 
 #include <QtCore/QCommandLineOption>
 #include <QtCore/QCommandLineParser>
@@ -65,7 +66,7 @@ int main(int argc, char** argv)
     H5::DataSpace outputSpace(3, outputImgDim);
     H5::DataSet outputDataset =
             astro::hdf5::createDataset(outputDatasetName, outputSpace, H5::PredType::NATIVE_FLOAT, h5file);
-    astro::processing::maxStacking(inputsDataset, outputDataset);
+    astro::processing::stacking<astro::filters::stackers::Max<float>>(inputsDataset, outputDataset);
     astro::ImageTypePtr result = astro::hdf5::extractFrom(outputDataset);
 
     if (highdef)

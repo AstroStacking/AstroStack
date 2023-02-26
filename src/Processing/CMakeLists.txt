@@ -5,7 +5,7 @@ FILE(GLOB ASTRO_PROCESSING_SRC
     Processing/grey.cpp
     Processing/histostretch.cpp
     Processing/lightpollution.cpp
-    Processing/maxstacking.cpp
+    Processing/stacking.cpp
     Processing/register.cpp
     Processing/rldeconvolution.cpp
     Processing/stardetection.cpp
@@ -19,7 +19,7 @@ FILE(GLOB ASTRO_PROCESSING_HEADERS
     Processing/grey.h
     Processing/histostretch.h
     Processing/lightpollution.h
-    Processing/maxstacking.h
+    Processing/stacking.h
     Processing/register.h
     Processing/rldeconvolution.h
     Processing/stardetection.h
