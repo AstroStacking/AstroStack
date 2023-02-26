@@ -4,10 +4,8 @@
 
 #pragma once
 
-#include <Algos/config.h>
-
-#include <itkMacro.h>
-#include <itkRGBPixel.h>
+#include <numeric>
+#include <vector>
 
 namespace astro
 {
