@@ -24,47 +24,11 @@ Multi2MultiProcessing::Multi2MultiProcessing(QString filename, QWidget* parent)
     setWindowTitle(filename);
     connect(this, &Multi2MultiProcessing::finished, this, &Multi2MultiProcessing::hasFinished);
     connect(m_ui->execute, &QPushButton::clicked, this, &Multi2MultiProcessing::run);
-    connect(m_ui->saveAs, &QPushButton::clicked, this, &Multi2MultiProcessing::saveAs);
 
     restore();
-    loadFile(filename);
 }
 
-Multi2MultiProcessing::~Multi2MultiProcessing()
-{
-    save();
-}
-
-void Multi2MultiProcessing::loadFile(QString file)
-{
-    m_progressDialog = new QProgressDialog(tr("Loading in progress."), tr("Cancel"), 0, 3, this);
-    m_progressDialog->setAttribute(Qt::WA_DeleteOnClose);
-    connect(m_progressDialog, &QProgressDialog::canceled, &m_watcher, &QFutureWatcher<void>::cancel);
-    connect(&m_watcher, &QFutureWatcher<void>::progressValueChanged, m_progressDialog, &QProgressDialog::setValue);
-    connect(&m_watcher, &QFutureWatcher<void>::finished, m_progressDialog, &QProgressDialog::close);
-
-    m_watcher.setFuture(QtConcurrent::run([=](QPromise<void>& promise) { processLoadFile(file, promise); }));
-    m_progressDialog->show();
-}
-
-void Multi2MultiProcessing::processLoadFile(QString file, QPromise<void>& promise)
-{
-    m_processedImg = m_img = InputInterface::loadImg(file, this);
-    promise.setProgressValue(1);
-    if (m_img.isValid())
-    {
-        m_ui->input->handleItem(m_img);
-        promise.setProgressValue(2);
-        m_ui->output->handleItem(m_img);
-        promise.setProgressValue(3);
-    }
-    else
-    {
-        QMessageBox msgBox;
-        msgBox.setText(tr("Could not load image ") + file + ".");
-        msgBox.exec();
-    }
-}
+Multi2MultiProcessing::~Multi2MultiProcessing() = default;
 
 void Multi2MultiProcessing::setupWorkflow(const std::vector<std::pair<Multi2MultiInterface*, QJsonObject>>& steps)
 {
@@ -128,10 +92,10 @@ void Multi2MultiProcessing::execute()
             [this, activeTasks = std::move(activeTasks)](QPromise<void>& promise)
             {
                 int i = 0;
-                AstroImage img = m_img;
                 for (auto task : activeTasks)
                 {
-                    img = task->process(img, promise);
+                    // TODO connect
+                    task->process(H5::Group(), promise);
                     promise.setProgressValue(++i);
                     if (promise.isCanceled())
                     {
@@ -139,8 +103,6 @@ void Multi2MultiProcessing::execute()
                         return;
                     }
                 }
-                m_processedImg = img;
-                m_ui->output->handleItem(m_processedImg);
                 promise.setProgressValue(++i);
                 emit finished();
             }));
@@ -151,20 +113,6 @@ void Multi2MultiProcessing::hasFinished()
 {
     m_ui->frame->setEnabled(true);
     setFocus();
-}
-
-void Multi2MultiProcessing::saveAs()
-{
-    QSettings settings("AstroStack", "AstroStack");
-    settings.beginGroup("Multi2MultiProcessing");
-    QString filename = settings.value("saveAs", "").toString();
-
-    filename = QFileDialog::getSaveFileName(this, tr("Save output"), filename);
-    if (!filename.isEmpty())
-    {
-        settings.setValue("saveAs", filename);
-        OutputInterface::saveImg(m_processedImg, filename, this);
-    }
 }
 
 void Multi2MultiProcessing::restore()

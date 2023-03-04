@@ -10,6 +10,7 @@ FILE(GLOB ASTRO_QTPROCESSING_SRC
     QtProcessing/Mono2Mono/rldeconvolution.cpp
     QtProcessing/Mono2Mono/rldeconvolution.ui
     QtProcessing/mono2monointerface.cpp
+    QtProcessing/multi2monointerface.cpp
     QtProcessing/multi2multiinterface.cpp
 )
 
@@ -22,7 +23,9 @@ FILE(GLOB ASTRO_QTPROCESSING_HEADERS
     QtProcessing/config.h
     QtProcessing/mono2monointerface.h
     QtProcessing/multi2multiinterface.h
+    QtProcessing/multi2monointerface.h
     QtProcessing/ui_mono2monointerface.h
+    QtProcessing/ui_multi2monointerface.h
     QtProcessing/ui_multi2multiinterface.h
 )
 

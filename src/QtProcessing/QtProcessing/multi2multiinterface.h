@@ -1,4 +1,5 @@
 #pragma once
+#include <IO/hdf5.h>
 #include <IO/io.h>
 #include <QtProcessing/config.h>
 
@@ -14,7 +15,7 @@ class Multi2MultiInterface;
 namespace astro
 {
 /**
- QWidgets that will be displayed in the stack
+ * QWidgets that will be displayed in the stack
  */
 class Multi2MultiInterfaceGUI : public QGroupBox
 {
@@ -23,36 +24,21 @@ public:
     ASTRO_QTPROCESSING_EXPORT Multi2MultiInterfaceGUI(QWidget* parent);
     ASTRO_QTPROCESSING_EXPORT virtual ~Multi2MultiInterfaceGUI();
 
-    /// Process a single image based on a promise.
-    virtual AstroImage process(AstroImage img, QPromise<void>& promise) = 0;
+    /// Process the pipeline based on a promise.
+    virtual void process(H5::Group group, QPromise<void>& promise) = 0;
+    /// Setting up inouts and outputs variables
     ASTRO_QTPROCESSING_EXPORT virtual void setup(QJsonObject data);
 
     ASTRO_QTPROCESSING_EXPORT bool check();
     ASTRO_QTPROCESSING_EXPORT bool isActive();
 
 protected:
-    void setNextFilename(QFileInfo info, QString basename, long inc);
-
-    void setupSlots();
-
-signals:
-    void save(const AstroImage& img);
-
-private slots:
-    void outputStateChanged(int state);
-    void outputFileBoxOpen();
-    void saveImg(const AstroImage& img);
-
-protected:
     std::unique_ptr<Ui::Multi2MultiInterface> m_multiUi;
     QString m_name;
-
-private:
-    bool m_overwriteIfExists{true};
 };
 
 /**
-  Interface to process one image at a time
+ * Interface to process one image at a time
  */
 class ASTRO_QTPROCESSING_EXPORT Multi2MultiInterface
 {
