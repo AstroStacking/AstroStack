@@ -9,8 +9,9 @@ FILE(GLOB ASTRO_QTPROCESSING_SRC
     QtProcessing/Mono2Mono/lightpollution.ui
     QtProcessing/Mono2Mono/rldeconvolution.cpp
     QtProcessing/Mono2Mono/rldeconvolution.ui
+    QtProcessing/Multi2Multi/maxstacking.cpp
+    QtProcessing/Multi2Multi/maxstacking.ui
     QtProcessing/mono2monointerface.cpp
-    QtProcessing/multi2monointerface.cpp
     QtProcessing/multi2multiinterface.cpp
 )
 
@@ -20,12 +21,11 @@ FILE(GLOB ASTRO_QTPROCESSING_HEADERS
     QtProcessing/Mono2Mono/histostretch.h
     QtProcessing/Mono2Mono/lightpollution.h
     QtProcessing/Mono2Mono/rldeconvolution.h
+    QtProcessing/Multi2Multi/maxstacking.h
     QtProcessing/config.h
     QtProcessing/mono2monointerface.h
     QtProcessing/multi2multiinterface.h
-    QtProcessing/multi2monointerface.h
     QtProcessing/ui_mono2monointerface.h
-    QtProcessing/ui_multi2monointerface.h
     QtProcessing/ui_multi2multiinterface.h
 )
 
@@ -35,9 +35,9 @@ FILE(GLOB ASTRO_QTPROCESSING_DOC
     QtProcessing/Mono2Mono/histostretch.md
     QtProcessing/Mono2Mono/lightpollution.md
     QtProcessing/Mono2Mono/rldeconvolution.md
-    QtProcessing/Multi2Mono/maxstacking.md
-    QtProcessing/Multi2Mono/medianstacking.md
-    QtProcessing/Multi2Mono/robustmeanstacking.md
+    QtProcessing/Multi2Multi/maxstacking.md
+    QtProcessing/Multi2Multi/medianstacking.md
+    QtProcessing/Multi2Multi/robustmeanstacking.md
 )
 
 ASTRO_add_library(
