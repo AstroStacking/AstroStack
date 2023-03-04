@@ -10,7 +10,7 @@
 #include <QtCore/QCommandLineOption>
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QCoreApplication>
-#include <QtCore/qtemporaryfile.h>
+#include <QtCore/QTemporaryFile>
 
 #include <H5Cpp.h>
 

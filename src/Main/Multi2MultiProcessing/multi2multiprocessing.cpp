@@ -8,6 +8,7 @@
 #include <QtConcurrent/QtConcurrentRun>
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
+#include <QtCore/QTemporaryFile>
 #include <QtGui/QFileSystemModel>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMenu>
@@ -88,14 +89,21 @@ void Multi2MultiProcessing::execute()
         }
     }
 
+    QTemporaryFile temp;
+    H5::H5File h5file;
+    if (temp.open())
+    {
+        temp.close();
+        h5file = H5::H5File(temp.fileName().toStdString(), H5F_ACC_TRUNC);
+    }
+
     m_watcher.setFuture(QtConcurrent::run(
-            [this, activeTasks = std::move(activeTasks)](QPromise<void>& promise)
+            [this, &h5file, activeTasks = std::move(activeTasks)](QPromise<void>& promise)
             {
                 int i = 0;
                 for (auto task : activeTasks)
                 {
-                    // TODO connect
-                    task->process(H5::Group(), promise);
+                    task->process(h5file, promise);
                     promise.setProgressValue(++i);
                     if (promise.isCanceled())
                     {
@@ -117,9 +125,6 @@ void Multi2MultiProcessing::hasFinished()
 
 void Multi2MultiProcessing::restore()
 {
-    m_ui->input->restore("ImageDisplayInput");
-    m_ui->output->restore("ImageDisplayOutput");
-
     QSettings settings("AstroStack", "AstroStack");
     settings.beginGroup("Multi2MultiProcessing");
     if (!settings.contains("geometry"))
@@ -127,7 +132,6 @@ void Multi2MultiProcessing::restore()
         return;
     }
     restoreGeometry(settings.value("geometry").toByteArray());
-    m_ui->splitter->restoreState(settings.value("splitter").toByteArray());
     settings.endGroup();
 }
 
@@ -136,7 +140,6 @@ void Multi2MultiProcessing::save()
     QSettings settings("AstroStack", "AstroStack");
     settings.beginGroup("Multi2MultiProcessing");
     settings.setValue("geometry", saveGeometry());
-    settings.setValue("splitter", m_ui->splitter->saveState());
     settings.endGroup();
 }
 } // namespace astro

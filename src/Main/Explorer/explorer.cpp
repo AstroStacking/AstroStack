@@ -70,7 +70,7 @@ void Explorer::createMenu()
     {
         QAction* processAct = new QAction(workflow->objectName(), this);
         processAct->setStatusTip(workflow->objectName());
-        //        connect(processAct, &QAction::triggered, workflow.get(), &Mono2MonoWorkflow::openProcess);
+        connect(processAct, &QAction::triggered, workflow.get(), &Multi2MultiWorkflow::openProcess);
         m_menu->addAction(processAct);
     }
 }
