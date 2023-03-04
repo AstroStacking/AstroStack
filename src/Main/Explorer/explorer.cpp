@@ -65,12 +65,7 @@ void Explorer::addSubWindow(QWidget* widget)
 
 void Explorer::createMenu()
 {
-#ifdef __APPLE__
-    QMenuBar* menuBar = new QMenuBar(nullptr);
-    m_menu = menuBar->addMenu(tr("Workflows"));
-#else
     m_menu = m_mainWindow->menuBar()->addMenu(tr("Workflows"));
-#endif
     for (auto& workflow : m_multiWorkflows)
     {
         QAction* processAct = new QAction(workflow->objectName(), this);
