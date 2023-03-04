@@ -11,6 +11,8 @@ FILE(GLOB ASTRO_QTPROCESSING_SRC
     QtProcessing/Mono2Mono/rldeconvolution.ui
     QtProcessing/Multi2Multi/maxstacking.cpp
     QtProcessing/Multi2Multi/maxstacking.ui
+    QtProcessing/Multi2Multi/reader.cpp
+    QtProcessing/Multi2Multi/reader.ui
     QtProcessing/mono2monointerface.cpp
     QtProcessing/multi2multiinterface.cpp
 )
@@ -22,6 +24,7 @@ FILE(GLOB ASTRO_QTPROCESSING_HEADERS
     QtProcessing/Mono2Mono/lightpollution.h
     QtProcessing/Mono2Mono/rldeconvolution.h
     QtProcessing/Multi2Multi/maxstacking.h
+    QtProcessing/Multi2Multi/reader.h
     QtProcessing/config.h
     QtProcessing/mono2monointerface.h
     QtProcessing/multi2multiinterface.h

@@ -17,7 +17,7 @@ QString MaxStacking::name() const
 
 QString MaxStacking::explanation() const
 {
-    return tr("Raises the image values to the power of a parameter");
+    return tr("Computes the max of a pixel among images");
 }
 
 Multi2MultiInterfaceGUI* MaxStacking::generateGUI(QWidget* parent) const

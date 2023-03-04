@@ -42,7 +42,10 @@ std::map<QString, Mono2MonoInterface*> scanPlugins()
     for (auto object : PluginFactory::get().getPluginsFor<Mono2MonoInterface*>())
     {
         auto* plugin = qobject_cast<Mono2MonoInterface*>(object);
-        plugins.emplace(plugin->name(), plugin);
+        if(plugin != nullptr)
+        {
+            plugins.emplace(plugin->name(), plugin);
+        }
     }
     return plugins;
 }

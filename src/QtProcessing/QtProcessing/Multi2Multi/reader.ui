@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MaxStacking</class>
- <widget class="QWidget" name="MaxStacking">
+ <class>Reader</class>
+ <widget class="QWidget" name="Reader">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>51</height>
+    <height>266</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -25,52 +25,9 @@
   <property name="checkable" stdset="0">
    <bool>true</bool>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Variance:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QDoubleSpinBox" name="variance">
-       <property name="decimals">
-        <number>0</number>
-       </property>
-       <property name="minimum">
-        <double>1.000000000000000</double>
-       </property>
-       <property name="maximum">
-        <double>100.000000000000000</double>
-       </property>
-       <property name="singleStep">
-        <double>1.000000000000000</double>
-       </property>
-       <property name="value">
-        <double>4.000000000000000</double>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QSlider" name="varianceSlider">
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>100</number>
-       </property>
-       <property name="value">
-        <number>4</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <widget class="QTreeView" name="treeView"/>
    </item>
   </layout>
  </widget>

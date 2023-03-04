@@ -2,6 +2,7 @@
 #include "ui_multi2multiinterface.h"
 #include <Plugin/pluginfactory.h>
 #include <QtIO/output.h>
+#include <QtProcessing/Multi2Multi/reader.h>
 
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
@@ -14,6 +15,18 @@ namespace
 std::map<QString, Multi2MultiInterface*> scanPlugins()
 {
     std::map<QString, Multi2MultiInterface*> plugins;
+    {
+        auto* reader = new Reader();
+        plugins.emplace(reader->name(), reader);
+    }
+    for (auto object : PluginFactory::get().getPluginsFor<Multi2MultiInterface*>())
+    {
+        auto* plugin = qobject_cast<Multi2MultiInterface*>(object);
+        if(plugin != nullptr)
+        {
+            plugins.emplace(plugin->name(), plugin);
+        }
+    }
     return plugins;
 }
 } // namespace

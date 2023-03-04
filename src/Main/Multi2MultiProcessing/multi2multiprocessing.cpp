@@ -29,7 +29,10 @@ Multi2MultiProcessing::Multi2MultiProcessing(QString filename, QWidget* parent)
     restore();
 }
 
-Multi2MultiProcessing::~Multi2MultiProcessing() = default;
+Multi2MultiProcessing::~Multi2MultiProcessing()
+{
+    save();
+}
 
 void Multi2MultiProcessing::setupWorkflow(const std::vector<std::pair<Multi2MultiInterface*, QJsonObject>>& steps)
 {

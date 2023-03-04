@@ -3,24 +3,24 @@
 
 namespace Ui
 {
-class MaxStacking;
+class Reader;
 }
+class QFileSystemModel;
 
 namespace astro
 {
 /**
- * Stacks the images, taking maximum of each pixel
+ * Reads images
  */
-class MaxStacking
+class Reader
     : public QObject
     , public Multi2MultiInterface
 {
     Q_OBJECT
 public:
-    ~MaxStacking() override;
+    ~Reader() override;
 
     QString name() const override;
-
     QString explanation() const override;
 
     Multi2MultiInterfaceGUI* generateGUI(QWidget* parent) const override;
@@ -29,21 +29,21 @@ public:
 /**
  QWidgets that will be displayed in the stack
  */
-class MaxStackingGUI : public Multi2MultiInterfaceGUI
+class ReaderGUI : public Multi2MultiInterfaceGUI
 {
     Q_OBJECT
 public:
-    MaxStackingGUI(QWidget* parent);
-    ~MaxStackingGUI() override;
+    ReaderGUI(QWidget* parent);
+    ~ReaderGUI() override;
 
     void process(H5::Group group, QPromise<void>& promise) override;
-
-private slots:
-    void setSkewValue(double val);
-    void setApproximateSkewValue(int val);
+    void setup(QJsonObject data) override;
 
 private:
-    std::unique_ptr<Ui::MaxStacking> m_ui;
+    std::unique_ptr<Ui::Reader> m_ui;
+    std::unique_ptr<QFileSystemModel> m_model;
+
+    QString m_outputDatasetName;
 };
 
 } // namespace astro

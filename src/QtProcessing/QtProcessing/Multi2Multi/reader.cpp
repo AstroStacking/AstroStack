@@ -1,62 +1,92 @@
+#include "reader.h"
 #include "../ui_multi2multiinterface.h"
-#include "maxstacking.h"
-#include "ui_maxstacking.h"
-#include <Processing/chromasmoothing.h>
+#include "ui_reader.h"
+#include <IO/hdf5.h>
+#include <QtIO/input.h>
 
+#include <QtCore/QJsonObject>
+#include <QtGui/QFileSystemModel>
 #include <QtWidgets/QDoubleSpinBox>
 
 namespace astro
 {
 
-MaxStacking::~MaxStacking() = default;
+Reader::~Reader() = default;
 
-QString MaxStacking::name() const
+QString Reader::name() const
 {
-    return "MaxStacking";
+    return "Reader";
 }
 
-QString MaxStacking::explanation() const
+QString Reader::explanation() const
 {
-    return tr("Raises the image values to the power of a parameter");
+    return tr("Reads images");
 }
 
-Multi2MultiInterfaceGUI* MaxStacking::generateGUI(QWidget* parent) const
+Multi2MultiInterfaceGUI* Reader::generateGUI(QWidget* parent) const
 {
-    return new MaxStackingGUI(parent);
+    return new ReaderGUI(parent);
 }
 
-MaxStackingGUI::MaxStackingGUI(QWidget* parent)
+ReaderGUI::ReaderGUI(QWidget* parent)
     : Multi2MultiInterfaceGUI(parent)
-    , m_ui(std::make_unique<Ui::MaxStacking>())
+    , m_ui(std::make_unique<Ui::Reader>())
 {
     QWidget* child = new QWidget(this);
     m_ui->setupUi(child);
     m_multiUi->setupUi(this, child);
-    setTitle(tr("MaxStacking"));
+    setTitle(tr("Reader"));
 
-    //setupSlots();
-    connect(m_ui->variance, &QDoubleSpinBox::valueChanged, this, &MaxStackingGUI::setSkewValue);
-    connect(m_ui->varianceSlider, &QSlider::valueChanged, this, &MaxStackingGUI::setApproximateSkewValue);
+    m_model = std::make_unique<QFileSystemModel>();
+    m_model->setRootPath(QDir::rootPath());
+    QStringList filters;
+    // TODO plugins to filters
+    filters << "*.png";
+    filters << "*.jpg";
+    filters << "*.tif";
+    filters << "*.tiff";
+
+    m_model->setNameFilters(filters);
+    m_model->setNameFilterDisables(false);
+    m_ui->treeView->setModel(m_model.get());
+    m_ui->treeView->setCurrentIndex(m_model->index(QDir::homePath()));
+    m_ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
+    m_ui->treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
 }
 
-MaxStackingGUI::~MaxStackingGUI() = default;
+ReaderGUI::~ReaderGUI() = default;
 
-void MaxStackingGUI::setSkewValue(double val)
+void ReaderGUI::process(H5::Group group, QPromise<void>& promise)
 {
-    m_ui->varianceSlider->setValue(static_cast<int>(val));
+    auto indices = m_ui->treeView->selectionModel()->selectedIndexes();
+    
+    QStringList filenames;
+    
+    for(auto index: indices)
+    {
+        filenames.push_back(m_model->fileInfo(index).absoluteFilePath());
+    }
+    if(filenames.empty())
+    {
+        throw std::runtime_error("No file selected");
+    }
+
+    auto refImg = InputInterface::loadImg(filenames.front(), this);
+    auto size = refImg.getImg()->GetRequestedRegion().GetSize();
+
+    std::vector<std::string> transformedFilenames;
+    for (QString filename : filenames)
+    {
+        transformedFilenames.push_back(filename.toStdString());
+    }
+
+    astro::hdf5::readTo(transformedFilenames, size, group, m_outputDatasetName.toStdString());
 }
 
-void MaxStackingGUI::setApproximateSkewValue(int val)
+void ReaderGUI::setup(QJsonObject data)
 {
-    m_ui->variance->setValue(val);
+    auto outputs = data["Outputs"].toObject();
+    m_outputDatasetName = outputs["data"].toObject()["dataset"].toString();
 }
 
-void MaxStackingGUI::process(H5::Group group, QPromise<void>& promise)
-{
-    //img.setImg(processing::chromaSmoothing(img.getImg(), m_ui->variance->value()));
-
-    //emit save(img);
-
-    //return img;
-}
 } // namespace astro
