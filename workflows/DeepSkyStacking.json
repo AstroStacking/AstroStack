@@ -3,16 +3,34 @@
     "Type": "Multi2Multi",
     "Steps": [
         {
-            "Type": "Reader"
+            "Type": "Reader",
+            "Outputs": {
+                "data": {"dataset": "inputs"}
+            }
         },
         {
-            "Type": "StarRegister"
+            "Type": "StarRegister",
+            "Inputs": {
+                "inputs": {"dataset": "inputs"}
+            },
+            "Outputs": {
+                "outputs": {"dataset": "outputs"},
+                "greys": {"dataset": "greys"},
+                "stars": {"dataset": "stars"},
+                "graphs": {"dataset": "graphs"}
+            }
         },
         {
-            "Type": "MaxStacking"
+            "Type": "MaxStacking",
+            "Inputs": {
+                "inputs": {"dataset": "outputs"}
+            }
         },
         {
-            "Type": "RobustMedianStacking"
+            "Type": "RobustMedianStacking",
+            "Inputs": {
+                "inputs": {"dataset": "outputs"}
+            }
         },
     ]
 }
