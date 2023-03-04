@@ -47,6 +47,10 @@ The current shipped ones are:
 * [Deconvolve](workflows/Deconvolve.md)
 * [Histogram Stretch](workflows/HistoStretch.md)
 
+For multiple photos, they are available from the main menu:
+
+* [Deep Sky Stacking](workflows/DeepSkyStacking.md)
+
 ## Changelog
 ### 0.3.0
 

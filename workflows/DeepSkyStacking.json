@@ -1,0 +1,18 @@
+{
+    "Name": "DeepSkyStacking",
+    "Type": "Multi2Multi",
+    "Steps": [
+        {
+            "Type": "Reader"
+        },
+        {
+            "Type": "StarRegister"
+        },
+        {
+            "Type": "MaxStacking"
+        },
+        {
+            "Type": "RobustMedianStacking"
+        },
+    ]
+}

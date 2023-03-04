@@ -37,7 +37,9 @@ FILE(GLOB ASTRO_QTPROCESSING_DOC
     QtProcessing/Mono2Mono/rldeconvolution.md
     QtProcessing/Multi2Multi/maxstacking.md
     QtProcessing/Multi2Multi/medianstacking.md
+    QtProcessing/Multi2Multi/reader.md
     QtProcessing/Multi2Multi/robustmeanstacking.md
+    QtProcessing/Multi2Multi/starregister.md
 )
 
 ASTRO_add_library(
