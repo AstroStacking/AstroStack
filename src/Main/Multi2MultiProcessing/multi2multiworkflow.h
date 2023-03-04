@@ -23,6 +23,6 @@ private:
     std::vector<std::pair<Multi2MultiInterface*, QJsonObject>> m_steps;
 
 public:
-    static std::vector<std::unique_ptr<Multi2MultiWorkflow>> getMultiWorkflows(Explorer* explorer);
+    static std::vector<std::unique_ptr<Multi2MultiWorkflow>> getWorkflows(Explorer* explorer);
 };
 } // namespace astro

@@ -23,6 +23,6 @@ private:
     std::vector<std::pair<Mono2MonoInterface*, QJsonObject>> m_steps;
 
 public:
-    static std::vector<std::unique_ptr<Mono2MonoWorkflow>> getMonoWorkflows(Explorer* explorer);
+    static std::vector<std::unique_ptr<Mono2MonoWorkflow>> getWorkflows(Explorer* explorer);
 };
 } // namespace astro

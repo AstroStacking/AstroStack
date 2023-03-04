@@ -12,6 +12,7 @@ namespace astro
 {
 class MainWindow;
 class Mono2MonoWorkflow;
+class Multi2MultiWorkflow;
 
 class Explorer : public QWidget
 {
@@ -36,6 +37,7 @@ protected:
     void closeEvent(QCloseEvent* event);
 
 private:
+    void createMenu();
     void createContextMenu();
     void restore();
     void save();
@@ -44,6 +46,8 @@ private:
     std::unique_ptr<QFileSystemModel> m_model;
     MainWindow* m_mainWindow{};
     QMenu* m_menu{};
+    QMenu* m_contextMenu{};
     std::vector<std::unique_ptr<Mono2MonoWorkflow>> m_workflows;
+    std::vector<std::unique_ptr<Multi2MultiWorkflow>> m_multiWorkflows;
 };
 } // namespace astro

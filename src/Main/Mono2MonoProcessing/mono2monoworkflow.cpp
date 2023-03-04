@@ -29,7 +29,7 @@ void Mono2MonoWorkflow::addStep(Mono2MonoInterface* plugin, QJsonObject object)
     m_steps.emplace_back(plugin, object);
 }
 
-std::vector<std::unique_ptr<Mono2MonoWorkflow>> Mono2MonoWorkflow::getMonoWorkflows(Explorer* explorer)
+std::vector<std::unique_ptr<Mono2MonoWorkflow>> Mono2MonoWorkflow::getWorkflows(Explorer* explorer)
 {
     std::vector<std::unique_ptr<Mono2MonoWorkflow>> workflows;
 

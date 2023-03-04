@@ -4,19 +4,23 @@
 #include <Common/imagedata.h>
 #include <Mono2MonoProcessing/mono2monoprocessing.h>
 #include <Mono2MonoProcessing/mono2monoworkflow.h>
+#include <Multi2MultiProcessing/multi2multiprocessing.h>
+#include <Multi2MultiProcessing/multi2multiworkflow.h>
 #include <mainwindow.h>
 
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
 #include <QtGui/QFileSystemModel>
 #include <QtWidgets/QMenu>
+#include <QtWidgets/QMenuBar>
 
 namespace astro
 {
 Explorer::Explorer(MainWindow* mainWindow)
     : m_ui(std::make_unique<Ui::Explorer>())
     , m_mainWindow(mainWindow)
-    , m_workflows(Mono2MonoWorkflow::getMonoWorkflows(this))
+    , m_workflows(Mono2MonoWorkflow::getWorkflows(this))
+    , m_multiWorkflows(Multi2MultiWorkflow::getWorkflows(this))
 {
     m_ui->setupUi(this);
 
@@ -40,6 +44,7 @@ Explorer::Explorer(MainWindow* mainWindow)
     connect(m_ui->treeView, &QTreeView::customContextMenuRequested, this, &Explorer::contextMenuRequested);
 
     restore();
+    createMenu();
     createContextMenu();
 }
 
@@ -58,15 +63,32 @@ void Explorer::addSubWindow(QWidget* widget)
     m_mainWindow->addSubWindow(widget);
 }
 
+void Explorer::createMenu()
+{
+#ifdef __APPLE__
+    QMenuBar* menuBar = new QMenuBar(nullptr);
+    m_menu = menuBar->addMenu(tr("Workflows"));
+#else
+    m_menu = m_mainWindow->menuBar()->addMenu(tr("Workflows"));
+#endif
+    for (auto& workflow : m_multiWorkflows)
+    {
+        QAction* processAct = new QAction(workflow->objectName(), this);
+        processAct->setStatusTip(workflow->objectName());
+        //        connect(processAct, &QAction::triggered, workflow.get(), &Mono2MonoWorkflow::openProcess);
+        m_menu->addAction(processAct);
+    }
+}
+
 void Explorer::createContextMenu()
 {
-    m_menu = new QMenu(this);
+    m_contextMenu = new QMenu(this);
     for (auto& workflow : m_workflows)
     {
         QAction* processAct = new QAction(workflow->objectName(), this);
         processAct->setStatusTip(workflow->objectName());
         connect(processAct, &QAction::triggered, workflow.get(), &Mono2MonoWorkflow::openProcess);
-        m_menu->addAction(processAct);
+        m_contextMenu->addAction(processAct);
     }
 }
 
@@ -132,6 +154,6 @@ void Explorer::selectImgFile(QString file)
 
 void Explorer::contextMenuRequested(QPoint pos)
 {
-    m_menu->popup(m_ui->treeView->viewport()->mapToGlobal(pos));
+    m_contextMenu->popup(m_ui->treeView->viewport()->mapToGlobal(pos));
 }
 } // namespace astro

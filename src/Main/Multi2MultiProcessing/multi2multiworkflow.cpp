@@ -30,7 +30,7 @@ void Multi2MultiWorkflow::addStep(Multi2MultiInterface* plugin, QJsonObject obje
     m_steps.emplace_back(plugin, object);
 }
 
-std::vector<std::unique_ptr<Multi2MultiWorkflow>> Multi2MultiWorkflow::getMultiWorkflows(Explorer* explorer)
+std::vector<std::unique_ptr<Multi2MultiWorkflow>> Multi2MultiWorkflow::getWorkflows(Explorer* explorer)
 {
     std::vector<std::unique_ptr<Multi2MultiWorkflow>> workflows;
 
