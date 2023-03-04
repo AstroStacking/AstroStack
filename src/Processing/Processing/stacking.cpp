@@ -1,6 +1,8 @@
 #include "stacking.h"
 
 #include <Algos/Filters/Stackers/max.h>
+#include <Algos/Filters/Stackers/median.h>
+#include <Algos/Filters/Stackers/robustmean.h>
 #include <Algos/Filters/multifunctorimagefilter.h>
 #include <IO/traits.h>
 
@@ -9,7 +11,7 @@ namespace astro
 namespace processing
 {
 template<typename Stacker>
-void stacking(const H5::DataSet& inputs, H5::DataSet& output)
+void stacking(const H5::DataSet& inputs, H5::DataSet& output, const Stacker& stacker)
 {
     H5::DataSpace inputDataspace = inputs.getSpace();
     int ndimsInput = inputDataspace.getSimpleExtentNdims();
@@ -77,7 +79,7 @@ void stacking(const H5::DataSet& inputs, H5::DataSet& output)
             {
                 values.push_back(inputSlab[k * outputSlab.size() + j]);
             }
-            outputSlab[j] = Stacker()(values);
+            outputSlab[j] = stacker(values);
         }
         hsize_t startOutput[4]{i, 0, 0};
         outputDataspace.selectHyperslab(H5S_SELECT_SET, countOutput, startOutput);
@@ -85,6 +87,8 @@ void stacking(const H5::DataSet& inputs, H5::DataSet& output)
     }
 }
 
-template void stacking<astro::filters::stackers::Max<float>>(const H5::DataSet& inputs, H5::DataSet& output);
+template void stacking<astro::filters::stackers::Max<float>>(const H5::DataSet& inputs, H5::DataSet& output, const astro::filters::stackers::Max<float>& stacker);
+template void stacking<astro::filters::stackers::Median<float>>(const H5::DataSet& inputs, H5::DataSet& output, const astro::filters::stackers::Median<float>& stacker);
+template void stacking<astro::filters::stackers::RobustMean<float>>(const H5::DataSet& inputs, H5::DataSet& output, const astro::filters::stackers::RobustMean<float>& stacker);
 } // namespace processing
 } // namespace astro

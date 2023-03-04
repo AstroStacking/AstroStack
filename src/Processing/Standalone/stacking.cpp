@@ -66,7 +66,9 @@ int main(int argc, char** argv)
     H5::DataSpace outputSpace(3, outputImgDim);
     H5::DataSet outputDataset =
             astro::hdf5::createDataset(outputDatasetName, outputSpace, H5::PredType::NATIVE_FLOAT, h5file);
-    astro::processing::stacking<astro::filters::stackers::Max<float>>(inputsDataset, outputDataset);
+    
+    astro::processing::stacking(inputsDataset, outputDataset, astro::filters::stackers::Max<float>());
+    
     astro::ImageTypePtr result = astro::hdf5::extractFrom(outputDataset);
 
     if (highdef)
