@@ -1,6 +1,6 @@
 {
     "Name": "Histogram Stretch",
-    "Type": "Mono",
+    "Type": "Mono2Mono",
     "Steps": [
         {
             "Type": "LightPollution"

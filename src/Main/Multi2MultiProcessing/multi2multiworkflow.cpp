@@ -45,7 +45,7 @@ std::vector<std::unique_ptr<Multi2MultiWorkflow>> Multi2MultiWorkflow::getMultiW
         loadFile.open(QIODevice::ReadOnly);
         QByteArray jsonData = loadFile.readAll();
         QJsonDocument loadDoc(QJsonDocument::fromJson(jsonData));
-        if (loadDoc["Type"].toString() != "Multi")
+        if (loadDoc["Type"].toString() != "Multi2Multi")
         {
             continue;
         }

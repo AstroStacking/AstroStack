@@ -45,7 +45,7 @@ std::vector<std::unique_ptr<Mono2MonoWorkflow>> Mono2MonoWorkflow::getMonoWorkfl
         loadFile.open(QIODevice::ReadOnly);
         QByteArray jsonData = loadFile.readAll();
         QJsonDocument loadDoc(QJsonDocument::fromJson(jsonData));
-        if (loadDoc["Type"].toString() != "Mono")
+        if (loadDoc["Type"].toString() != "Mono2Mono")
         {
             continue;
         }

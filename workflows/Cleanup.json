@@ -1,6 +1,6 @@
 {
     "Name": "Cleanup",
-    "Type": "Mono",
+    "Type": "Mono2Mono",
     "Steps": [
         {
             "Type": "ChromaSmoothing"

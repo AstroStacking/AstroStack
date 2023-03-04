@@ -1,6 +1,6 @@
 {
     "Name": "Deconvolve",
-    "Type": "Mono",
+    "Type": "Mono2Mono",
     "Steps": [
         {
             "Type": "RLDeconvolution"
