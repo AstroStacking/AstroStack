@@ -20,7 +20,6 @@ public:
     {
         std::partial_sort(values.begin(), values.begin() + (values.size() + 1) / 2, values.end());
         return values[(values.size() + 1) / 2 - 1];
-        
     }
 };
 } // namespace stackers

@@ -87,8 +87,12 @@ void stacking(const H5::DataSet& inputs, H5::DataSet& output, const Stacker& sta
     }
 }
 
-template void stacking<astro::filters::stackers::Max<float>>(const H5::DataSet& inputs, H5::DataSet& output, const astro::filters::stackers::Max<float>& stacker);
-template void stacking<astro::filters::stackers::Median<float>>(const H5::DataSet& inputs, H5::DataSet& output, const astro::filters::stackers::Median<float>& stacker);
-template void stacking<astro::filters::stackers::RobustMean<float>>(const H5::DataSet& inputs, H5::DataSet& output, const astro::filters::stackers::RobustMean<float>& stacker);
+template void stacking<astro::filters::stackers::Max<float>>(const H5::DataSet& inputs, H5::DataSet& output,
+                                                             const astro::filters::stackers::Max<float>& stacker);
+template void stacking<astro::filters::stackers::Median<float>>(const H5::DataSet& inputs, H5::DataSet& output,
+                                                                const astro::filters::stackers::Median<float>& stacker);
+template void
+stacking<astro::filters::stackers::RobustMean<float>>(const H5::DataSet& inputs, H5::DataSet& output,
+                                                      const astro::filters::stackers::RobustMean<float>& stacker);
 } // namespace processing
 } // namespace astro

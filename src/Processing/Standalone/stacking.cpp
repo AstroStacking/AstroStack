@@ -1,4 +1,6 @@
 #include <Algos/Filters/Stackers/max.h>
+#include <Algos/Filters/Stackers/median.h>
+#include <Algos/Filters/Stackers/robustmean.h>
 #include <IO/hdf5.h>
 #include <IO/io.h>
 #include <IO/itkoutput.h>
@@ -28,8 +30,14 @@ int main(int argc, char** argv)
     parser.addOption(outputDatasetOption);
     QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output image."), "output");
     parser.addOption(outputOption);
+    QCommandLineOption methodOption(
+            "method", QCoreApplication::translate("main", "Stacking method (max, median, robustMean)."), "max");
+    parser.addOption(methodOption);
     QCommandLineOption highdefOption("high-def", QCoreApplication::translate("main", "Save in 16bits."));
     parser.addOption(highdefOption);
+    QCommandLineOption robustnessOption(
+            "robustness", QCoreApplication::translate("main", "How much of the outliers we remove."), ".05");
+    parser.addOption(robustnessOption);
 
     // Process the actual command line arguments given by the user
     parser.process(app);
@@ -44,6 +52,11 @@ int main(int argc, char** argv)
     std::string output = parser.value(outputOption).toStdString();
     std::string outputDatasetName = parser.value(outputDatasetOption).toStdString();
     bool highdef = parser.isSet(highdefOption);
+    std::string method = parser.value(methodOption).toStdString();
+    if (method != "max" && method != "median" && method != "robustMean")
+    {
+        throw std::runtime_error("Unknown type of stacking method " + method);
+    }
 
     H5::H5File h5file(input, H5F_ACC_RDWR);
 
@@ -66,9 +79,21 @@ int main(int argc, char** argv)
     H5::DataSpace outputSpace(3, outputImgDim);
     H5::DataSet outputDataset =
             astro::hdf5::createDataset(outputDatasetName, outputSpace, H5::PredType::NATIVE_FLOAT, h5file);
-    
-    astro::processing::stacking(inputsDataset, outputDataset, astro::filters::stackers::Max<float>());
-    
+
+    if (method == "max")
+    {
+        astro::processing::stacking(inputsDataset, outputDataset, astro::filters::stackers::Max<float>());
+    }
+    else if (method == "median")
+    {
+        astro::processing::stacking(inputsDataset, outputDataset, astro::filters::stackers::Median<float>());
+    }
+    else if (method == "robusMedian")
+    {
+        float robust = parser.value(robustnessOption).toFloat() / 2;
+        astro::processing::stacking(inputsDataset, outputDataset, astro::filters::stackers::RobustMean<float>(robust));
+    }
+
     astro::ImageTypePtr result = astro::hdf5::extractFrom(outputDataset);
 
     if (highdef)
