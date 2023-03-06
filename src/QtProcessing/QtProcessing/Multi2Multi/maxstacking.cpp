@@ -1,9 +1,13 @@
 #include "maxstacking.h"
 #include "../ui_multi2multiinterface.h"
 #include "ui_maxstacking.h"
+#include <Algos/Filters/Stackers/max.h>
+#include <IO/hdf5.h>
 #include <Processing/chromasmoothing.h>
+#include <Processing/stacking.h>
 #include <QtIO/output.h>
 
+#include <QtCore/QJsonObject>
 #include <QtWidgets/QDoubleSpinBox>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
@@ -46,6 +50,14 @@ void MaxStackingGUI::setupSlots()
 {
     connect(m_ui->filenameOpen, &QPushButton::clicked, this, &MaxStackingGUI::outputFileBoxOpen);
     connect(this, &MaxStackingGUI::save, this, &MaxStackingGUI::saveImg);
+}
+
+void MaxStackingGUI::setup(QJsonObject data)
+{
+    auto inputs = data["Inputs"].toObject();
+    m_inputsDatasetName = inputs["data"].toObject()["dataset"].toString().toStdString();
+    auto outputs = data["Outputs"].toObject();
+    m_outputDatasetName = outputs["inputs"].toObject()["dataset"].toString().toStdString();
 }
 
 void MaxStackingGUI::outputFileBoxOpen()
@@ -112,10 +124,31 @@ void MaxStackingGUI::saveImg(const AstroImage& img)
 
 void MaxStackingGUI::process(H5::Group group, QPromise<void>& promise)
 {
-    //img.setImg(processing::chromaSmoothing(img.getImg(), m_ui->variance->value()));
+    H5::DataSet inputsDataset = group.openDataSet(m_inputsDatasetName);
 
-    //emit save(img);
+    H5::DataSpace dataspace = inputsDataset.getSpace();
+    int ndims = dataspace.getSimpleExtentNdims();
+    if (ndims != 4)
+    {
+        throw std::runtime_error("Wrong number of dimensions");
+    }
+    hsize_t dims[4];
+    ndims = dataspace.getSimpleExtentDims(dims, nullptr);
+    if (dims[3] != astro::PixelDimension)
+    {
+        throw std::runtime_error("Wrong pixel dimension");
+    }
 
-    //return img;
+    hsize_t outputImgDim[3]{dims[1], dims[2], astro::PixelDimension};
+    H5::DataSpace outputSpace(3, outputImgDim);
+    H5::DataSet outputDataset =
+            hdf5::createDataset(m_outputDatasetName, outputSpace, H5::PredType::NATIVE_FLOAT, group);
+
+    processing::stacking(inputsDataset, outputDataset, filters::stackers::Max<float>());
+
+    AstroImage img;
+    img.setImg(hdf5::extractFrom(outputDataset));
+
+    emit save(img);
 }
 } // namespace astro

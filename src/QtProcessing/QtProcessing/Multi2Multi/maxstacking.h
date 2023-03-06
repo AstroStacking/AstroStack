@@ -36,8 +36,9 @@ public:
     MaxStackingGUI(QWidget* parent);
     ~MaxStackingGUI() override;
 
-    void process(H5::Group group, QPromise<void>& promise) override;
+    void setup(QJsonObject data) override;
     bool check() override;
+    void process(H5::Group group, QPromise<void>& promise) override;
 
 signals:
     void save(const AstroImage& img);
@@ -52,6 +53,8 @@ private:
 
     std::unique_ptr<Ui::MaxStacking> m_ui;
     bool m_overwriteIfExists{true};
+    std::string m_inputsDatasetName;
+    std::string m_outputDatasetName;
 };
 
 } // namespace astro

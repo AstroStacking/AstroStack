@@ -50,8 +50,14 @@ The current shipped ones are:
 For multiple photos, they are available from the main menu:
 
 * [Deep Sky Stacking](workflows/DeepSkyStacking.md)
+* [Max Stacking](workflows/MaxStacking.md)
 
 ## Changelog
+### 0.4.0
+* Starting the Multi processes
+  * Max Stacking
+  * Deep Sky Stacking
+
 ### 0.3.0
 
 * Fix documentation with pandoc 3.1

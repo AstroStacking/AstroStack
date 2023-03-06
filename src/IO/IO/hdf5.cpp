@@ -206,7 +206,7 @@ H5::DataSet readTo(const std::vector<std::string>& filenames, itk::Size<Dimensio
     return dataset;
 }
 
-H5::Group getOrCreateGroup(const std::string& outputGroupName, const H5::H5File& h5file)
+H5::Group getOrCreateGroup(const std::string& outputGroupName, const H5::Group& h5file)
 {
     if (outputGroupName.empty())
     {
@@ -223,7 +223,7 @@ H5::Group getOrCreateGroup(const std::string& outputGroupName, const H5::H5File&
 }
 
 H5::DataSet createDataset(const std::string& outputDatasetName, const H5::DataSpace& outputSpace, H5::PredType type,
-                          const H5::H5File& h5file)
+                          const H5::Group& h5file)
 {
     H5::DataSet outputDataset;
     size_t needSubGroup = outputDatasetName.rfind("/");
