@@ -17,16 +17,14 @@
 
 namespace astro
 {
-Multi2MultiProcessing::Multi2MultiProcessing(QString filename, QWidget* parent)
+Multi2MultiProcessing::Multi2MultiProcessing(QString workflow, QWidget* parent)
     : QWidget(parent)
     , m_ui(std::make_unique<Ui::Multi2MultiProcessing>())
 {
     m_ui->setupUi(this);
-    setWindowTitle(filename);
+    setWindowTitle(workflow);
     connect(this, &Multi2MultiProcessing::finished, this, &Multi2MultiProcessing::hasFinished);
     connect(m_ui->execute, &QPushButton::clicked, this, &Multi2MultiProcessing::run);
-
-    restore();
 }
 
 Multi2MultiProcessing::~Multi2MultiProcessing()
@@ -44,6 +42,8 @@ void Multi2MultiProcessing::setupWorkflow(const std::vector<std::pair<Multi2Mult
     }
 
     m_ui->contentLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding));
+
+    restore();
 }
 
 void Multi2MultiProcessing::run()
@@ -129,20 +129,32 @@ void Multi2MultiProcessing::hasFinished()
 void Multi2MultiProcessing::restore()
 {
     QSettings settings("AstroStack", "AstroStack");
-    settings.beginGroup("Multi2MultiProcessing");
+    settings.beginGroup(windowTitle());
     if (!settings.contains("geometry"))
     {
         return;
     }
     restoreGeometry(settings.value("geometry").toByteArray());
+    for(auto* task: m_tasks)
+    {
+        settings.beginGroup(task->objectName());
+        task->restore(settings);
+        settings.endGroup();
+    }
     settings.endGroup();
 }
 
 void Multi2MultiProcessing::save()
 {
     QSettings settings("AstroStack", "AstroStack");
-    settings.beginGroup("Multi2MultiProcessing");
+    settings.beginGroup(windowTitle());
     settings.setValue("geometry", saveGeometry());
+    for(auto* task: m_tasks)
+    {
+        settings.beginGroup(task->objectName());
+        task->save(settings);
+        settings.endGroup();
+    }
     settings.endGroup();
 }
 } // namespace astro

@@ -36,8 +36,11 @@ public:
     ReaderGUI(QWidget* parent);
     ~ReaderGUI() override;
 
-    void process(H5::Group group, QPromise<void>& promise) override;
     void setup(QJsonObject data) override;
+    bool check() override;
+    void process(H5::Group group, QPromise<void>& promise) override;
+    void restore(QSettings& settings) override;
+    void save(QSettings& settings) override;
 
 private:
     std::unique_ptr<Ui::Reader> m_ui;

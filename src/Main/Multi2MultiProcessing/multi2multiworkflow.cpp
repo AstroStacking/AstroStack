@@ -17,10 +17,7 @@ Multi2MultiWorkflow::Multi2MultiWorkflow(QString name, Explorer* explorer)
 
 void Multi2MultiWorkflow::openProcess()
 {
-    // Obviously not OK
-    QString file = m_explorer->getSelectedFile();
-
-    Multi2MultiProcessing* widget = new Multi2MultiProcessing(file);
+    Multi2MultiProcessing* widget = new Multi2MultiProcessing(objectName());
     m_explorer->addSubWindow(widget);
     widget->setupWorkflow(m_steps);
 }

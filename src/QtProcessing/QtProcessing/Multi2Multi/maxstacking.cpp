@@ -49,11 +49,11 @@ MaxStackingGUI::~MaxStackingGUI() = default;
 void MaxStackingGUI::setupSlots()
 {
     connect(m_ui->filenameOpen, &QPushButton::clicked, this, &MaxStackingGUI::outputFileBoxOpen);
-    connect(this, &MaxStackingGUI::save, this, &MaxStackingGUI::saveImg);
 }
 
 void MaxStackingGUI::setup(QJsonObject data)
 {
+    Multi2MultiInterfaceGUI::setup(data);
     auto inputs = data["Inputs"].toObject();
     m_inputsDatasetName = inputs["data"].toObject()["dataset"].toString().toStdString();
     auto outputs = data["Outputs"].toObject();
@@ -63,6 +63,16 @@ void MaxStackingGUI::setup(QJsonObject data)
 void MaxStackingGUI::outputFileBoxOpen()
 {
     m_ui->filename->setText(QFileDialog::getSaveFileName(this, tr("Save output"), m_ui->filename->text()));
+}
+
+void MaxStackingGUI::restore(QSettings& settings)
+{
+    
+}
+
+void MaxStackingGUI::save(QSettings& settings)
+{
+    
 }
 
 bool MaxStackingGUI::check()
@@ -148,7 +158,6 @@ void MaxStackingGUI::process(H5::Group group, QPromise<void>& promise)
 
     AstroImage img;
     img.setImg(hdf5::extractFrom(outputDataset));
-
-    emit save(img);
+    saveImg(img);
 }
 } // namespace astro

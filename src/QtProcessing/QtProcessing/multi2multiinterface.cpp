@@ -2,6 +2,7 @@
 #include "ui_multi2multiinterface.h"
 #include <Plugin/pluginfactory.h>
 #include <QtIO/output.h>
+#include <QtProcessing/Multi2Multi/maxstacking.h>
 #include <QtProcessing/Multi2Multi/reader.h>
 
 #include <QtWidgets/QFileDialog>
@@ -18,6 +19,10 @@ std::map<QString, Multi2MultiInterface*> scanPlugins()
     {
         auto* reader = new Reader();
         plugins.emplace(reader->name(), reader);
+    }
+    {
+        auto* stacker = new MaxStacking();
+        plugins.emplace(stacker->name(), stacker);
     }
     for (auto object : PluginFactory::get().getPluginsFor<Multi2MultiInterface*>())
     {
@@ -51,11 +56,6 @@ Multi2MultiInterfaceGUI::~Multi2MultiInterfaceGUI() = default;
 void Multi2MultiInterfaceGUI::setup(QJsonObject data)
 {
     m_name = data["Name"].toString();
-}
-
-bool Multi2MultiInterfaceGUI::check()
-{
-    return true;
 }
 
 bool Multi2MultiInterfaceGUI::isActive()

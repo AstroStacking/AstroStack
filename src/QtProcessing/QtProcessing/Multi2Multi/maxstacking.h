@@ -39,17 +39,16 @@ public:
     void setup(QJsonObject data) override;
     bool check() override;
     void process(H5::Group group, QPromise<void>& promise) override;
-
-signals:
-    void save(const AstroImage& img);
+    void restore(QSettings& settings) override;
+    void save(QSettings& settings) override;
 
 private slots:
     void outputFileBoxOpen();
-    void saveImg(const AstroImage& img);
 
 private:
     void setupSlots();
     void setNextFilename(QFileInfo info, QString basename, long inc);
+    void saveImg(const AstroImage& img);
 
     std::unique_ptr<Ui::MaxStacking> m_ui;
     bool m_overwriteIfExists{true};

@@ -49,7 +49,7 @@ ReaderGUI::ReaderGUI(QWidget* parent)
     m_model->setNameFilters(filters);
     m_model->setNameFilterDisables(false);
     m_ui->treeView->setModel(m_model.get());
-    m_ui->treeView->setCurrentIndex(m_model->index(QDir::homePath()));
+    m_ui->treeView->setCurrentIndex(m_model->index(QDir::homePath())); // Should recover from somewhere
     m_ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
     m_ui->treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
 }
@@ -83,8 +83,24 @@ void ReaderGUI::process(H5::Group group, QPromise<void>& promise)
     astro::hdf5::readTo(transformedFilenames, size, group, m_outputDatasetName.toStdString());
 }
 
+void ReaderGUI::restore(QSettings& settings)
+{
+    
+}
+
+void ReaderGUI::save(QSettings& settings)
+{
+    
+}
+
+bool ReaderGUI::check()
+{
+    return true;
+}
+
 void ReaderGUI::setup(QJsonObject data)
 {
+    Multi2MultiInterfaceGUI::setup(data);
     auto outputs = data["Outputs"].toObject();
     m_outputDatasetName = outputs["data"].toObject()["dataset"].toString();
 }

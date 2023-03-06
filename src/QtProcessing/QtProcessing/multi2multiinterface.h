@@ -5,6 +5,7 @@
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QPromise>
+#include <QtCore/QSettings>
 #include <QtWidgets/QGroupBox>
 
 namespace Ui
@@ -25,11 +26,13 @@ public:
     ASTRO_QTPROCESSING_EXPORT virtual ~Multi2MultiInterfaceGUI();
 
     /// Process the pipeline based on a promise.
-    virtual void process(H5::Group group, QPromise<void>& promise) = 0;
+    ASTRO_QTPROCESSING_EXPORT virtual void process(H5::Group group, QPromise<void>& promise) = 0;
     /// Setting up inouts and outputs variables
     ASTRO_QTPROCESSING_EXPORT virtual void setup(QJsonObject data);
 
-    ASTRO_QTPROCESSING_EXPORT virtual bool check();
+    ASTRO_QTPROCESSING_EXPORT virtual void restore(QSettings& settings) = 0;
+    ASTRO_QTPROCESSING_EXPORT virtual void save(QSettings& settings) = 0;
+    ASTRO_QTPROCESSING_EXPORT virtual bool check() = 0;
     ASTRO_QTPROCESSING_EXPORT bool isActive();
 
 protected:
