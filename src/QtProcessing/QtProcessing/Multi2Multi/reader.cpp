@@ -59,14 +59,14 @@ ReaderGUI::~ReaderGUI() = default;
 void ReaderGUI::process(H5::Group group, QPromise<void>& promise)
 {
     auto indices = m_ui->treeView->selectionModel()->selectedIndexes();
-    
+
     QStringList filenames;
-    
-    for(auto index: indices)
+
+    for (auto index : indices)
     {
         filenames.push_back(m_model->fileInfo(index).absoluteFilePath());
     }
-    if(filenames.empty())
+    if (filenames.empty())
     {
         throw std::runtime_error("No file selected");
     }

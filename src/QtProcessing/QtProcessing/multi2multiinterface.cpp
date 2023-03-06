@@ -22,7 +22,7 @@ std::map<QString, Multi2MultiInterface*> scanPlugins()
     for (auto object : PluginFactory::get().getPluginsFor<Multi2MultiInterface*>())
     {
         auto* plugin = qobject_cast<Multi2MultiInterface*>(object);
-        if(plugin != nullptr)
+        if (plugin != nullptr)
         {
             plugins.emplace(plugin->name(), plugin);
         }
@@ -55,7 +55,6 @@ void Multi2MultiInterfaceGUI::setup(QJsonObject data)
 
 bool Multi2MultiInterfaceGUI::check()
 {
-    // TODO
     return true;
 }
 

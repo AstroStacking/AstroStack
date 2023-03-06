@@ -29,7 +29,7 @@ public:
     /// Setting up inouts and outputs variables
     ASTRO_QTPROCESSING_EXPORT virtual void setup(QJsonObject data);
 
-    ASTRO_QTPROCESSING_EXPORT bool check();
+    ASTRO_QTPROCESSING_EXPORT virtual bool check();
     ASTRO_QTPROCESSING_EXPORT bool isActive();
 
 protected:

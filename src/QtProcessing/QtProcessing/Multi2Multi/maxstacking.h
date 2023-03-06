@@ -37,13 +37,21 @@ public:
     ~MaxStackingGUI() override;
 
     void process(H5::Group group, QPromise<void>& promise) override;
+    bool check() override;
+
+signals:
+    void save(const AstroImage& img);
 
 private slots:
-    void setSkewValue(double val);
-    void setApproximateSkewValue(int val);
+    void outputFileBoxOpen();
+    void saveImg(const AstroImage& img);
 
 private:
+    void setupSlots();
+    void setNextFilename(QFileInfo info, QString basename, long inc);
+
     std::unique_ptr<Ui::MaxStacking> m_ui;
+    bool m_overwriteIfExists{true};
 };
 
 } // namespace astro
