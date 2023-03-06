@@ -1,0 +1,18 @@
+{
+    "Name": "MaxStacking",
+    "Type": "Multi2Multi",
+    "Steps": [
+        {
+            "Type": "Reader",
+            "Outputs": {
+                "data": {"dataset": "inputs"}
+            }
+        },
+        {
+            "Type": "MaxStacking",
+            "Inputs": {
+                "inputs": {"dataset": "inputs"}
+            }
+        }
+    ]
+}
