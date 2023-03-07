@@ -90,17 +90,16 @@ void Multi2MultiProcessing::execute()
         }
     }
 
-    QTemporaryFile temp;
-    H5::H5File h5file;
-    if (temp.open())
-    {
-        temp.close();
-        h5file = H5::H5File(temp.fileName().toStdString(), H5F_ACC_TRUNC);
-    }
-
     m_watcher.setFuture(QtConcurrent::run(
-            [this, &h5file, activeTasks = std::move(activeTasks)](QPromise<void>& promise)
+            [this, activeTasks = std::move(activeTasks)](QPromise<void>& promise)
             {
+                QTemporaryFile temp;
+                H5::H5File h5file;
+                if (temp.open())
+                {
+                    temp.close();
+                    h5file = H5::H5File(temp.fileName().toStdString(), H5F_ACC_TRUNC);
+                }
                 int i = 0;
                 for (auto task : activeTasks)
                 {

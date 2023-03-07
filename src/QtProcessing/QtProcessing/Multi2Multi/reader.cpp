@@ -56,7 +56,7 @@ ReaderGUI::ReaderGUI(QWidget* parent)
 
 ReaderGUI::~ReaderGUI() = default;
 
-void ReaderGUI::process(H5::Group group, QPromise<void>& promise)
+void ReaderGUI::process(const H5::H5File& group, QPromise<void>& promise)
 {
     auto indices = m_ui->treeView->selectionModel()->selectedIndexes();
 
@@ -64,6 +64,10 @@ void ReaderGUI::process(H5::Group group, QPromise<void>& promise)
 
     for (auto index : indices)
     {
+        if(index.column() != 0)
+        {
+            continue;
+        }
         filenames.push_back(m_model->fileInfo(index).absoluteFilePath());
     }
     if (filenames.empty())
@@ -78,7 +82,6 @@ void ReaderGUI::process(H5::Group group, QPromise<void>& promise)
     for (QString filename : filenames)
     {
         transformedFilenames.push_back(filename.toStdString());
-        std::cout << transformedFilenames.back() << std::endl;
     }
 
     astro::hdf5::readTo(transformedFilenames, size, group, m_outputDatasetName.toStdString());

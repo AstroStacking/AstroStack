@@ -136,7 +136,7 @@ void MaxStackingGUI::saveImg(const AstroImage& img)
     }
 }
 
-void MaxStackingGUI::process(H5::Group group, QPromise<void>& promise)
+void MaxStackingGUI::process(const H5::H5File& group, QPromise<void>& promise)
 {
     H5::DataSet inputsDataset = group.openDataSet(m_inputsDatasetName);
 
