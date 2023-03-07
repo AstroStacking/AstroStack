@@ -33,7 +33,8 @@ public:
     ASTRO_QTPROCESSING_EXPORT virtual void restore(QSettings& settings) = 0;
     ASTRO_QTPROCESSING_EXPORT virtual void save(QSettings& settings) = 0;
     ASTRO_QTPROCESSING_EXPORT virtual bool check() = 0;
-    ASTRO_QTPROCESSING_EXPORT bool isActive();
+    ASTRO_QTPROCESSING_EXPORT bool isActive() const;
+    ASTRO_QTPROCESSING_EXPORT QString getName() const;
 
 protected:
     std::unique_ptr<Ui::Multi2MultiInterface> m_multiUi;

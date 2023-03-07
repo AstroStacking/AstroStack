@@ -3,12 +3,14 @@
     "Type": "Multi2Multi",
     "Steps": [
         {
+            "Name": "Reader",
             "Type": "Reader",
             "Outputs": {
                 "data": {"dataset": "inputs"}
             }
         },
         {
+            "Name": "Registration",
             "Type": "StarRegister",
             "Inputs": {
                 "inputs": {"dataset": "inputs"}
@@ -21,12 +23,14 @@
             }
         },
         {
+            "Name": "Stacking1",
             "Type": "MaxStacking",
             "Inputs": {
                 "inputs": {"dataset": "outputs"}
             }
         },
         {
+            "Name": "Stacking2",
             "Type": "RobustMedianStacking",
             "Inputs": {
                 "inputs": {"dataset": "outputs"}

@@ -78,6 +78,7 @@ void ReaderGUI::process(H5::Group group, QPromise<void>& promise)
     for (QString filename : filenames)
     {
         transformedFilenames.push_back(filename.toStdString());
+        std::cout << transformedFilenames.back() << std::endl;
     }
 
     astro::hdf5::readTo(transformedFilenames, size, group, m_outputDatasetName.toStdString());
@@ -90,11 +91,21 @@ void ReaderGUI::restore(QSettings& settings)
         return;
     }
     m_ui->treeView->setCurrentIndex(m_model->index(settings.value("path").toString()));
+    m_ui->treeView->restoreGeometry(settings.value("geometry").toByteArray());
+    for (int i = 0; i < m_model->columnCount(); ++i)
+    {
+        m_ui->treeView->setColumnWidth(i, settings.value("header" + QString::number(i)).toInt());
+    }
 }
 
 void ReaderGUI::save(QSettings& settings)
 {
     settings.setValue("path", m_model->fileInfo(m_ui->treeView->currentIndex()).absoluteFilePath());
+    settings.setValue("geometry", m_ui->treeView->saveGeometry());
+    for (int i = 0; i < m_model->columnCount(); ++i)
+    {
+        settings.setValue("header" + QString::number(i), m_ui->treeView->columnWidth(i));
+    }
 }
 
 bool ReaderGUI::check()

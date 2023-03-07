@@ -19,8 +19,9 @@ void Multi2MultiWorkflow::openProcess()
 {
     Multi2MultiProcessing* widget = new Multi2MultiProcessing(objectName());
     m_explorer->addSubWindow(widget);
-    widget->restore();
     widget->setupWorkflow(m_steps);
+    widget->restore();
+    widget->setAttribute(Qt::WA_DeleteOnClose,true);
 }
 
 void Multi2MultiWorkflow::addStep(Multi2MultiInterface* plugin, QJsonObject object)

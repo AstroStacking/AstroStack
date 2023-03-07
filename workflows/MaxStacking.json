@@ -3,12 +3,14 @@
     "Type": "Multi2Multi",
     "Steps": [
         {
+            "Name": "Reader",
             "Type": "Reader",
             "Outputs": {
                 "data": {"dataset": "inputs"}
             }
         },
         {
+            "Name": "Stacking",
             "Type": "MaxStacking",
             "Inputs": {
                 "inputs": {"dataset": "inputs"}

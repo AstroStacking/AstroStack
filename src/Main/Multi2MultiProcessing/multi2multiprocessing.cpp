@@ -135,7 +135,7 @@ void Multi2MultiProcessing::restore()
     parentWidget()->restoreGeometry(settings.value("geometry").toByteArray());
     for(auto* task: m_tasks)
     {
-        settings.beginGroup(task->objectName());
+        settings.beginGroup(task->getName());
         task->restore(settings);
         settings.endGroup();
     }
@@ -149,7 +149,7 @@ void Multi2MultiProcessing::save()
     settings.setValue("geometry", parentWidget()->saveGeometry());
     for(auto* task: m_tasks)
     {
-        settings.beginGroup(task->objectName());
+        settings.beginGroup(task->getName());
         task->save(settings);
         settings.endGroup();
     }

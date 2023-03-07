@@ -58,9 +58,11 @@ void Multi2MultiInterfaceGUI::setup(QJsonObject data)
     m_name = data["Name"].toString();
 }
 
-bool Multi2MultiInterfaceGUI::isActive()
+bool Multi2MultiInterfaceGUI::isActive() const
 {
     return isChecked();
 }
+
+QString Multi2MultiInterfaceGUI::getName() const {return m_name;}
 
 } // namespace astro
