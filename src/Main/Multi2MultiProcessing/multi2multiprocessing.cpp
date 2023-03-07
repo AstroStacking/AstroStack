@@ -42,8 +42,6 @@ void Multi2MultiProcessing::setupWorkflow(const std::vector<std::pair<Multi2Mult
     }
 
     m_ui->contentLayout->addItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding));
-
-    restore();
 }
 
 void Multi2MultiProcessing::run()
@@ -134,7 +132,7 @@ void Multi2MultiProcessing::restore()
     {
         return;
     }
-    restoreGeometry(settings.value("geometry").toByteArray());
+    parentWidget()->restoreGeometry(settings.value("geometry").toByteArray());
     for(auto* task: m_tasks)
     {
         settings.beginGroup(task->objectName());
@@ -148,7 +146,7 @@ void Multi2MultiProcessing::save()
 {
     QSettings settings("AstroStack", "AstroStack");
     settings.beginGroup(windowTitle());
-    settings.setValue("geometry", saveGeometry());
+    settings.setValue("geometry", parentWidget()->saveGeometry());
     for(auto* task: m_tasks)
     {
         settings.beginGroup(task->objectName());

@@ -67,12 +67,16 @@ void MaxStackingGUI::outputFileBoxOpen()
 
 void MaxStackingGUI::restore(QSettings& settings)
 {
-    
+    if (!settings.contains("file"))
+    {
+        return;
+    }
+    m_ui->filename->setText(settings.value("file").toString());
 }
 
 void MaxStackingGUI::save(QSettings& settings)
 {
-    
+    settings.setValue("file", m_ui->filename->text());
 }
 
 bool MaxStackingGUI::check()

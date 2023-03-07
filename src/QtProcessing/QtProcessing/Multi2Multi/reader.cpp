@@ -85,12 +85,16 @@ void ReaderGUI::process(H5::Group group, QPromise<void>& promise)
 
 void ReaderGUI::restore(QSettings& settings)
 {
-    
+    if (!settings.contains("path"))
+    {
+        return;
+    }
+    m_ui->treeView->setCurrentIndex(m_model->index(settings.value("path").toString()));
 }
 
 void ReaderGUI::save(QSettings& settings)
 {
-    
+    settings.setValue("path", m_model->fileInfo(m_ui->treeView->currentIndex()).absoluteFilePath());
 }
 
 bool ReaderGUI::check()

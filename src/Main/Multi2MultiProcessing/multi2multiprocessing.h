@@ -28,6 +28,7 @@ public:
     ~Multi2MultiProcessing();
 
     void setupWorkflow(const std::vector<std::pair<Multi2MultiInterface*, QJsonObject>>& steps);
+    void restore();
 
 signals:
     void enable(bool enabled);
@@ -38,7 +39,6 @@ public slots:
     void hasFinished();
 
 private:
-    void restore();
     void save();
     bool check();
     void execute();

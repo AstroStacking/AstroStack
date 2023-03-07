@@ -19,6 +19,7 @@ void Multi2MultiWorkflow::openProcess()
 {
     Multi2MultiProcessing* widget = new Multi2MultiProcessing(objectName());
     m_explorer->addSubWindow(widget);
+    widget->restore();
     widget->setupWorkflow(m_steps);
 }
 
