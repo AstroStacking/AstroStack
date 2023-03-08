@@ -12,7 +12,7 @@ class Multi2MultiProcessing;
 }
 
 class QFileSystemModel;
-class QProgressDialog;
+class DoubleProgressBar;
 
 namespace astro
 {
@@ -33,6 +33,8 @@ public:
 signals:
     void enable(bool enabled);
     void finished();
+    void startNewTask(int steps);
+    void setCurrentaskAdvancement(int value);
 
 public slots:
     void run();
@@ -44,7 +46,7 @@ private:
     void execute();
 
     std::unique_ptr<Ui::Multi2MultiProcessing> m_ui;
-    QProgressDialog* m_progressDialog{};
+    DoubleProgressBar* m_progressDialog{};
     QFutureWatcher<void> m_watcher;
 
     std::vector<Multi2MultiInterfaceGUI*> m_tasks;

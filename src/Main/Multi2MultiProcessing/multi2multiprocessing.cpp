@@ -1,5 +1,6 @@
 #include "multi2multiprocessing.h"
 #include "ui_multi2multiprocessing.h"
+#include <Common/doubleprogressbar.h>
 #include <Common/imagedata.h>
 #include <QtIO/input.h>
 #include <QtIO/output.h>
@@ -74,12 +75,14 @@ void Multi2MultiProcessing::execute()
 {
     m_ui->frame->setEnabled(false);
 
-    m_progressDialog = new QProgressDialog(tr("Processing."), tr("Cancel"), 0, m_tasks.size() + 1, this);
+    m_progressDialog = new DoubleProgressBar(windowTitle(), m_tasks.size() + 1, this);
     m_progressDialog->setAttribute(Qt::WA_DeleteOnClose);
 
-    connect(m_progressDialog, &QProgressDialog::canceled, &m_watcher, &QFutureWatcher<void>::cancel);
-    connect(&m_watcher, &QFutureWatcher<void>::progressValueChanged, m_progressDialog, &QProgressDialog::setValue);
-    connect(&m_watcher, &QFutureWatcher<void>::finished, m_progressDialog, &QProgressDialog::close);
+    connect(m_progressDialog, &DoubleProgressBar::cancel, &m_watcher, &QFutureWatcher<void>::cancel);
+    connect(&m_watcher, &QFutureWatcher<void>::finished, m_progressDialog, &DoubleProgressBar::close);
+    connect(this, &Multi2MultiProcessing::startNewTask, m_progressDialog, &DoubleProgressBar::startNewTask);
+    connect(this, &Multi2MultiProcessing::setCurrentaskAdvancement, m_progressDialog,
+            &DoubleProgressBar::setCurrentaskAdvancement);
 
     std::vector<Multi2MultiInterfaceGUI*> activeTasks;
     for (auto task : m_tasks)
@@ -103,7 +106,9 @@ void Multi2MultiProcessing::execute()
                 int i = 0;
                 for (auto task : activeTasks)
                 {
-                    task->process(h5file, promise);
+                    task->process(
+                            h5file, [this](int steps) { emit startNewTask(steps); },
+                            [this](int value) { emit setCurrentaskAdvancement(value); }, promise);
                     promise.setProgressValue(++i);
                     if (promise.isCanceled())
                     {
@@ -132,7 +137,7 @@ void Multi2MultiProcessing::restore()
         return;
     }
     parentWidget()->restoreGeometry(settings.value("geometry").toByteArray());
-    for(auto* task: m_tasks)
+    for (auto* task : m_tasks)
     {
         settings.beginGroup(task->getName());
         task->restore(settings);
@@ -146,7 +151,7 @@ void Multi2MultiProcessing::save()
     QSettings settings("AstroStack", "AstroStack");
     settings.beginGroup(windowTitle());
     settings.setValue("geometry", parentWidget()->saveGeometry());
-    for(auto* task: m_tasks)
+    for (auto* task : m_tasks)
     {
         settings.beginGroup(task->getName());
         task->save(settings);

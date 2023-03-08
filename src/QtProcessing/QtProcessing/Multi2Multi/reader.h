@@ -38,7 +38,8 @@ public:
 
     void setup(QJsonObject data) override;
     bool check() override;
-    void process(const H5::H5File& group, QPromise<void>& promise) override;
+    void process(const H5::H5File& group, const std::function<void(int)>& startNewTask,
+                 const std::function<void(int)>& updateTask, QPromise<void>& promise) override;
     void restore(QSettings& settings) override;
     void save(QSettings& settings) override;
 

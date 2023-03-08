@@ -26,7 +26,10 @@ public:
     ASTRO_QTPROCESSING_EXPORT virtual ~Multi2MultiInterfaceGUI();
 
     /// Process the pipeline based on a promise.
-    ASTRO_QTPROCESSING_EXPORT virtual void process(const H5::H5File& group, QPromise<void>& promise) = 0;
+    ASTRO_QTPROCESSING_EXPORT virtual void process(const H5::H5File& group,
+                                                   const std::function<void(int)>& startNewTask,
+                                                   const std::function<void(int)>& updateTask,
+                                                   QPromise<void>& promise) = 0;
     /// Setting up inouts and outputs variables
     ASTRO_QTPROCESSING_EXPORT virtual void setup(QJsonObject data);
 

@@ -63,6 +63,9 @@ bool Multi2MultiInterfaceGUI::isActive() const
     return isChecked();
 }
 
-QString Multi2MultiInterfaceGUI::getName() const {return m_name;}
+QString Multi2MultiInterfaceGUI::getName() const
+{
+    return m_name;
+}
 
 } // namespace astro

@@ -182,7 +182,7 @@ H5::DataSet writeTo(const ScalarImageType& img, const H5::Group& group, const st
 }
 
 H5::DataSet readTo(const std::vector<std::string>& filenames, itk::Size<Dimension> size, const H5::Group& group,
-                   const std::string& datasetName)
+                   const std::string& datasetName, std::optional<std::function<void(int)>> updateTask)
 {
     hsize_t imageDim[4]{1, size.at(0), size.at(1), PixelDimension};
     H5::DataSpace imgDataspace(4, imageDim);
@@ -201,6 +201,10 @@ H5::DataSet readTo(const std::vector<std::string>& filenames, itk::Size<Dimensio
         auto img = io::open(filenames[i]);
 
         dataset.write(img->GetBufferPointer(), H5::PredType::NATIVE_FLOAT, imgDataspace, fspace1);
+        if (updateTask)
+        {
+            (*updateTask)(i);
+        }
     }
 
     return dataset;

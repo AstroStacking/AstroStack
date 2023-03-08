@@ -55,9 +55,9 @@ void MaxStackingGUI::setup(QJsonObject data)
 {
     Multi2MultiInterfaceGUI::setup(data);
     auto inputs = data["Inputs"].toObject();
-    m_inputsDatasetName = inputs["data"].toObject()["dataset"].toString().toStdString();
+    m_inputsDatasetName = inputs["inputs"].toObject()["dataset"].toString().toStdString();
     auto outputs = data["Outputs"].toObject();
-    m_outputDatasetName = outputs["inputs"].toObject()["dataset"].toString().toStdString();
+    m_outputDatasetName = outputs["output"].toObject()["dataset"].toString().toStdString();
 }
 
 void MaxStackingGUI::outputFileBoxOpen()
@@ -136,7 +136,9 @@ void MaxStackingGUI::saveImg(const AstroImage& img)
     }
 }
 
-void MaxStackingGUI::process(const H5::H5File& group, QPromise<void>& promise)
+void MaxStackingGUI::process(const H5::H5File& group, const std::function<void(int)>& startNewTask,
+                             const std::function<void(int)>& updateTask, QPromise<void>& promise)
+try
 {
     H5::DataSet inputsDataset = group.openDataSet(m_inputsDatasetName);
 
@@ -157,11 +159,16 @@ void MaxStackingGUI::process(const H5::H5File& group, QPromise<void>& promise)
     H5::DataSpace outputSpace(3, outputImgDim);
     H5::DataSet outputDataset =
             hdf5::createDataset(m_outputDatasetName, outputSpace, H5::PredType::NATIVE_FLOAT, group);
+    startNewTask(dims[1]);
 
-    processing::stacking(inputsDataset, outputDataset, filters::stackers::Max<float>());
+    processing::stacking(inputsDataset, outputDataset, filters::stackers::Max<float>(), updateTask);
 
     AstroImage img;
     img.setImg(hdf5::extractFrom(outputDataset));
     saveImg(img);
+}
+catch (const std::exception& e)
+{
+    promise.setException(std::current_exception());
 }
 } // namespace astro

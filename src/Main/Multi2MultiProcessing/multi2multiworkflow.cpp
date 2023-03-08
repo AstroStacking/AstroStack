@@ -21,7 +21,7 @@ void Multi2MultiWorkflow::openProcess()
     m_explorer->addSubWindow(widget);
     widget->setupWorkflow(m_steps);
     widget->restore();
-    widget->setAttribute(Qt::WA_DeleteOnClose,true);
+    widget->setAttribute(Qt::WA_DeleteOnClose, true);
 }
 
 void Multi2MultiWorkflow::addStep(Multi2MultiInterface* plugin, QJsonObject object)

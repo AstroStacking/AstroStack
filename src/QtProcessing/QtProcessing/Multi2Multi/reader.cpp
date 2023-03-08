@@ -56,7 +56,9 @@ ReaderGUI::ReaderGUI(QWidget* parent)
 
 ReaderGUI::~ReaderGUI() = default;
 
-void ReaderGUI::process(const H5::H5File& group, QPromise<void>& promise)
+void ReaderGUI::process(const H5::H5File& group, const std::function<void(int)>& startNewTask,
+                        const std::function<void(int)>& updateTask, QPromise<void>& promise)
+try
 {
     auto indices = m_ui->treeView->selectionModel()->selectedIndexes();
 
@@ -64,7 +66,7 @@ void ReaderGUI::process(const H5::H5File& group, QPromise<void>& promise)
 
     for (auto index : indices)
     {
-        if(index.column() != 0)
+        if (index.column() != 0)
         {
             continue;
         }
@@ -75,6 +77,8 @@ void ReaderGUI::process(const H5::H5File& group, QPromise<void>& promise)
         throw std::runtime_error("No file selected");
     }
 
+    startNewTask(filenames.size());
+
     auto refImg = InputInterface::loadImg(filenames.front(), this);
     auto size = refImg.getImg()->GetRequestedRegion().GetSize();
 
@@ -84,7 +88,11 @@ void ReaderGUI::process(const H5::H5File& group, QPromise<void>& promise)
         transformedFilenames.push_back(filename.toStdString());
     }
 
-    astro::hdf5::readTo(transformedFilenames, size, group, m_outputDatasetName.toStdString());
+    astro::hdf5::readTo(transformedFilenames, size, group, m_outputDatasetName.toStdString(), updateTask);
+}
+catch (const std::exception& e)
+{
+    promise.setException(std::current_exception());
 }
 
 void ReaderGUI::restore(QSettings& settings)

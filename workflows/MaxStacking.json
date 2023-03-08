@@ -14,6 +14,9 @@
             "Type": "MaxStacking",
             "Inputs": {
                 "inputs": {"dataset": "inputs"}
+            },
+            "Outputs": {
+                "output": {"dataset": "output"}
             }
         }
     ]
