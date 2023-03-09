@@ -34,6 +34,7 @@ std::vector<size_t> histogram(const ImageTypePtr& img, size_t bins)
     imageToHistogramFilter->SetHistogramBinMinimum(lowerBound);
     imageToHistogramFilter->SetHistogramBinMaximum(upperBound);
     imageToHistogramFilter->SetHistogramSize(size);
+    imageToHistogramFilter->SetAutoMinimumMaximum(false);
     imageToHistogramFilter->Update();
     typename ImageToHistogramFilterType::HistogramType* histogram = imageToHistogramFilter->GetOutput();
 
@@ -53,7 +54,7 @@ float getMaxHistogram(const ImageTypePtr& img, double ratio)
     constexpr unsigned int MEAN_SIZE = 5;
     std::vector<size_t> hist = histogram(img, BINS);
     std::vector<double> histFilt(BINS, 0);
-    for (size_t i = MEAN_SIZE; i < BINS - MEAN_SIZE / 2; ++i)
+    for (size_t i = MEAN_SIZE / 2; i < BINS - MEAN_SIZE / 2; ++i)
     {
         histFilt[i] = static_cast<double>(std::accumulate(hist.data() + i - MEAN_SIZE / 2,
                                                           hist.data() + i + MEAN_SIZE / 2 + 1, 0)) /
