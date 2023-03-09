@@ -21,10 +21,20 @@ QStringList ITKOutputPlugin::filters() const
 void ITKOutputPlugin::save(ImageTypePtr img, QString filename, QWidget* parent) const
 try
 {
-    io::save<uint8_t>(img, filename.toStdString());
+    io::save<uint16_t>(img, filename.toStdString());
 }
 catch (...)
 {
+    try
+    {
+        io::save<uint8_t>(img, filename.toStdString());
+    }
+    catch (...)
+    {
+        QMessageBox msgBox;
+        msgBox.setText(tr("Could not save image ") + filename + ".");
+        msgBox.exec();
+    }
     QMessageBox msgBox;
     msgBox.setText(tr("Could not save image ") + filename + ".");
     msgBox.exec();
