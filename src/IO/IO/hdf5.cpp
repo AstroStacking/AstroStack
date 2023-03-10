@@ -190,7 +190,17 @@ H5::DataSet writeTo(const ImageType& img, const H5::DataSet& dataset, size_t ind
     fspace1.selectHyperslab(H5S_SELECT_SET, currSlab, offset);
 
     dataset.write(img.GetBufferPointer(), H5::PredType::NATIVE_FLOAT, dataset.getSpace(), fspace1);
+}
 
+H5::DataSet writeTo(const ScalarImageType& img, const H5::DataSet& dataset, size_t index)
+{
+    H5::DataSpace fspace1 = dataset.getSpace();
+    auto size = img.GetRequestedRegion().GetSize();
+    hsize_t currSlab[3]{1, size.at(0), size.at(1)};
+    hsize_t offset[3]{index, 0, 0};
+    fspace1.selectHyperslab(H5S_SELECT_SET, currSlab, offset);
+
+    dataset.write(img.GetBufferPointer(), H5::PredType::NATIVE_FLOAT, dataset.getSpace(), fspace1);
 }
 
 H5::DataSet readTo(const std::vector<std::string>& filenames, itk::Size<Dimension> size, const H5::Group& group,
@@ -254,5 +264,34 @@ H5::DataSet createDataset(const std::string& outputDatasetName, const H5::DataSp
     }
     return outputDataset;
 }
+
+std::vector<std::pair<double, double>> readGraph(const H5::DataSet& dataset)
+{
+    H5::DataSpace dataspace = dataset.getSpace();
+    int ndims = dataspace.getSimpleExtentNdims();
+    if (ndims != 2)
+    {
+        throw std::runtime_error("Wrong number of dimensions");
+    }
+    hsize_t dims[2];
+    ndims = dataspace.getSimpleExtentDims(dims, nullptr);
+    if (dims[1] <= 2)
+    {
+        throw std::runtime_error("Wrong number of columns " + std::to_string(dims[1]));
+    }
+
+    std::vector<double> buffer(dims[0] * dims[1]);
+    dataset.read(buffer.data(), H5::PredType::NATIVE_DOUBLE, dataspace, dataspace);
+
+    std::vector<std::pair<double, double>> data(dims[0]);
+    for (size_t i = 0; i < dims[0]; ++i)
+    {
+        data[i].first = buffer[i * dims[1]];
+        data[i].second = buffer[i * dims[1] + 1];
+    }
+
+    return data;
+}
+
 } // namespace hdf5
 } // namespace astro

@@ -148,7 +148,7 @@ void RobustMeanStackingGUI::saveImg(const AstroImage& img)
 }
 
 void RobustMeanStackingGUI::process(const H5::H5File& group, const std::function<void(int)>& startNewTask,
-                             const std::function<void(int)>& updateTask, QPromise<void>& promise)
+                                    const std::function<void(int)>& updateTask, QPromise<void>& promise)
 try
 {
     H5::DataSet inputsDataset = group.openDataSet(m_inputsDatasetName);
@@ -172,7 +172,8 @@ try
             hdf5::createDataset(m_outputDatasetName, outputSpace, H5::PredType::NATIVE_FLOAT, group);
     startNewTask(dims[1]);
 
-    processing::stacking(inputsDataset, outputDataset, filters::stackers::RobustMean<float>(m_ui->variance->value()), updateTask);
+    processing::stacking(inputsDataset, outputDataset, filters::stackers::RobustMean<float>(m_ui->variance->value()),
+                         updateTask);
 
     AstroImage img;
     img.setImg(hdf5::extractFrom(outputDataset));

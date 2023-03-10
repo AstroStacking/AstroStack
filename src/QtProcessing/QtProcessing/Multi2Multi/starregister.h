@@ -42,7 +42,7 @@ public:
                  const std::function<void(int)>& updateTask, QPromise<void>& promise) override;
     void restore(QSettings& settings) override;
     void save(QSettings& settings) override;
-    
+
 private slots:
     void setMinStarsValue(double val);
     void setApproximateMinStarsValue(int val);

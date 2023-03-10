@@ -14,34 +14,6 @@
 
 #include <H5Cpp.h>
 
-std::vector<std::pair<double, double>> read(H5::DataSet dataset)
-{
-    H5::DataSpace dataspace = dataset.getSpace();
-    int ndims = dataspace.getSimpleExtentNdims();
-    if (ndims != 2)
-    {
-        throw std::runtime_error("Wrong number of dimensions");
-    }
-    hsize_t dims[2];
-    ndims = dataspace.getSimpleExtentDims(dims, nullptr);
-    if (dims[1] <= 2)
-    {
-        throw std::runtime_error("Wrong number of columns " + std::to_string(dims[1]));
-    }
-
-    std::vector<double> buffer(dims[0] * dims[1]);
-    dataset.read(buffer.data(), H5::PredType::NATIVE_DOUBLE, dataspace, dataspace);
-
-    std::vector<std::pair<double, double>> data(dims[0]);
-    for (size_t i = 0; i < dims[0]; ++i)
-    {
-        data[i].first = buffer[i * dims[1]];
-        data[i].second = buffer[i * dims[1] + 1];
-    }
-
-    return data;
-}
-
 
 int main(int argc, char** argv)
 {
@@ -120,8 +92,8 @@ int main(int argc, char** argv)
     astro::processing::starDetection(h5file.openDataSet("fixGrey"), h5file, "fixStar", minStars, maxStars);
     astro::processing::starDetection(h5file.openDataSet("movingGrey"), h5file, "movingStar", minStars, maxStars);
 
-    std::vector<std::pair<double, double>> fixGraph = read(h5file.openDataSet("fixStar"));
-    std::vector<std::pair<double, double>> movingGraph = read(h5file.openDataSet("movingStar"));
+    std::vector<std::pair<double, double>> fixGraph = astro::hdf5::readGraph(h5file.openDataSet("fixStar"));
+    std::vector<std::pair<double, double>> movingGraph = astro::hdf5::readGraph(h5file.openDataSet("movingStar"));
 
     std::vector<std::pair<size_t, size_t>> matches =
             astro::processing::graphmatching(fixGraph, movingGraph, fullGraph, maxRatio);

@@ -79,7 +79,7 @@ void StarRegisterGUI::setApproximateFullGraphValue(int val)
 }
 
 void StarRegisterGUI::process(const H5::H5File& group, const std::function<void(int)>& startNewTask,
-                        const std::function<void(int)>& updateTask, QPromise<void>& promise)
+                              const std::function<void(int)>& updateTask, QPromise<void>& promise)
 try
 {
     H5::DataSet inputs = group.openDataSet(m_inputsDatasetName);
@@ -93,20 +93,20 @@ try
     ndims = dataspace.getSimpleExtentDims(dims, nullptr);
 
     startNewTask(dims[0] * 4 - 1);
-    
+
     H5::Group intermediateGroup = hdf5::getOrCreateGroup(m_intermediateGroupName.toStdString(), group);
-    
+
     // Grey all images, save in inter/greys
     // Star detection, save in inter/stars
     // Create graphs, save in inter/graphs
     // Create transformation, apply on image
-    
+
     H5::DataSet outputDataset =
             hdf5::createDataset(m_outputsDatasetName.toStdString(), dataspace, H5::PredType::NATIVE_FLOAT, group);
 
     // for()
     // writeTo
-    
+
     /*
      astro::ScalarImageTypePtr fixGrey = astro::processing::grey(inputs, 0, h5file, "fixGrey");
      astro::ScalarImageTypePtr movingGrey = astro::processing::grey(inputs, 1, h5file, "movingGrey");
@@ -138,13 +138,9 @@ catch (const std::exception& e)
     promise.setException(std::current_exception());
 }
 
-void StarRegisterGUI::restore(QSettings& settings)
-{
-}
+void StarRegisterGUI::restore(QSettings& settings) {}
 
-void StarRegisterGUI::save(QSettings& settings)
-{
-}
+void StarRegisterGUI::save(QSettings& settings) {}
 
 bool StarRegisterGUI::check()
 {
