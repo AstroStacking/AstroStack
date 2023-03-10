@@ -57,7 +57,11 @@ private:
     std::unique_ptr<Ui::StarRegister> m_ui;
 
     std::string m_inputsDatasetName;
-    QString m_outputDatasetName;
+    QString m_intermediateGroupName;
+    QString m_greyDatasetName;
+    QString m_starsGroupName;
+    QString m_graphGroupName;
+    QString m_outputsDatasetName;
 };
 
 } // namespace astro

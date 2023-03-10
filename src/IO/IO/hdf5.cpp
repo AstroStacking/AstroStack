@@ -181,6 +181,18 @@ H5::DataSet writeTo(const ScalarImageType& img, const H5::Group& group, const st
     return dataset;
 }
 
+H5::DataSet writeTo(const ImageType& img, const H5::DataSet& dataset, size_t index)
+{
+    H5::DataSpace fspace1 = dataset.getSpace();
+    auto size = img.GetRequestedRegion().GetSize();
+    hsize_t currSlab[4]{1, size.at(0), size.at(1), PixelDimension};
+    hsize_t offset[4]{index, 0, 0, 0};
+    fspace1.selectHyperslab(H5S_SELECT_SET, currSlab, offset);
+
+    dataset.write(img.GetBufferPointer(), H5::PredType::NATIVE_FLOAT, dataset.getSpace(), fspace1);
+
+}
+
 H5::DataSet readTo(const std::vector<std::string>& filenames, itk::Size<Dimension> size, const H5::Group& group,
                    const std::string& datasetName, std::optional<std::function<void(int)>> updateTask)
 {
