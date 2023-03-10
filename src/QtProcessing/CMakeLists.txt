@@ -15,6 +15,10 @@ FILE(GLOB ASTRO_QTPROCESSING_SRC
     QtProcessing/Multi2Multi/medianstacking.ui
     QtProcessing/Multi2Multi/reader.cpp
     QtProcessing/Multi2Multi/reader.ui
+    QtProcessing/Multi2Multi/robustmeanstacking.cpp
+    QtProcessing/Multi2Multi/robustmeanstacking.ui
+    QtProcessing/Multi2Multi/starregister.cpp
+    QtProcessing/Multi2Multi/starregister.ui
     QtProcessing/mono2monointerface.cpp
     QtProcessing/multi2multiinterface.cpp
 )
@@ -28,6 +32,8 @@ FILE(GLOB ASTRO_QTPROCESSING_HEADERS
     QtProcessing/Multi2Multi/maxstacking.h
     QtProcessing/Multi2Multi/medianstacking.h
     QtProcessing/Multi2Multi/reader.h
+    QtProcessing/Multi2Multi/robustmeanstacking.h
+    QtProcessing/Multi2Multi/starregister.h
     QtProcessing/config.h
     QtProcessing/mono2monointerface.h
     QtProcessing/multi2multiinterface.h

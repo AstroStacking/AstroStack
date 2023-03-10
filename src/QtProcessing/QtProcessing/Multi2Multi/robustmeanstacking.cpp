@@ -1,7 +1,7 @@
-#include "medianstacking.h"
+#include "robustmeanstacking.h"
 #include "../ui_multi2multiinterface.h"
-#include "ui_medianstacking.h"
-#include <Algos/Filters/Stackers/median.h>
+#include "ui_robustmeanstacking.h"
+#include <Algos/Filters/Stackers/robustmean.h>
 #include <IO/hdf5.h>
 #include <Processing/stacking.h>
 #include <QtIO/output.h>
@@ -14,43 +14,55 @@
 namespace astro
 {
 
-MedianStacking::~MedianStacking() = default;
+RobustMeanStacking::~RobustMeanStacking() = default;
 
-QString MedianStacking::name() const
+QString RobustMeanStacking::name() const
 {
-    return "MedianStacking";
+    return "RobustMeanStacking";
 }
 
-QString MedianStacking::explanation() const
+QString RobustMeanStacking::explanation() const
 {
-    return tr("Computes the median of a pixel among images");
+    return tr("Computes the robust mean of a pixel among images");
 }
 
-Multi2MultiInterfaceGUI* MedianStacking::generateGUI(QWidget* parent) const
+Multi2MultiInterfaceGUI* RobustMeanStacking::generateGUI(QWidget* parent) const
 {
-    return new MedianStackingGUI(parent);
+    return new RobustMeanStackingGUI(parent);
 }
 
-MedianStackingGUI::MedianStackingGUI(QWidget* parent)
+RobustMeanStackingGUI::RobustMeanStackingGUI(QWidget* parent)
     : Multi2MultiInterfaceGUI(parent)
-    , m_ui(std::make_unique<Ui::MedianStacking>())
+    , m_ui(std::make_unique<Ui::RobustMeanStacking>())
 {
     QWidget* child = new QWidget(this);
     m_ui->setupUi(child);
     m_multiUi->setupUi(this, child);
-    setTitle(tr("MedianStacking"));
+    setTitle(tr("RobustMeanStackingGUI"));
 
     setupSlots();
 }
 
-MedianStackingGUI::~MedianStackingGUI() = default;
+RobustMeanStackingGUI::~RobustMeanStackingGUI() = default;
 
-void MedianStackingGUI::setupSlots()
+void RobustMeanStackingGUI::setupSlots()
 {
-    connect(m_ui->filenameOpen, &QPushButton::clicked, this, &MedianStackingGUI::outputFileBoxOpen);
+    connect(m_ui->filenameOpen, &QPushButton::clicked, this, &RobustMeanStackingGUI::outputFileBoxOpen);
+    connect(m_ui->variance, &QDoubleSpinBox::valueChanged, this, &RobustMeanStackingGUI::setVarianceValue);
+    connect(m_ui->varianceSlider, &QSlider::valueChanged, this, &RobustMeanStackingGUI::setApproximateVarianceValue);
 }
 
-void MedianStackingGUI::setup(QJsonObject data)
+void RobustMeanStackingGUI::setVarianceValue(double val)
+{
+    m_ui->varianceSlider->setValue(static_cast<int>(val));
+}
+
+void RobustMeanStackingGUI::setApproximateVarianceValue(int val)
+{
+    m_ui->variance->setValue(val);
+}
+
+void RobustMeanStackingGUI::setup(QJsonObject data)
 {
     Multi2MultiInterfaceGUI::setup(data);
     auto inputs = data["Inputs"].toObject();
@@ -59,12 +71,12 @@ void MedianStackingGUI::setup(QJsonObject data)
     m_outputDatasetName = outputs["output"].toObject()["dataset"].toString().toStdString();
 }
 
-void MedianStackingGUI::outputFileBoxOpen()
+void RobustMeanStackingGUI::outputFileBoxOpen()
 {
     m_ui->filename->setText(QFileDialog::getSaveFileName(this, tr("Save output"), m_ui->filename->text()));
 }
 
-void MedianStackingGUI::restore(QSettings& settings)
+void RobustMeanStackingGUI::restore(QSettings& settings)
 {
     if (!settings.contains("file"))
     {
@@ -73,12 +85,12 @@ void MedianStackingGUI::restore(QSettings& settings)
     m_ui->filename->setText(settings.value("file").toString());
 }
 
-void MedianStackingGUI::save(QSettings& settings)
+void RobustMeanStackingGUI::save(QSettings& settings)
 {
     settings.setValue("file", m_ui->filename->text());
 }
 
-bool MedianStackingGUI::check()
+bool RobustMeanStackingGUI::check()
 {
     QFileInfo info(m_ui->filename->text());
     if (!info.exists())
@@ -111,7 +123,7 @@ bool MedianStackingGUI::check()
     return true;
 }
 
-void MedianStackingGUI::setNextFilename(QFileInfo info, QString basename, long inc)
+void RobustMeanStackingGUI::setNextFilename(QFileInfo info, QString basename, long inc)
 {
     while (true)
     {
@@ -126,7 +138,7 @@ void MedianStackingGUI::setNextFilename(QFileInfo info, QString basename, long i
     }
 }
 
-void MedianStackingGUI::saveImg(const AstroImage& img)
+void RobustMeanStackingGUI::saveImg(const AstroImage& img)
 {
     QFileInfo info(m_ui->filename->text());
     if (!info.exists() || m_overwriteIfExists)
@@ -135,7 +147,7 @@ void MedianStackingGUI::saveImg(const AstroImage& img)
     }
 }
 
-void MedianStackingGUI::process(const H5::H5File& group, const std::function<void(int)>& startNewTask,
+void RobustMeanStackingGUI::process(const H5::H5File& group, const std::function<void(int)>& startNewTask,
                              const std::function<void(int)>& updateTask, QPromise<void>& promise)
 try
 {
@@ -160,7 +172,7 @@ try
             hdf5::createDataset(m_outputDatasetName, outputSpace, H5::PredType::NATIVE_FLOAT, group);
     startNewTask(dims[1]);
 
-    processing::stacking(inputsDataset, outputDataset, filters::stackers::Median<float>(), updateTask);
+    processing::stacking(inputsDataset, outputDataset, filters::stackers::RobustMean<float>(m_ui->variance->value()), updateTask);
 
     AstroImage img;
     img.setImg(hdf5::extractFrom(outputDataset));

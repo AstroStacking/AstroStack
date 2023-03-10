@@ -3,7 +3,6 @@
 #include "ui_maxstacking.h"
 #include <Algos/Filters/Stackers/max.h>
 #include <IO/hdf5.h>
-#include <Processing/chromasmoothing.h>
 #include <Processing/stacking.h>
 #include <QtIO/output.h>
 

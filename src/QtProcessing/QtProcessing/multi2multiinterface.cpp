@@ -3,7 +3,10 @@
 #include <Plugin/pluginfactory.h>
 #include <QtIO/output.h>
 #include <QtProcessing/Multi2Multi/maxstacking.h>
+#include <QtProcessing/Multi2Multi/medianstacking.h>
 #include <QtProcessing/Multi2Multi/reader.h>
+#include <QtProcessing/Multi2Multi/robustmeanstacking.h>
+#include <QtProcessing/Multi2Multi/starregister.h>
 
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
@@ -23,6 +26,18 @@ std::map<QString, Multi2MultiInterface*> scanPlugins()
     {
         auto* stacker = new MaxStacking();
         plugins.emplace(stacker->name(), stacker);
+    }
+    {
+        auto* stacker = new MedianStacking();
+        plugins.emplace(stacker->name(), stacker);
+    }
+    {
+        auto* stacker = new RobustMeanStacking();
+        plugins.emplace(stacker->name(), stacker);
+    }
+    {
+        auto* starRegister = new StarRegister();
+        plugins.emplace(starRegister->name(), starRegister);
     }
     for (auto object : PluginFactory::get().getPluginsFor<Multi2MultiInterface*>())
     {
