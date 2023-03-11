@@ -135,8 +135,8 @@ void MedianStackingGUI::saveImg(const AstroImage& img)
     }
 }
 
-void MedianStackingGUI::process(const H5::H5File& group, const StartTask& startNewTask,
-                                const UpdateTask& updateTask, QPromise<void>& promise)
+void MedianStackingGUI::process(const H5::H5File& group, const StartTask& startNewTask, const UpdateTask& updateTask,
+                                QPromise<void>& promise)
 try
 {
     H5::DataSet inputsDataset = group.openDataSet(m_inputsDatasetName);

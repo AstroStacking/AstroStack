@@ -94,12 +94,12 @@ void StarRegisterGUI::setApproximateMaxRatioValue(int val)
     m_ui->maxRatio->setValue(val / 100.);
 }
 
-void StarRegisterGUI::process(const H5::H5File& group, const StartTask& startNewTask,
-                              const UpdateTask& updateTask, QPromise<void>& promise)
+void StarRegisterGUI::process(const H5::H5File& group, const StartTask& startNewTask, const UpdateTask& updateTask,
+                              QPromise<void>& promise)
 try
 {
-    H5::DataSet inputs = group.openDataSet(m_inputsDatasetName);
-    H5::DataSpace dataspace = inputs.getSpace();
+    H5::DataSet inputsDataset = group.openDataSet(m_inputsDatasetName);
+    H5::DataSpace dataspace = inputsDataset.getSpace();
     int ndims = dataspace.getSimpleExtentNdims();
     if (ndims != 4)
     {
@@ -110,6 +110,8 @@ try
 
     int minStars = static_cast<int>(m_ui->minStars->value());
     int maxStars = static_cast<int>(m_ui->maxStars->value());
+    double maxRatio = m_ui->maxRatio->value();
+    int fullGraph = static_cast<int>(m_ui->fullGraph->value());
 
     startNewTask(dims[0] * 4 - 1);
 
@@ -123,14 +125,13 @@ try
     // create grey dataset
     for (size_t index = 0; index < dims[0]; ++index)
     {
-        ImageTypePtr img = hdf5::extractFrom(inputs, index);
+        ImageTypePtr img = hdf5::extractFrom(inputsDataset, index);
         auto outputImg = processing::grey(img);
         hdf5::writeTo(*outputImg, greyDataset, index);
         updateTask(index);
     }
 
     H5::Group starGroup = hdf5::getOrCreateGroup(m_starsGroupName.toStdString(), intermediateGroup);
-
     // Star detection, save in inter/stars
     for (size_t index = 0; index < dims[0]; ++index)
     {
@@ -139,62 +140,81 @@ try
     }
 
     size_t middle = dims[0] / 2;
-    
+    std::vector<std::pair<double, double>> middleGraph = hdf5::readGraph(starGroup.openDataSet(std::to_string(middle)));
+    H5::Group graphGroup = hdf5::getOrCreateGroup(m_graphGroupName.toStdString(), intermediateGroup);
     // Create graphs, save in inter/graphs
     for (size_t index = 0; index < middle; ++index)
     {
+        std::vector<std::pair<double, double>> currentGraph = hdf5::readGraph(starGroup.openDataSet(std::to_string(index)));
+
+        std::vector<std::pair<size_t, size_t>> matches =
+                astro::processing::graphmatching(middleGraph, currentGraph, fullGraph, maxRatio);
+
+        std::vector<std::pair<double, double>> middleStars;
+        std::vector<std::pair<double, double>> currentStars;
+        for (auto pair : matches)
+        {
+            middleStars.push_back(middleGraph[pair.first]);
+            currentStars.push_back(currentGraph[pair.second]);
+        }
+        hdf5::writeGraph(middleStars, graphGroup, "middle" + std::to_string(index));
+        hdf5::writeGraph(currentStars, graphGroup, "current" + std::to_string(index));
+
         updateTask(index + 2 * dims[0]);
     }
     for (size_t index = middle + 1; index < dims[0]; ++index)
     {
+        std::vector<std::pair<double, double>> currentGraph = hdf5::readGraph(starGroup.openDataSet(std::to_string(index)));
+
+        std::vector<std::pair<size_t, size_t>> matches =
+                astro::processing::graphmatching(middleGraph, currentGraph, fullGraph, maxRatio);
+
+        std::vector<std::pair<double, double>> middleStars;
+        std::vector<std::pair<double, double>> currentStars;
+        for (auto pair : matches)
+        {
+            middleStars.push_back(middleGraph[pair.first]);
+            currentStars.push_back(currentGraph[pair.second]);
+        }
+        hdf5::writeGraph(middleStars, graphGroup, "middle" + std::to_string(index));
+        hdf5::writeGraph(currentStars, graphGroup, "current" + std::to_string(index));
+
         updateTask(index + 2 * dims[0] + middle);
     }
 
-    H5::DataSet outputDataset = hdf5::createDataset(m_outputsDatasetName.toStdString(), dataspace,
-                                                  H5::PredType::NATIVE_FLOAT, group);
+    H5::DataSet outputDataset =
+            hdf5::createDataset(m_outputsDatasetName.toStdString(), dataspace, H5::PredType::NATIVE_FLOAT, group);
 
     // Create transformation, apply on image
+    ImageTypePtr middleImg = hdf5::extractFrom(inputsDataset, middle);
     for (size_t index = 0; index < middle; ++index)
     {
+        ImageTypePtr img = hdf5::extractFrom(inputsDataset, index);
+        std::vector<std::pair<double, double>> middleStars = hdf5::readGraph(graphGroup.openDataSet("middle" + std::to_string(index)));
+        std::vector<std::pair<double, double>> currentStars = hdf5::readGraph(graphGroup.openDataSet("current" + std::to_string(index)));
+        ImageTypePtr registeredImg =
+                processing::registerImages(middleImg, img, middleStars, currentStars);
+
+        hdf5::writeTo(*img, outputDataset, index);
         updateTask(index + 3 * dims[0]);
     }
     {
+        ImageTypePtr middleImg = hdf5::extractFrom(inputsDataset, middle);
+        hdf5::writeTo(*middleImg, outputDataset, middle);
         updateTask(3 * dims[0] + middle);
     }
     // Copy middle image
     for (size_t index = middle + 1; index < dims[0]; ++index)
     {
+        ImageTypePtr img = hdf5::extractFrom(inputsDataset, index);
+        std::vector<std::pair<double, double>> middleStars = hdf5::readGraph(graphGroup.openDataSet("middle" + std::to_string(index)));
+        std::vector<std::pair<double, double>> currentStars = hdf5::readGraph(graphGroup.openDataSet("current" + std::to_string(index)));
+        ImageTypePtr registeredImg =
+                processing::registerImages(middleImg, img, middleStars, currentStars);
+
+        hdf5::writeTo(*img, outputDataset, index);
         updateTask(index + 3 * dims[0] + middle + 1);
     }
-
-    // for()
-    // writeTo
-
-    /*
-     astro::ScalarImageTypePtr fixGrey = astro::processing::grey(inputs, 0, h5file, "fixGrey");
-     astro::ScalarImageTypePtr movingGrey = astro::processing::grey(inputs, 1, h5file, "movingGrey");
-
-     astro::processing::starDetection(h5file.openDataSet("fixGrey"), h5file, "fixStar", minStars, maxStars);
-     astro::processing::starDetection(h5file.openDataSet("movingGrey"), h5file, "movingStar", minStars, maxStars);
-
-     std::vector<std::pair<double, double>> fixGraph = read(h5file.openDataSet("fixStar"));
-     std::vector<std::pair<double, double>> movingGraph = read(h5file.openDataSet("movingStar"));
-
-     std::vector<std::pair<size_t, size_t>> matches =
-             astro::processing::graphmatching(fixGraph, movingGraph, fullGraph, maxRatio);
-
-     std::vector<std::pair<double, double>> fixStars;
-     std::vector<std::pair<double, double>> movingStars;
-     for (auto pair : matches)
-     {
-         fixStars.push_back(fixGraph[pair.first]);
-         movingStars.push_back(movingGraph[pair.second]);
-     }
-
-     astro::ImageTypePtr outputImg =
-             astro::processing::registerImages(fixImg.getImg(), movingImg.getImg(), fixStars, movingStars);
-
-     */
 }
 catch (const std::exception& e)
 {

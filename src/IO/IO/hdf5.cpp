@@ -346,5 +346,16 @@ std::vector<std::pair<double, double>> readGraph(const H5::DataSet& dataset)
     return data;
 }
 
+void writeGraph(const std::vector<std::pair<double, double>>& graph, const H5::Group& h5file,
+                const std::string& datasetName)
+{
+    // Output data
+    hsize_t outputImgDim[2]{graph.size() / 2, 2};
+    H5::DataSpace outputSpace(2, outputImgDim);
+    // output list
+    H5::DataSet outputDataset = h5file.createDataSet(datasetName, H5::PredType::NATIVE_DOUBLE, outputSpace);
+    outputDataset.write(graph.data(), H5::PredType::NATIVE_DOUBLE, outputSpace, outputSpace);
+}
+
 } // namespace hdf5
 } // namespace astro

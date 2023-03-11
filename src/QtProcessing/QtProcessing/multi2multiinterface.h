@@ -24,15 +24,13 @@ class Multi2MultiInterfaceGUI : public QGroupBox
 public:
     ASTRO_QTPROCESSING_EXPORT Multi2MultiInterfaceGUI(QWidget* parent);
     ASTRO_QTPROCESSING_EXPORT virtual ~Multi2MultiInterfaceGUI();
-    
+
     using StartTask = std::function<void(int)>;
     using UpdateTask = std::function<void(int)>;
 
     /// Process the pipeline based on a promise.
-    ASTRO_QTPROCESSING_EXPORT virtual void process(const H5::H5File& group,
-                                                   const StartTask& startNewTask,
-                                                   const UpdateTask& updateTask,
-                                                   QPromise<void>& promise) = 0;
+    ASTRO_QTPROCESSING_EXPORT virtual void process(const H5::H5File& group, const StartTask& startNewTask,
+                                                   const UpdateTask& updateTask, QPromise<void>& promise) = 0;
     /// Setting up inouts and outputs variables
     ASTRO_QTPROCESSING_EXPORT virtual void setup(QJsonObject data);
 
