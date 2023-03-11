@@ -19,13 +19,10 @@ namespace processing
 namespace
 {
 constexpr int MAX_ITERATIONS{50};
-}
 
-ScalarImageTypePtr starDetection(const H5::DataSet& input, H5::Group& output, const std::string& dataset,
+ScalarImageTypePtr starDetection(const ScalarImageTypePtr& inputImg, H5::Group& output, const std::string& dataset,
                                  int32_t minStars, int32_t maxStars)
 {
-    auto inputImg = astro::hdf5::extractScalarFrom(input);
-
     using BinaryThresholdImageFilterType = itk::BinaryThresholdImageFilter<ScalarImageType, ScalarIntegerImageType>;
     using ConnectedComponentImageFilterType =
             itk::ConnectedComponentImageFilter<ScalarIntegerImageType, ScalarIntegerImageType>;
@@ -108,5 +105,23 @@ ScalarImageTypePtr starDetection(const H5::DataSet& input, H5::Group& output, co
 
     return filter->GetOutput();
 }
+} // namespace
+
+ScalarImageTypePtr starDetection(const H5::DataSet& input, H5::Group& output, const std::string& dataset,
+                                 int32_t minStars, int32_t maxStars)
+{
+    auto inputImg = astro::hdf5::extractScalarFrom(input);
+
+    return starDetection(inputImg, output, dataset, minStars, maxStars);
+}
+
+ScalarImageTypePtr starDetection(const H5::DataSet& input, size_t index, H5::Group& output, const std::string& dataset,
+                                 int32_t minStars, int32_t maxStars)
+{
+    auto inputImg = astro::hdf5::extractScalarFrom(input);
+
+    return starDetection(inputImg, output, dataset, minStars, maxStars);
+}
+
 } // namespace processing
 } // namespace astro

@@ -1,6 +1,10 @@
 #include "starregister.h"
 #include "../ui_multi2multiinterface.h"
 #include "ui_starregister.h"
+#include <Processing/graphmatching.h>
+#include <Processing/grey.h>
+#include <Processing/register.h>
+#include <Processing/stardetection.h>
 
 #include <QtCore/QJsonObject>
 
@@ -46,6 +50,8 @@ void StarRegisterGUI::setupSlots()
     connect(m_ui->maxStarsSlider, &QSlider::valueChanged, this, &StarRegisterGUI::setApproximateMaxStarsValue);
     connect(m_ui->fullGraph, &QDoubleSpinBox::valueChanged, this, &StarRegisterGUI::setFullGraphValue);
     connect(m_ui->fullGraphSlider, &QSlider::valueChanged, this, &StarRegisterGUI::setApproximateFullGraphValue);
+    connect(m_ui->maxRatio, &QDoubleSpinBox::valueChanged, this, &StarRegisterGUI::setMaxRatioValue);
+    connect(m_ui->maxRatioSlider, &QSlider::valueChanged, this, &StarRegisterGUI::setApproximateMaxRatioValue);
 }
 
 void StarRegisterGUI::setMinStarsValue(double val)
@@ -78,6 +84,16 @@ void StarRegisterGUI::setApproximateFullGraphValue(int val)
     m_ui->fullGraph->setValue(val);
 }
 
+void StarRegisterGUI::setMaxRatioValue(double val)
+{
+    m_ui->maxRatioSlider->setValue(static_cast<int>(val * 100));
+}
+
+void StarRegisterGUI::setApproximateMaxRatioValue(int val)
+{
+    m_ui->maxRatio->setValue(val / 100.);
+}
+
 void StarRegisterGUI::process(const H5::H5File& group, const std::function<void(int)>& startNewTask,
                               const std::function<void(int)>& updateTask, QPromise<void>& promise)
 try
@@ -92,14 +108,56 @@ try
     hsize_t dims[4];
     ndims = dataspace.getSimpleExtentDims(dims, nullptr);
 
+    int minStars = static_cast<int>(m_ui->minStars->value());
+    int maxStars = static_cast<int>(m_ui->maxStars->value());
+
     startNewTask(dims[0] * 4 - 1);
 
     H5::Group intermediateGroup = hdf5::getOrCreateGroup(m_intermediateGroupName.toStdString(), group);
 
     // Grey all images, save in inter/greys
+    hsize_t greyDims[3]{dims[0], dims[1], dims[2]};
+    H5::DataSpace greyDataspace(3, greyDims);
+    H5::DataSet greyDataset = hdf5::createDataset(m_greyDatasetName.toStdString(), greyDataspace,
+                                                  H5::PredType::NATIVE_FLOAT, intermediateGroup);
+    // create grey dataset
+    for (size_t index = 0; index < dims[0]; ++index)
+    {
+        ImageTypePtr img = hdf5::extractFrom(inputs, index);
+        auto outputImg = processing::grey(img);
+        hdf5::writeTo(*outputImg, greyDataset, index);
+        updateTask(index);
+    }
+
+    H5::Group starGroup = hdf5::getOrCreateGroup(m_starsGroupName.toStdString(), intermediateGroup);
+
     // Star detection, save in inter/stars
+    for (size_t index = 0; index < dims[0]; ++index)
+    {
+        processing::starDetection(greyDataset, index, starGroup, std::to_string(index), minStars, maxStars);
+        updateTask(index + dims[0]);
+    }
+
     // Create graphs, save in inter/graphs
+    for (size_t index = 0; index < dims[0] / 2; ++index)
+    {
+        updateTask(index + 2 * dims[0]);
+    }
+    for (size_t index = dims[0] / 2 + 1; index < dims[0]; ++index)
+    {
+        updateTask(index + 2 * dims[0] + dims[0] / 2);
+    }
+
     // Create transformation, apply on image
+    for (size_t index = 0; index < dims[0] / 2; ++index)
+    {
+        updateTask(index + 3 * dims[0]);
+    }
+    // Copy middle image
+    for (size_t index = dims[0] / 2 + 1; index < dims[0]; ++index)
+    {
+        updateTask(index + 3 * dims[0] + dims[0] / 2);
+    }
 
     H5::DataSet outputDataset =
             hdf5::createDataset(m_outputsDatasetName.toStdString(), dataspace, H5::PredType::NATIVE_FLOAT, group);

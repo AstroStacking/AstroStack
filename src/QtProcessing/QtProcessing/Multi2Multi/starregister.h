@@ -50,6 +50,8 @@ private slots:
     void setApproximateMaxStarsValue(int val);
     void setFullGraphValue(double val);
     void setApproximateFullGraphValue(int val);
+    void setMaxRatioValue(double val);
+    void setApproximateMaxRatioValue(int val);
 
 private:
     void setupSlots();
