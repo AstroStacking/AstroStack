@@ -94,8 +94,8 @@ void StarRegisterGUI::setApproximateMaxRatioValue(int val)
     m_ui->maxRatio->setValue(val / 100.);
 }
 
-void StarRegisterGUI::process(const H5::H5File& group, const std::function<void(int)>& startNewTask,
-                              const std::function<void(int)>& updateTask, QPromise<void>& promise)
+void StarRegisterGUI::process(const H5::H5File& group, const StartTask& startNewTask,
+                              const UpdateTask& updateTask, QPromise<void>& promise)
 try
 {
     H5::DataSet inputs = group.openDataSet(m_inputsDatasetName);
@@ -138,29 +138,34 @@ try
         updateTask(index + dims[0]);
     }
 
+    size_t middle = dims[0] / 2;
+    
     // Create graphs, save in inter/graphs
-    for (size_t index = 0; index < dims[0] / 2; ++index)
+    for (size_t index = 0; index < middle; ++index)
     {
         updateTask(index + 2 * dims[0]);
     }
-    for (size_t index = dims[0] / 2 + 1; index < dims[0]; ++index)
+    for (size_t index = middle + 1; index < dims[0]; ++index)
     {
-        updateTask(index + 2 * dims[0] + dims[0] / 2);
+        updateTask(index + 2 * dims[0] + middle);
     }
 
+    H5::DataSet outputDataset = hdf5::createDataset(m_outputsDatasetName.toStdString(), dataspace,
+                                                  H5::PredType::NATIVE_FLOAT, group);
+
     // Create transformation, apply on image
-    for (size_t index = 0; index < dims[0] / 2; ++index)
+    for (size_t index = 0; index < middle; ++index)
     {
         updateTask(index + 3 * dims[0]);
     }
-    // Copy middle image
-    for (size_t index = dims[0] / 2 + 1; index < dims[0]; ++index)
     {
-        updateTask(index + 3 * dims[0] + dims[0] / 2);
+        updateTask(3 * dims[0] + middle);
     }
-
-    H5::DataSet outputDataset =
-            hdf5::createDataset(m_outputsDatasetName.toStdString(), dataspace, H5::PredType::NATIVE_FLOAT, group);
+    // Copy middle image
+    for (size_t index = middle + 1; index < dims[0]; ++index)
+    {
+        updateTask(index + 3 * dims[0] + middle + 1);
+    }
 
     // for()
     // writeTo

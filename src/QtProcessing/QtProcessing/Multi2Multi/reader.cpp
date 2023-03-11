@@ -56,8 +56,8 @@ ReaderGUI::ReaderGUI(QWidget* parent)
 
 ReaderGUI::~ReaderGUI() = default;
 
-void ReaderGUI::process(const H5::H5File& group, const std::function<void(int)>& startNewTask,
-                        const std::function<void(int)>& updateTask, QPromise<void>& promise)
+void ReaderGUI::process(const H5::H5File& group, const StartTask& startNewTask,
+                        const UpdateTask& updateTask, QPromise<void>& promise)
 try
 {
     auto indices = m_ui->treeView->selectionModel()->selectedIndexes();
