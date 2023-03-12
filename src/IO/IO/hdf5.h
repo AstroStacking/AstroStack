@@ -25,8 +25,10 @@ readTo(const std::vector<std::string>& filenames, itk::Size<Dimension> size, con
 ASTRO_IO_EXPORT H5::Group getOrCreateGroup(const std::string& outputGroupName, const H5::Group& h5file);
 ASTRO_IO_EXPORT H5::DataSet createDataset(const std::string& outputDatasetName, const H5::DataSpace& outputSpace,
                                           H5::PredType type, const H5::Group& h5file);
-ASTRO_IO_EXPORT std::vector<std::pair<double, double>> readGraph(const H5::DataSet& dataset);
-ASTRO_IO_EXPORT void writeGraph(const std::vector<std::pair<double, double>>& graph, const H5::Group& h5file,
+template<typename T>
+ASTRO_IO_EXPORT std::vector<std::pair<T, T>> readGraph(const H5::DataSet& dataset);
+template<typename T>
+ASTRO_IO_EXPORT void writeGraph(const std::vector<std::pair<T, T>>& graph, const H5::Group& h5file,
                                 const std::string& datasetName);
 
 } // namespace hdf5

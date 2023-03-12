@@ -113,7 +113,7 @@ try
     double maxRatio = m_ui->maxRatio->value();
     int fullGraph = static_cast<int>(m_ui->fullGraph->value());
 
-    startNewTask(dims[0] * 4 - 1);
+    startNewTask(dims[0] * 5 - 1);
 
     H5::Group intermediateGroup = hdf5::getOrCreateGroup(m_intermediateGroupName, group);
 
@@ -140,51 +140,119 @@ try
     }
 
     size_t middle = dims[0] / 2;
-    std::vector<std::pair<double, double>> middleGraph = hdf5::readGraph(starGroup.openDataSet(std::to_string(middle)));
     H5::Group graphGroup = hdf5::getOrCreateGroup(m_graphGroupName, intermediateGroup);
-    // Create graphs, save in inter/graphs
+    // Create graphs between current image and next one, save in inter/graphs
     for (size_t index = 0; index < middle; ++index)
     {
         std::vector<std::pair<double, double>> currentGraph =
-                hdf5::readGraph(starGroup.openDataSet(std::to_string(index)));
+                hdf5::readGraph<double>(starGroup.openDataSet(std::to_string(index)));
+        std::vector<std::pair<double, double>> nextGraph =
+                hdf5::readGraph<double>(starGroup.openDataSet(std::to_string(index + 1)));
 
         std::vector<std::pair<size_t, size_t>> matches =
-                astro::processing::graphmatching(middleGraph, currentGraph, fullGraph, maxRatio);
+                astro::processing::graphmatching(nextGraph, currentGraph, fullGraph, maxRatio);
 
-        std::vector<std::pair<double, double>> middleStars;
-        std::vector<std::pair<double, double>> currentStars;
-        for (auto pair : matches)
-        {
-            middleStars.push_back(middleGraph[pair.first]);
-            currentStars.push_back(currentGraph[pair.second]);
-        }
-        hdf5::writeGraph(middleStars, graphGroup, "middle" + std::to_string(index));
-        hdf5::writeGraph(currentStars, graphGroup, "current" + std::to_string(index));
+        hdf5::writeGraph(matches, graphGroup, "partial" + std::to_string(index));
 
         updateTask(index + 2 * dims[0]);
     }
     for (size_t index = middle + 1; index < dims[0]; ++index)
     {
         std::vector<std::pair<double, double>> currentGraph =
-                hdf5::readGraph(starGroup.openDataSet(std::to_string(index)));
+                hdf5::readGraph<double>(starGroup.openDataSet(std::to_string(index)));
+        std::vector<std::pair<double, double>> previousGraph =
+                hdf5::readGraph<double>(starGroup.openDataSet(std::to_string(index - 1)));
 
         std::vector<std::pair<size_t, size_t>> matches =
-                astro::processing::graphmatching(middleGraph, currentGraph, fullGraph, maxRatio);
+                astro::processing::graphmatching(previousGraph, currentGraph, fullGraph, maxRatio);
 
-        std::vector<std::pair<double, double>> middleStars;
-        std::vector<std::pair<double, double>> currentStars;
-        for (auto pair : matches)
-        {
-            middleStars.push_back(middleGraph[pair.first]);
-            currentStars.push_back(currentGraph[pair.second]);
-        }
-        hdf5::writeGraph(middleStars, graphGroup, "middle" + std::to_string(index));
-        hdf5::writeGraph(currentStars, graphGroup, "current" + std::to_string(index));
+        hdf5::writeGraph<size_t>(matches, graphGroup, "partial" + std::to_string(index));
 
         updateTask(index + 2 * dims[0] + middle);
     }
 
     H5::DataSet outputDataset = hdf5::createDataset(m_outputsDatasetName, dataspace, H5::PredType::NATIVE_FLOAT, group);
+    std::vector<std::pair<double, double>> middleStars =
+            hdf5::readGraph<double>(starGroup.openDataSet(std::to_string(middle)));
+    std::vector<std::pair<size_t, size_t>> middleGraph;
+    for (size_t i = 0; i < middleStars.size(); ++i)
+    {
+        middleGraph.push_back(std::make_pair(i, i));
+    }
+    std::vector<std::pair<size_t, size_t>> graph = middleGraph;
+
+    // Create graphs
+    for (size_t index = middle - 1; index < middle; --index)
+    {
+        std::vector<std::pair<size_t, size_t>> currentGraph =
+                hdf5::readGraph<size_t>(graphGroup.openDataSet("partial" + std::to_string(index)));
+        std::vector<std::pair<double, double>> currentStars =
+                hdf5::readGraph<double>(starGroup.openDataSet(std::to_string(index)));
+
+        // propagate graph
+        std::vector<std::pair<size_t, size_t>> tempGraph;
+        for (size_t i = 0; i < graph.size(); ++i)
+        {
+            auto it = std::find_if(currentGraph.begin(), currentGraph.end(),
+                                   [=](std::pair<size_t, size_t> edge) { return graph[i].second == edge.first; });
+            if (it != currentGraph.end())
+            {
+                tempGraph.emplace_back(graph[i].first, it->second);
+            }
+        }
+        graph = std::move(tempGraph);
+
+        std::vector<std::pair<double, double>> matchedMiddleStars;
+        std::vector<std::pair<double, double>> matchedStars;
+
+        // create graph
+        for (size_t i = 0; i < graph.size(); ++i)
+        {
+            matchedMiddleStars.push_back(middleStars[graph[i].first]);
+            matchedStars.push_back(currentStars[graph[i].second]);
+        }
+
+        hdf5::writeGraph<double>(matchedMiddleStars, graphGroup, "middle" + std::to_string(index));
+        hdf5::writeGraph<double>(matchedStars, graphGroup, "current" + std::to_string(index));
+
+        updateTask(index + 3 * dims[0]);
+    }
+    graph = middleGraph;
+    for (size_t index = middle + 1; index < dims[0]; ++index)
+    {
+        std::vector<std::pair<size_t, size_t>> currentGraph =
+                hdf5::readGraph<size_t>(graphGroup.openDataSet("partial" + std::to_string(index)));
+        std::vector<std::pair<double, double>> currentStars =
+                hdf5::readGraph<double>(starGroup.openDataSet(std::to_string(index)));
+
+        // propagate graph
+        std::vector<std::pair<size_t, size_t>> tempGraph;
+        for (size_t i = 0; i < graph.size(); ++i)
+        {
+            auto it = std::find_if(currentGraph.begin(), currentGraph.end(),
+                                   [=](std::pair<size_t, size_t> edge) { return graph[i].second == edge.first; });
+            if (it != currentGraph.end())
+            {
+                tempGraph.emplace_back(graph[i].first, it->second);
+            }
+        }
+        graph = std::move(tempGraph);
+
+        std::vector<std::pair<double, double>> matchedMiddleStars;
+        std::vector<std::pair<double, double>> matchedStars;
+
+        // create graph
+        for (size_t i = 0; i < graph.size(); ++i)
+        {
+            matchedMiddleStars.push_back(middleStars[graph[i].first]);
+            matchedStars.push_back(currentStars[graph[i].second]);
+        }
+
+        hdf5::writeGraph<double>(matchedMiddleStars, graphGroup, "middle" + std::to_string(index));
+        hdf5::writeGraph<double>(matchedStars, graphGroup, "current" + std::to_string(index));
+
+        updateTask(index + 3 * dims[0] + middle);
+    }
 
     // Create transformation, apply on image
     ImageTypePtr middleImg = hdf5::extractFrom(inputsDataset, middle);
@@ -192,31 +260,31 @@ try
     {
         ImageTypePtr img = hdf5::extractFrom(inputsDataset, index);
         std::vector<std::pair<double, double>> middleStars =
-                hdf5::readGraph(graphGroup.openDataSet("middle" + std::to_string(index)));
+                hdf5::readGraph<double>(graphGroup.openDataSet("middle" + std::to_string(index)));
         std::vector<std::pair<double, double>> currentStars =
-                hdf5::readGraph(graphGroup.openDataSet("current" + std::to_string(index)));
+                hdf5::readGraph<double>(graphGroup.openDataSet("current" + std::to_string(index)));
         ImageTypePtr registeredImg = processing::registerImages(middleImg, img, middleStars, currentStars);
 
-        hdf5::writeTo(*img, outputDataset, index);
-        updateTask(index + 3 * dims[0]);
+        hdf5::writeTo(*registeredImg, outputDataset, index);
+        updateTask(index + 4 * dims[0]);
     }
     {
         ImageTypePtr middleImg = hdf5::extractFrom(inputsDataset, middle);
         hdf5::writeTo(*middleImg, outputDataset, middle);
-        updateTask(3 * dims[0] + middle);
+        updateTask(4 * dims[0] + middle);
     }
     // Copy middle image
     for (size_t index = middle + 1; index < dims[0]; ++index)
     {
         ImageTypePtr img = hdf5::extractFrom(inputsDataset, index);
         std::vector<std::pair<double, double>> middleStars =
-                hdf5::readGraph(graphGroup.openDataSet("middle" + std::to_string(index)));
+                hdf5::readGraph<double>(graphGroup.openDataSet("middle" + std::to_string(index)));
         std::vector<std::pair<double, double>> currentStars =
-                hdf5::readGraph(graphGroup.openDataSet("current" + std::to_string(index)));
+                hdf5::readGraph<double>(graphGroup.openDataSet("current" + std::to_string(index)));
         ImageTypePtr registeredImg = processing::registerImages(middleImg, img, middleStars, currentStars);
 
-        hdf5::writeTo(*img, outputDataset, index);
-        updateTask(index + 3 * dims[0] + middle + 1);
+        hdf5::writeTo(*registeredImg, outputDataset, index);
+        updateTask(index + 4 * dims[0] + middle + 1);
     }
 }
 catch (const std::exception& e)

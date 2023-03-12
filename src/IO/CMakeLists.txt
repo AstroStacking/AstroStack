@@ -3,6 +3,7 @@ FILE(GLOB ASTRO_IO_SRC
     IO/io.cpp
     IO/itkinput.cpp
     IO/itkoutput.cpp
+    IO/traits.cpp
 )
 
 FILE(GLOB ASTRO_IO_HEADERS

@@ -328,7 +328,8 @@ H5::DataSet createDataset(const std::string& outputDatasetName, const H5::DataSp
     return outputDataset;
 }
 
-std::vector<std::pair<double, double>> readGraph(const H5::DataSet& dataset)
+template<typename T>
+std::vector<std::pair<T, T>> readGraph(const H5::DataSet& dataset)
 {
     H5::DataSpace dataspace = dataset.getSpace();
     int ndims = dataspace.getSimpleExtentNdims();
@@ -343,10 +344,10 @@ std::vector<std::pair<double, double>> readGraph(const H5::DataSet& dataset)
         throw std::runtime_error("Wrong number of columns " + std::to_string(dims[1]));
     }
 
-    std::vector<double> buffer(dims[0] * dims[1]);
-    dataset.read(buffer.data(), H5::PredType::NATIVE_DOUBLE, dataspace, dataspace);
+    std::vector<T> buffer(dims[0] * dims[1]);
+    dataset.read(buffer.data(), DataTraits<T>::HDF5Type, dataspace, dataspace);
 
-    std::vector<std::pair<double, double>> data(dims[0]);
+    std::vector<std::pair<T, T>> data(dims[0]);
     for (size_t i = 0; i < dims[0]; ++i)
     {
         data[i].first = buffer[i * dims[1]];
@@ -356,16 +357,24 @@ std::vector<std::pair<double, double>> readGraph(const H5::DataSet& dataset)
     return data;
 }
 
-void writeGraph(const std::vector<std::pair<double, double>>& graph, const H5::Group& h5file,
-                const std::string& datasetName)
+template std::vector<std::pair<double, double>> readGraph<double>(const H5::DataSet& dataset);
+template std::vector<std::pair<unsigned long, unsigned long>> readGraph<unsigned long>(const H5::DataSet& dataset);
+
+template<typename T>
+void writeGraph(const std::vector<std::pair<T, T>>& graph, const H5::Group& h5file, const std::string& datasetName)
 {
     // Output data
     hsize_t outputImgDim[2]{graph.size() / 2, 2};
     H5::DataSpace outputSpace(2, outputImgDim);
     // output list
-    H5::DataSet outputDataset = h5file.createDataSet(datasetName, H5::PredType::NATIVE_DOUBLE, outputSpace);
-    outputDataset.write(graph.data(), H5::PredType::NATIVE_DOUBLE, outputSpace, outputSpace);
+    H5::DataSet outputDataset = h5file.createDataSet(datasetName, DataTraits<T>::HDF5Type, outputSpace);
+    outputDataset.write(graph.data(), DataTraits<T>::HDF5Type, outputSpace, outputSpace);
 }
+
+template void writeGraph<double>(const std::vector<std::pair<double, double>>& graph, const H5::Group& h5file,
+                                 const std::string& datasetName);
+template void writeGraph<unsigned long>(const std::vector<std::pair<unsigned long, unsigned long>>& graph,
+                                        const H5::Group& h5file, const std::string& datasetName);
 
 } // namespace hdf5
 } // namespace astro

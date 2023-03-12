@@ -2,6 +2,8 @@
 
 #include <IO/io.h>
 
+#include <H5Cpp.h>
+
 namespace astro
 {
 template<typename ImageType>
@@ -22,6 +24,23 @@ struct Traits<ScalarImageType>
 {
     static constexpr size_t NbDimensions = 2;
     using PixelType = UnderlyingPixelType;
+};
+
+template<typename T>
+struct DataTraits
+{
+};
+
+template<>
+struct DataTraits<double>
+{
+    static const H5::PredType& HDF5Type;
+};
+
+template<>
+struct DataTraits<unsigned long>
+{
+    static const H5::PredType& HDF5Type;
 };
 
 } // namespace astro
