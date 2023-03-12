@@ -18,7 +18,7 @@ DoubleProgressBar::DoubleProgressBar(QString labelText, int tasks, QWidget* pare
 void DoubleProgressBar::startNewTask(int steps)
 {
     m_ui->totalTasksBar->setValue(m_ui->totalTasksBar->value() + 1);
-    m_ui->totalTasksLabel->setText(tr("Task ") + QString::number(m_ui->totalTasksBar->value()) + "/" +
+    m_ui->totalTasksLabel->setText(tr("Task ") + QString::number(m_ui->totalTasksBar->value() + 1) + "/" +
                                    QString::number(m_ui->totalTasksBar->maximum()));
 
     m_ui->currentTaskBar->setMaximum(steps);
@@ -28,6 +28,8 @@ void DoubleProgressBar::startNewTask(int steps)
 
 void DoubleProgressBar::setCurrentaskAdvancement(int value)
 {
+    m_ui->currentTaskLabel->setText(tr("Current Task: ") + QString::number(m_ui->currentTaskBar->value() + 1) + "/" +
+                                    QString::number(m_ui->currentTaskBar->maximum()));
     m_ui->currentTaskBar->setValue(value);
 }
 

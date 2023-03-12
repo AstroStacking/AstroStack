@@ -158,13 +158,14 @@ try
     H5::DataSpace outputSpace(3, outputImgDim);
     H5::DataSet outputDataset =
             hdf5::createDataset(m_outputDatasetName, outputSpace, H5::PredType::NATIVE_FLOAT, group);
-    startNewTask(dims[1]);
+    startNewTask(dims[1] + 1);
 
     processing::stacking(inputsDataset, outputDataset, filters::stackers::Median<float>(), updateTask);
 
     AstroImage img;
     img.setImg(hdf5::extractFrom(outputDataset));
     saveImg(img);
+    updateTask(dims[1] + 1);
 }
 catch (const std::exception& e)
 {

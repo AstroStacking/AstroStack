@@ -115,13 +115,13 @@ try
 
     startNewTask(dims[0] * 4 - 1);
 
-    H5::Group intermediateGroup = hdf5::getOrCreateGroup(m_intermediateGroupName.toStdString(), group);
+    H5::Group intermediateGroup = hdf5::getOrCreateGroup(m_intermediateGroupName, group);
 
     // Grey all images, save in inter/greys
     hsize_t greyDims[3]{dims[0], dims[1], dims[2]};
     H5::DataSpace greyDataspace(3, greyDims);
-    H5::DataSet greyDataset = hdf5::createDataset(m_greyDatasetName.toStdString(), greyDataspace,
-                                                  H5::PredType::NATIVE_FLOAT, intermediateGroup);
+    H5::DataSet greyDataset =
+            hdf5::createDataset(m_greyDatasetName, greyDataspace, H5::PredType::NATIVE_FLOAT, intermediateGroup);
     // create grey dataset
     for (size_t index = 0; index < dims[0]; ++index)
     {
@@ -131,7 +131,7 @@ try
         updateTask(index);
     }
 
-    H5::Group starGroup = hdf5::getOrCreateGroup(m_starsGroupName.toStdString(), intermediateGroup);
+    H5::Group starGroup = hdf5::getOrCreateGroup(m_starsGroupName, intermediateGroup);
     // Star detection, save in inter/stars
     for (size_t index = 0; index < dims[0]; ++index)
     {
@@ -141,11 +141,12 @@ try
 
     size_t middle = dims[0] / 2;
     std::vector<std::pair<double, double>> middleGraph = hdf5::readGraph(starGroup.openDataSet(std::to_string(middle)));
-    H5::Group graphGroup = hdf5::getOrCreateGroup(m_graphGroupName.toStdString(), intermediateGroup);
+    H5::Group graphGroup = hdf5::getOrCreateGroup(m_graphGroupName, intermediateGroup);
     // Create graphs, save in inter/graphs
     for (size_t index = 0; index < middle; ++index)
     {
-        std::vector<std::pair<double, double>> currentGraph = hdf5::readGraph(starGroup.openDataSet(std::to_string(index)));
+        std::vector<std::pair<double, double>> currentGraph =
+                hdf5::readGraph(starGroup.openDataSet(std::to_string(index)));
 
         std::vector<std::pair<size_t, size_t>> matches =
                 astro::processing::graphmatching(middleGraph, currentGraph, fullGraph, maxRatio);
@@ -164,7 +165,8 @@ try
     }
     for (size_t index = middle + 1; index < dims[0]; ++index)
     {
-        std::vector<std::pair<double, double>> currentGraph = hdf5::readGraph(starGroup.openDataSet(std::to_string(index)));
+        std::vector<std::pair<double, double>> currentGraph =
+                hdf5::readGraph(starGroup.openDataSet(std::to_string(index)));
 
         std::vector<std::pair<size_t, size_t>> matches =
                 astro::processing::graphmatching(middleGraph, currentGraph, fullGraph, maxRatio);
@@ -182,18 +184,18 @@ try
         updateTask(index + 2 * dims[0] + middle);
     }
 
-    H5::DataSet outputDataset =
-            hdf5::createDataset(m_outputsDatasetName.toStdString(), dataspace, H5::PredType::NATIVE_FLOAT, group);
+    H5::DataSet outputDataset = hdf5::createDataset(m_outputsDatasetName, dataspace, H5::PredType::NATIVE_FLOAT, group);
 
     // Create transformation, apply on image
     ImageTypePtr middleImg = hdf5::extractFrom(inputsDataset, middle);
     for (size_t index = 0; index < middle; ++index)
     {
         ImageTypePtr img = hdf5::extractFrom(inputsDataset, index);
-        std::vector<std::pair<double, double>> middleStars = hdf5::readGraph(graphGroup.openDataSet("middle" + std::to_string(index)));
-        std::vector<std::pair<double, double>> currentStars = hdf5::readGraph(graphGroup.openDataSet("current" + std::to_string(index)));
-        ImageTypePtr registeredImg =
-                processing::registerImages(middleImg, img, middleStars, currentStars);
+        std::vector<std::pair<double, double>> middleStars =
+                hdf5::readGraph(graphGroup.openDataSet("middle" + std::to_string(index)));
+        std::vector<std::pair<double, double>> currentStars =
+                hdf5::readGraph(graphGroup.openDataSet("current" + std::to_string(index)));
+        ImageTypePtr registeredImg = processing::registerImages(middleImg, img, middleStars, currentStars);
 
         hdf5::writeTo(*img, outputDataset, index);
         updateTask(index + 3 * dims[0]);
@@ -207,10 +209,11 @@ try
     for (size_t index = middle + 1; index < dims[0]; ++index)
     {
         ImageTypePtr img = hdf5::extractFrom(inputsDataset, index);
-        std::vector<std::pair<double, double>> middleStars = hdf5::readGraph(graphGroup.openDataSet("middle" + std::to_string(index)));
-        std::vector<std::pair<double, double>> currentStars = hdf5::readGraph(graphGroup.openDataSet("current" + std::to_string(index)));
-        ImageTypePtr registeredImg =
-                processing::registerImages(middleImg, img, middleStars, currentStars);
+        std::vector<std::pair<double, double>> middleStars =
+                hdf5::readGraph(graphGroup.openDataSet("middle" + std::to_string(index)));
+        std::vector<std::pair<double, double>> currentStars =
+                hdf5::readGraph(graphGroup.openDataSet("current" + std::to_string(index)));
+        ImageTypePtr registeredImg = processing::registerImages(middleImg, img, middleStars, currentStars);
 
         hdf5::writeTo(*img, outputDataset, index);
         updateTask(index + 3 * dims[0] + middle + 1);
@@ -221,9 +224,25 @@ catch (const std::exception& e)
     promise.setException(std::current_exception());
 }
 
-void StarRegisterGUI::restore(QSettings& settings) {}
+void StarRegisterGUI::restore(QSettings& settings)
+{
+    if (!settings.contains("minStars"))
+    {
+        return;
+    }
+    m_ui->minStars->setValue(settings.value("minStars").toInt());
+    m_ui->maxStars->setValue(settings.value("maxStars").toInt());
+    m_ui->fullGraph->setValue(settings.value("fullGraph").toInt());
+    m_ui->maxRatio->setValue(settings.value("maxRatio").toDouble());
+}
 
-void StarRegisterGUI::save(QSettings& settings) {}
+void StarRegisterGUI::save(QSettings& settings)
+{
+    settings.setValue("minStars", m_ui->minStars->value());
+    settings.setValue("maxStars", m_ui->maxStars->value());
+    settings.setValue("fullGraph", m_ui->fullGraph->value());
+    settings.setValue("maxRatio", m_ui->maxRatio->value());
+}
 
 bool StarRegisterGUI::check()
 {
@@ -233,13 +252,15 @@ bool StarRegisterGUI::check()
 void StarRegisterGUI::setup(QJsonObject data)
 {
     Multi2MultiInterfaceGUI::setup(data);
+    auto inputs = data["Inputs"].toObject();
+    m_inputsDatasetName = inputs["inputs"].toObject()["dataset"].toString().toStdString();
     auto outputs = data["Outputs"].toObject();
-    m_outputsDatasetName = outputs["outputs"].toObject()["dataset"].toString();
-    auto intermediate = data["Intermediate"].toObject();
-    m_intermediateGroupName = intermediate["group"].toString();
-    m_greyDatasetName = intermediate["greys"].toObject()["dataset"].toString();
-    m_starsGroupName = intermediate["stars"].toObject()["group"].toString();
-    m_graphGroupName = intermediate["graphs"].toObject()["group"].toString();
+    m_outputsDatasetName = outputs["outputs"].toObject()["dataset"].toString().toStdString();
+    auto intermediate = outputs["intermediate"].toObject();
+    m_intermediateGroupName = intermediate["group"].toString().toStdString();
+    m_greyDatasetName = intermediate["greys"].toObject()["dataset"].toString().toStdString();
+    m_starsGroupName = intermediate["stars"].toObject()["group"].toString().toStdString();
+    m_graphGroupName = intermediate["graphs"].toObject()["group"].toString().toStdString();
 }
 
 } // namespace astro

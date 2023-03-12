@@ -118,7 +118,7 @@ ScalarImageTypePtr starDetection(const H5::DataSet& input, H5::Group& output, co
 ScalarImageTypePtr starDetection(const H5::DataSet& input, size_t index, H5::Group& output, const std::string& dataset,
                                  int32_t minStars, int32_t maxStars)
 {
-    auto inputImg = astro::hdf5::extractScalarFrom(input);
+    auto inputImg = astro::hdf5::extractScalarFrom(input, index);
 
     return starDetection(inputImg, output, dataset, minStars, maxStars);
 }

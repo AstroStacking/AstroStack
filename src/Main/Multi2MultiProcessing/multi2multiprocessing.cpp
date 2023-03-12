@@ -75,7 +75,7 @@ void Multi2MultiProcessing::execute()
 {
     m_ui->frame->setEnabled(false);
 
-    m_progressDialog = new DoubleProgressBar(windowTitle(), m_tasks.size() + 1, this);
+    m_progressDialog = new DoubleProgressBar(windowTitle(), m_tasks.size(), this);
     m_progressDialog->setAttribute(Qt::WA_DeleteOnClose);
 
     connect(m_progressDialog, &DoubleProgressBar::cancel, &m_watcher, &QFutureWatcher<void>::cancel);
@@ -116,7 +116,6 @@ void Multi2MultiProcessing::execute()
                         return;
                     }
                 }
-                promise.setProgressValue(++i);
                 emit finished();
             }));
     m_progressDialog->show();

@@ -187,8 +187,8 @@ ScalarImageTypePtr extractScalarFrom(const H5::DataSet& dataset, size_t index)
     auto importFilter = ImportFilterType::New();
     ImportFilterType::SizeType regionSize;
 
-    regionSize[0] = dims[0]; // size along X
-    regionSize[1] = dims[1]; // size along Y
+    regionSize[0] = dims[1]; // size along X
+    regionSize[1] = dims[2]; // size along Y
 
     ImportFilterType::IndexType start;
     start.Fill(0);
@@ -234,26 +234,32 @@ H5::DataSet writeTo(const ScalarImageType& img, const H5::Group& group, const st
     return dataset;
 }
 
-H5::DataSet writeTo(const ImageType& img, const H5::DataSet& dataset, size_t index)
+void writeTo(const ImageType& img, const H5::DataSet& dataset, size_t index)
 {
-    H5::DataSpace fspace1 = dataset.getSpace();
     auto size = img.GetRequestedRegion().GetSize();
+    hsize_t imageDim[4]{1, size.at(0), size.at(1), PixelDimension};
+    H5::DataSpace imgDataspace(4, imageDim);
+
+    H5::DataSpace fspace1 = dataset.getSpace();
     hsize_t currSlab[4]{1, size.at(0), size.at(1), PixelDimension};
     hsize_t offset[4]{index, 0, 0, 0};
     fspace1.selectHyperslab(H5S_SELECT_SET, currSlab, offset);
 
-    dataset.write(img.GetBufferPointer(), H5::PredType::NATIVE_FLOAT, dataset.getSpace(), fspace1);
+    dataset.write(img.GetBufferPointer(), H5::PredType::NATIVE_FLOAT, imgDataspace, fspace1);
 }
 
-H5::DataSet writeTo(const ScalarImageType& img, const H5::DataSet& dataset, size_t index)
+void writeTo(const ScalarImageType& img, const H5::DataSet& dataset, size_t index)
 {
-    H5::DataSpace fspace1 = dataset.getSpace();
     auto size = img.GetRequestedRegion().GetSize();
+    hsize_t imageDim[3]{1, size.at(0), size.at(1)};
+    H5::DataSpace imgDataspace(3, imageDim);
+
+    H5::DataSpace fspace1 = dataset.getSpace();
     hsize_t currSlab[3]{1, size.at(0), size.at(1)};
     hsize_t offset[3]{index, 0, 0};
     fspace1.selectHyperslab(H5S_SELECT_SET, currSlab, offset);
 
-    dataset.write(img.GetBufferPointer(), H5::PredType::NATIVE_FLOAT, dataset.getSpace(), fspace1);
+    dataset.write(img.GetBufferPointer(), H5::PredType::NATIVE_FLOAT, imgDataspace, fspace1);
 }
 
 H5::DataSet readTo(const std::vector<std::string>& filenames, itk::Size<Dimension> size, const H5::Group& group,
@@ -299,6 +305,10 @@ H5::Group getOrCreateGroup(const std::string& outputGroupName, const H5::Group& 
     {
         return h5file.createGroup(outputGroupName);
     }
+    catch (const H5::GroupIException&)
+    {
+        return h5file.createGroup(outputGroupName);
+    }
 }
 
 H5::DataSet createDataset(const std::string& outputDatasetName, const H5::DataSpace& outputSpace, H5::PredType type,
@@ -328,7 +338,7 @@ std::vector<std::pair<double, double>> readGraph(const H5::DataSet& dataset)
     }
     hsize_t dims[2];
     ndims = dataspace.getSimpleExtentDims(dims, nullptr);
-    if (dims[1] <= 2)
+    if (dims[1] < 2)
     {
         throw std::runtime_error("Wrong number of columns " + std::to_string(dims[1]));
     }

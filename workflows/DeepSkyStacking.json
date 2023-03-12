@@ -20,9 +20,9 @@
                     "group": "inter",
                     "greys": {"dataset": "greys"},
                     "stars": {"group": "stars"},
-                    "graphs": {"group": "graphs"},
+                    "graphs": {"group": "graphs"}
                 },
-                "outputs": {"dataset": "images"}
+                "outputs": {"dataset": "outputs"}
             }
         },
         {
@@ -30,13 +30,19 @@
             "Type": "MaxStacking",
             "Inputs": {
                 "inputs": {"dataset": "outputs"}
+            },
+            "Outputs": {
+                "output": {"dataset": "maxstack"}
             }
         },
         {
             "Name": "Stacking2",
-            "Type": "RobustMedianStacking",
+            "Type": "MedianStacking",
             "Inputs": {
-                "inputs": {"dataset": "images"}
+                "inputs": {"dataset": "outputs"}
+            },
+            "Outputs": {
+                "output": {"dataset": "medianstack"}
             }
         }
     ]
