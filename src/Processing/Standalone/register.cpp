@@ -92,8 +92,9 @@ int main(int argc, char** argv)
     astro::processing::starDetection(h5file.openDataSet("fixGrey"), h5file, "fixStar", minStars, maxStars);
     astro::processing::starDetection(h5file.openDataSet("movingGrey"), h5file, "movingStar", minStars, maxStars);
 
-    std::vector<std::pair<double, double>> fixGraph = astro::hdf5::readGraph(h5file.openDataSet("fixStar"));
-    std::vector<std::pair<double, double>> movingGraph = astro::hdf5::readGraph(h5file.openDataSet("movingStar"));
+    std::vector<std::pair<double, double>> fixGraph = astro::hdf5::readGraph<double>(h5file.openDataSet("fixStar"));
+    std::vector<std::pair<double, double>> movingGraph =
+            astro::hdf5::readGraph<double>(h5file.openDataSet("movingStar"));
 
     std::vector<std::pair<size_t, size_t>> matches =
             astro::processing::graphmatching(fixGraph, movingGraph, fullGraph, maxRatio);

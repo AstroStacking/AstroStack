@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <Algos/Filters/Stackers/traits.h>
+
 #include <vector>
 
 namespace astro
@@ -16,10 +18,19 @@ template<typename Type>
 class Median
 {
 public:
-    Type operator()(std::vector<Type>& values) const
+    Type operator()(const std::vector<Type>& values) const
     {
-        std::partial_sort(values.begin(), values.begin() + (values.size() + 1) / 2, values.end());
-        return values[(values.size() + 1) / 2 - 1];
+        std::vector<Type> nanvalues;
+        for (Type x : values)
+        {
+            if (Traits<Type>::isnan(x))
+            {
+                continue;
+            }
+            nanvalues.push_back(x);
+        }
+        std::partial_sort(nanvalues.begin(), nanvalues.begin() + (nanvalues.size() + 1) / 2, nanvalues.end());
+        return nanvalues[(nanvalues.size() + 1) / 2 - 1];
     }
 };
 } // namespace stackers

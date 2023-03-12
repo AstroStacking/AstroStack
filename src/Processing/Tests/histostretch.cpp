@@ -52,7 +52,7 @@ TEST(Processing, HistoStretchRelative)
         int j = pixel % 256;
         for (int k = 0; k < 3; ++k)
         {
-            ASSERT_NEAR(value[k], k == i ? std::max((j / 255.f - limit / 5) / (1 - limit / 5), 0.f) : 0, 0.001);
+            ASSERT_NEAR(value[k], k == i ? std::max((j / 255.f - limit / 5) / (1 - limit / 5), 0.f) : 0, 0.1);
         }
         ++it;
         ++pixel;

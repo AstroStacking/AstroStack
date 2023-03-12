@@ -18,6 +18,7 @@ FILE(GLOB ASTRO_ALGORITHMS_HEADERS
     Algos/Filters/Stackers/max.h
     Algos/Filters/Stackers/median.h
     Algos/Filters/Stackers/robustmean.h
+    Algos/Filters/Stackers/traits.h
     Algos/Filters/mergehslfilter.h
     Algos/Filters/multifunctorimagefilter.h
     Algos/Graph/distance.h
