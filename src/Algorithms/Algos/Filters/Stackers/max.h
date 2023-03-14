@@ -26,7 +26,7 @@ public:
                                  {
                                      if (Traits<Type>::isnan(x))
                                      {
-                                         return false;
+                                         return true;
                                      }
                                      if (Traits<Type>::isnan(other))
                                      {

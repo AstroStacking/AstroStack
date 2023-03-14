@@ -112,6 +112,7 @@ try
     int maxStars = static_cast<int>(m_ui->maxStars->value());
     double maxRatio = m_ui->maxRatio->value();
     int fullGraph = static_cast<int>(m_ui->fullGraph->value());
+    bool highDef = m_ui->highdef->isChecked();
 
     startNewTask(dims[0] * 5 - 1);
 
@@ -263,7 +264,9 @@ try
                 hdf5::readGraph<double>(graphGroup.openDataSet("middle" + std::to_string(index)));
         std::vector<std::pair<double, double>> currentStars =
                 hdf5::readGraph<double>(graphGroup.openDataSet("current" + std::to_string(index)));
-        ImageTypePtr registeredImg = processing::registerImages(middleImg, img, middleStars, currentStars);
+        ImageTypePtr registeredImg =
+                highDef ? processing::registerImagesBSpline(middleImg, img, middleStars, currentStars)
+                        : processing::registerImages(middleImg, img, middleStars, currentStars);
 
         hdf5::writeTo(*registeredImg, outputDataset, index);
         updateTask(index + 4 * dims[0]);
@@ -281,7 +284,9 @@ try
                 hdf5::readGraph<double>(graphGroup.openDataSet("middle" + std::to_string(index)));
         std::vector<std::pair<double, double>> currentStars =
                 hdf5::readGraph<double>(graphGroup.openDataSet("current" + std::to_string(index)));
-        ImageTypePtr registeredImg = processing::registerImages(middleImg, img, middleStars, currentStars);
+        ImageTypePtr registeredImg =
+                highDef ? processing::registerImagesBSpline(middleImg, img, middleStars, currentStars)
+                        : processing::registerImages(middleImg, img, middleStars, currentStars);
 
         hdf5::writeTo(*registeredImg, outputDataset, index);
         updateTask(index + 4 * dims[0] + middle + 1);

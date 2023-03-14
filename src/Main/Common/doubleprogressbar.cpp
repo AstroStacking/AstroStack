@@ -14,8 +14,8 @@ DoubleProgressBar::DoubleProgressBar(QString labelText, int tasks, QWidget* pare
 
     connect(m_ui->cancel, &QPushButton::clicked, this, &DoubleProgressBar::cancel);
     setAttribute(Qt::WA_DeleteOnClose, true);
+    setModal(true);
 }
-
 
 void DoubleProgressBar::startNewTask(int steps)
 {

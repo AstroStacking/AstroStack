@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>172</height>
+    <width>417</width>
+    <height>185</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -209,6 +209,13 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="highdef">
+     <property name="text">
+      <string>Use high dimension transform</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

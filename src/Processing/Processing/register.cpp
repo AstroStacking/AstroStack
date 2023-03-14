@@ -48,6 +48,8 @@ ImageTypePtr registerImages(const ImageTypePtr& fix, const ImageTypePtr& moving,
         movingLandmarks.push_back(point);
     }
 
+    landmarkBasedTransformInitializer->SetBSplineNumberOfControlPoints(4);
+    landmarkBasedTransformInitializer->SetReferenceImage(fix);
     landmarkBasedTransformInitializer->SetFixedLandmarks(fixedLandmarks);
     landmarkBasedTransformInitializer->SetMovingLandmarks(movingLandmarks);
 
