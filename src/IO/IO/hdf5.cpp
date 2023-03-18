@@ -357,8 +357,8 @@ std::vector<std::pair<T, T>> readGraph(const H5::DataSet& dataset)
     return data;
 }
 
-template std::vector<std::pair<double, double>> readGraph<double>(const H5::DataSet& dataset);
-template std::vector<std::pair<unsigned long, unsigned long>> readGraph<unsigned long>(const H5::DataSet& dataset);
+template ASTRO_IO_EXPORT std::vector<std::pair<double, double>> readGraph<double>(const H5::DataSet& dataset);
+template ASTRO_IO_EXPORT std::vector<std::pair<uint64_t, uint64_t>> readGraph<uint64_t>(const H5::DataSet& dataset);
 
 template<typename T>
 void writeGraph(const std::vector<std::pair<T, T>>& graph, const H5::Group& h5file, const std::string& datasetName)
@@ -371,10 +371,12 @@ void writeGraph(const std::vector<std::pair<T, T>>& graph, const H5::Group& h5fi
     outputDataset.write(graph.data(), DataTraits<T>::HDF5Type, outputSpace, outputSpace);
 }
 
-template void writeGraph<double>(const std::vector<std::pair<double, double>>& graph, const H5::Group& h5file,
+template ASTRO_IO_EXPORT void writeGraph<double>(const std::vector<std::pair<double, double>>& graph,
+                                                const H5::Group& h5file,
                                  const std::string& datasetName);
-template void writeGraph<unsigned long>(const std::vector<std::pair<unsigned long, unsigned long>>& graph,
-                                        const H5::Group& h5file, const std::string& datasetName);
+template ASTRO_IO_EXPORT void writeGraph<uint64_t>(const std::vector<std::pair<uint64_t, uint64_t>>& graph,
+                                                   const H5::Group& h5file,
+                          const std::string& datasetName);
 
 } // namespace hdf5
 } // namespace astro

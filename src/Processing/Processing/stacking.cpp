@@ -92,13 +92,15 @@ void stacking(const H5::DataSet& inputs, H5::DataSet& output, const Stacker& sta
     }
 }
 
-template void stacking<astro::filters::stackers::Max<float>>(const H5::DataSet& inputs, H5::DataSet& output,
+template ASTRO_PROCESSING_EXPORT void
+stacking<astro::filters::stackers::Max<float>>(const H5::DataSet& inputs, H5::DataSet& output,
                                                              const astro::filters::stackers::Max<float>& stacker,
                                                              std::optional<std::function<void(int)>> updateTask);
-template void stacking<astro::filters::stackers::Median<float>>(const H5::DataSet& inputs, H5::DataSet& output,
+template ASTRO_PROCESSING_EXPORT void
+stacking<astro::filters::stackers::Median<float>>(const H5::DataSet& inputs, H5::DataSet& output,
                                                                 const astro::filters::stackers::Median<float>& stacker,
                                                                 std::optional<std::function<void(int)>> updateTask);
-template void
+template ASTRO_PROCESSING_EXPORT void
 stacking<astro::filters::stackers::RobustMean<float>>(const H5::DataSet& inputs, H5::DataSet& output,
                                                       const astro::filters::stackers::RobustMean<float>& stacker,
                                                       std::optional<std::function<void(int)>> updateTask);

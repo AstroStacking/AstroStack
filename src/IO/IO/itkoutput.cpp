@@ -59,9 +59,9 @@ void save(const ScalarImageTypePtr& img, const std::string& filename)
     writer->Update();
 }
 
-template void save<uint8_t>(const ImageTypePtr& img, const std::string& filename);
-template void save<uint16_t>(const ImageTypePtr& img, const std::string& filename);
-template void save<uint8_t>(const ScalarImageTypePtr& img, const std::string& filename);
-template void save<uint16_t>(const ScalarImageTypePtr& img, const std::string& filename);
+template void ASTRO_IO_EXPORT save<uint8_t>(const ImageTypePtr& img, const std::string& filename);
+template void ASTRO_IO_EXPORT save<uint16_t>(const ImageTypePtr& img, const std::string& filename);
+template void ASTRO_IO_EXPORT save<uint8_t>(const ScalarImageTypePtr& img, const std::string& filename);
+template void ASTRO_IO_EXPORT save<uint16_t>(const ScalarImageTypePtr& img, const std::string& filename);
 } // namespace io
 } // namespace astro

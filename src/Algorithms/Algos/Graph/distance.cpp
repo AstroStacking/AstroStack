@@ -1,4 +1,4 @@
-#include "full_matching.h"
+#include "distance.h"
 
 #include <iostream>
 #include <numeric>

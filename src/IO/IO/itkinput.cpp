@@ -47,6 +47,7 @@ bool registerITKPlugins()
     itk::JPEGImageIOFactoryRegister__Private();
     itk::PNGImageIOFactoryRegister__Private();
     itk::TIFFImageIOFactoryRegister__Private();
+    return true;
 }
 
 bool registeredPlugins{registerITKPlugins()};

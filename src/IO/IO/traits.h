@@ -38,7 +38,7 @@ struct DataTraits<double>
 };
 
 template<>
-struct DataTraits<unsigned long>
+struct DataTraits<uint64_t>
 {
     static const H5::PredType& HDF5Type;
 };

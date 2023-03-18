@@ -24,13 +24,14 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Main/Common/doubleprogressbar.cpp" line="10"/>
-        <location filename="../src/Main/Common/doubleprogressbar.cpp" line="19"/>
+        <location filename="../src/Main/Common/doubleprogressbar.cpp" line="12"/>
+        <location filename="../src/Main/Common/doubleprogressbar.cpp" line="22"/>
         <source>Task </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Main/Common/doubleprogressbar.cpp" line="22"/>
+        <location filename="../src/Main/Common/doubleprogressbar.cpp" line="27"/>
+        <location filename="../src/Main/Common/doubleprogressbar.cpp" line="33"/>
         <source>Current Task: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -55,25 +56,47 @@
     <name>MainWindow</name>
     <message>
         <location filename="../src/Main/mainwindow.ui" line="16"/>
+        <location filename="../../AstroStack-build/src/Main/AstroStack_autogen/include_RelWithDebInfo/ui_mainwindow.h" line="50"/>
         <source>AstroStack</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>MonoProcessing</name>
+    <name>Mono2MonoProcessing</name>
     <message>
-        <location filename="../src/Main/MonoProcessing/monoprocessing.ui" line="14"/>
+        <location filename="../src/Main/Mono2MonoProcessing/mono2monoprocessing.ui" line="14"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Main/MonoProcessing/monoprocessing.ui" line="59"/>
+        <location filename="../src/Main/Mono2MonoProcessing/mono2monoprocessing.ui" line="59"/>
         <source>Execute</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Main/MonoProcessing/monoprocessing.ui" line="66"/>
+        <location filename="../src/Main/Mono2MonoProcessing/mono2monoprocessing.ui" line="66"/>
         <source>Save as...</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Multi2MultiProcessing</name>
+    <message>
+        <location filename="../src/Main/Multi2MultiProcessing/multi2multiprocessing.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/Main/Multi2MultiProcessing/multi2multiprocessing.ui" line="47"/>
+        <source>Execute</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>astro::Explorer</name>
+    <message>
+        <location filename="../src/Main/Explorer/explorer.cpp" line="68"/>
+        <source>Workflows</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -119,36 +142,44 @@
     </message>
 </context>
 <context>
-    <name>astro::MonoProcessing</name>
+    <name>astro::Mono2MonoProcessing</name>
     <message>
-        <location filename="../src/Main/MonoProcessing/monoprocessing.cpp" line="41"/>
+        <location filename="../src/Main/Mono2MonoProcessing/mono2monoprocessing.cpp" line="40"/>
         <source>Loading in progress.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Main/MonoProcessing/monoprocessing.cpp" line="41"/>
-        <location filename="../src/Main/MonoProcessing/monoprocessing.cpp" line="112"/>
+        <location filename="../src/Main/Mono2MonoProcessing/mono2monoprocessing.cpp" line="40"/>
+        <location filename="../src/Main/Mono2MonoProcessing/mono2monoprocessing.cpp" line="111"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Main/MonoProcessing/monoprocessing.cpp" line="65"/>
+        <location filename="../src/Main/Mono2MonoProcessing/mono2monoprocessing.cpp" line="64"/>
         <source>Could not load image </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Main/MonoProcessing/monoprocessing.cpp" line="91"/>
+        <location filename="../src/Main/Mono2MonoProcessing/mono2monoprocessing.cpp" line="90"/>
         <source>Failed executing workflow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Main/MonoProcessing/monoprocessing.cpp" line="112"/>
+        <location filename="../src/Main/Mono2MonoProcessing/mono2monoprocessing.cpp" line="111"/>
         <source>Processing.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/Main/MonoProcessing/monoprocessing.cpp" line="163"/>
+        <location filename="../src/Main/Mono2MonoProcessing/mono2monoprocessing.cpp" line="162"/>
         <source>Save output</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>astro::Multi2MultiProcessing</name>
+    <message>
+        <location filename="../src/Main/Multi2MultiProcessing/multi2multiprocessing.cpp" line="57"/>
+        <source>Failed executing workflow</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

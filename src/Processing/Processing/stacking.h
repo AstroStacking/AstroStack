@@ -4,6 +4,7 @@
 
 #include <H5Cpp.h>
 
+#include <functional>
 #include <optional>
 
 namespace astro

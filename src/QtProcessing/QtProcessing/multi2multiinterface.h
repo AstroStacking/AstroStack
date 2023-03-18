@@ -48,11 +48,11 @@ protected:
 /**
  * Interface to process one image at a time
  */
-class ASTRO_QTPROCESSING_EXPORT Multi2MultiInterface
+class Multi2MultiInterface
 {
 public:
-    Multi2MultiInterface();
-    virtual ~Multi2MultiInterface();
+    ASTRO_QTPROCESSING_EXPORT Multi2MultiInterface();
+    ASTRO_QTPROCESSING_EXPORT virtual ~Multi2MultiInterface();
     /// Name of the interface
     virtual QString name() const = 0;
     /// Return a string explaining what this interface does
@@ -60,7 +60,7 @@ public:
     /// Generate a GUI to be added to the stack
     virtual Multi2MultiInterfaceGUI* generateGUI(QWidget* parent) const = 0;
 
-    static const std::map<QString, Multi2MultiInterface*>& getPlugins();
+    ASTRO_QTPROCESSING_EXPORT static const std::map<QString, Multi2MultiInterface*>& getPlugins();
 };
 } // namespace astro
 

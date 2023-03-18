@@ -20,6 +20,8 @@ find_package(HDF5 COMPONENTS C CXX)
 find_package(Eigen3 REQUIRED)
 find_package(GTest REQUIRED)
 
+add_compile_definitions(H5_BUILT_AS_DYNAMIC_LIB=1)
+
 enable_testing()
 
 if(ENABLE_EXIV2)

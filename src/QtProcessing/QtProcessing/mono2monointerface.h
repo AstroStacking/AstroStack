@@ -54,11 +54,11 @@ private:
 /**
   Interface to process one image at a time
  */
-class ASTRO_QTPROCESSING_EXPORT Mono2MonoInterface
+class Mono2MonoInterface
 {
 public:
-    Mono2MonoInterface();
-    virtual ~Mono2MonoInterface();
+    ASTRO_QTPROCESSING_EXPORT Mono2MonoInterface();
+    ASTRO_QTPROCESSING_EXPORT virtual ~Mono2MonoInterface();
     /// Name of the interface
     virtual QString name() const = 0;
     /// Return a string explaining what this interface does
@@ -66,7 +66,7 @@ public:
     /// Generate a GUI to be added to the stack
     virtual Mono2MonoInterfaceGUI* generateGUI(QWidget* parent) const = 0;
 
-    static const std::map<QString, Mono2MonoInterface*>& getPlugins();
+    ASTRO_QTPROCESSING_EXPORT static const std::map<QString, Mono2MonoInterface*>& getPlugins();
 };
 } // namespace astro
 
