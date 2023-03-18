@@ -29,10 +29,11 @@ int main(int argc, char** argv)
     QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output binary Image."), "output");
     parser.addOption(outputOption);
     QCommandLineOption thresholdOption("threshold", QCoreApplication::translate("main", "Threshold to find stars."),
-                                      ".5", ".5");
+                                       ".5", ".5");
     parser.addOption(thresholdOption);
-    QCommandLineOption discardBiggerOption("discard-bigger", QCoreApplication::translate("main", "Discard elements that are bigger than this value."),
-                                      "100", "100");
+    QCommandLineOption discardBiggerOption(
+            "discard-bigger", QCoreApplication::translate("main", "Discard elements that are bigger than this value."),
+            "100", "100");
     parser.addOption(discardBiggerOption);
 
     // Process the actual command line arguments given by the user
@@ -56,7 +57,8 @@ int main(int argc, char** argv)
         outputDatasetName = outputDatasetName.substr(needSubGroup + 1);
     }
 
-    auto binaryOutput = astro::processing::starDetection(inputDataset, group, outputDatasetName, threshold, discardBigger);
+    auto binaryOutput =
+            astro::processing::starDetection(inputDataset, group, outputDatasetName, threshold, discardBigger);
 
     astro::io::save<uint8_t>(binaryOutput, output);
 

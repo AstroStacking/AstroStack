@@ -47,7 +47,8 @@ void StarRegisterGUI::setupSlots()
     connect(m_ui->threshold, &QDoubleSpinBox::valueChanged, this, &StarRegisterGUI::setThresholdValue);
     connect(m_ui->thresholdSlider, &QSlider::valueChanged, this, &StarRegisterGUI::setApproximateThresholdValue);
     connect(m_ui->discardBigger, &QDoubleSpinBox::valueChanged, this, &StarRegisterGUI::setDiscardBiggerValue);
-    connect(m_ui->discardBiggerSlider, &QSlider::valueChanged, this, &StarRegisterGUI::setApproximateDiscardBiggerValue);
+    connect(m_ui->discardBiggerSlider, &QSlider::valueChanged, this,
+            &StarRegisterGUI::setApproximateDiscardBiggerValue);
     connect(m_ui->fullGraph, &QDoubleSpinBox::valueChanged, this, &StarRegisterGUI::setFullGraphValue);
     connect(m_ui->fullGraphSlider, &QSlider::valueChanged, this, &StarRegisterGUI::setApproximateFullGraphValue);
     connect(m_ui->maxRatio, &QDoubleSpinBox::valueChanged, this, &StarRegisterGUI::setMaxRatioValue);
