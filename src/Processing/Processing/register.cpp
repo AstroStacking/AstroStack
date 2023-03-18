@@ -48,7 +48,7 @@ ImageTypePtr registerImages(const ImageTypePtr& fix, const ImageTypePtr& moving,
         movingLandmarks.push_back(point);
     }
 
-    landmarkBasedTransformInitializer->SetBSplineNumberOfControlPoints(4);
+    landmarkBasedTransformInitializer->SetBSplineNumberOfControlPoints(6);
     landmarkBasedTransformInitializer->SetReferenceImage(fix);
     landmarkBasedTransformInitializer->SetFixedLandmarks(fixedLandmarks);
     landmarkBasedTransformInitializer->SetMovingLandmarks(movingLandmarks);
@@ -88,7 +88,8 @@ ImageTypePtr registerImagesBSpline(const ImageTypePtr& fix, const ImageTypePtr& 
                                    const std::vector<std::pair<double, double>> fixStars,
                                    const std::vector<std::pair<double, double>> movingStars, double defaultValue)
 {
-    return registerImages<itk::BSplineTransform<double, Dimension>>(fix, moving, fixStars, movingStars, defaultValue);
+    return registerImages<itk::BSplineTransform<double, Dimension, 5>>(fix, moving, fixStars, movingStars,
+                                                                       defaultValue);
 }
 } // namespace processing
 } // namespace astro

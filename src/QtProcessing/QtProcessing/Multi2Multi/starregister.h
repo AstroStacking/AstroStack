@@ -44,10 +44,10 @@ public:
     void save(QSettings& settings) override;
 
 private slots:
-    void setMinStarsValue(double val);
-    void setApproximateMinStarsValue(int val);
-    void setMaxStarsValue(double val);
-    void setApproximateMaxStarsValue(int val);
+    void setThresholdValue(double val);
+    void setApproximateThresholdValue(int val);
+    void setDiscardBiggerValue(double val);
+    void setApproximateDiscardBiggerValue(int val);
     void setFullGraphValue(double val);
     void setApproximateFullGraphValue(int val);
     void setMaxRatioValue(double val);

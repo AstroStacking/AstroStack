@@ -28,12 +28,12 @@ int main(int argc, char** argv)
     parser.addOption(outputDatasetOption);
     QCommandLineOption outputOption("output", QCoreApplication::translate("main", "Output binary Image."), "output");
     parser.addOption(outputOption);
-    QCommandLineOption minStarsOption("min-stars", QCoreApplication::translate("main", "Minimum number of stars."),
-                                      "80", "80");
-    parser.addOption(minStarsOption);
-    QCommandLineOption maxStarsOption("max-stars", QCoreApplication::translate("main", "Maximum number of stars."),
-                                      "120", "120");
-    parser.addOption(maxStarsOption);
+    QCommandLineOption thresholdOption("threshold", QCoreApplication::translate("main", "Threshold to find stars."),
+                                      ".5", ".5");
+    parser.addOption(thresholdOption);
+    QCommandLineOption discardBiggerOption("discard-bigger", QCoreApplication::translate("main", "Discard elements that are bigger than this value."),
+                                      "100", "100");
+    parser.addOption(discardBiggerOption);
 
     // Process the actual command line arguments given by the user
     parser.process(app);
@@ -42,8 +42,8 @@ int main(int argc, char** argv)
     std::string output = parser.value(outputOption).toStdString();
     std::string outputDatasetName = parser.value(outputDatasetOption).toStdString();
 
-    int32_t minStars = parser.value(minStarsOption).toInt();
-    int32_t maxStars = parser.value(maxStarsOption).toInt();
+    float threshold = parser.value(thresholdOption).toFloat();
+    int32_t discardBigger = parser.value(discardBiggerOption).toInt();
 
     H5::H5File h5file(input, H5F_ACC_RDWR);
 
@@ -56,7 +56,7 @@ int main(int argc, char** argv)
         outputDatasetName = outputDatasetName.substr(needSubGroup + 1);
     }
 
-    auto binaryOutput = astro::processing::starDetection(inputDataset, group, outputDatasetName, minStars, maxStars);
+    auto binaryOutput = astro::processing::starDetection(inputDataset, group, outputDatasetName, threshold, discardBigger);
 
     astro::io::save<uint8_t>(binaryOutput, output);
 

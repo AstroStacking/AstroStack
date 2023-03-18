@@ -44,34 +44,34 @@ StarRegisterGUI::~StarRegisterGUI() = default;
 
 void StarRegisterGUI::setupSlots()
 {
-    connect(m_ui->minStars, &QDoubleSpinBox::valueChanged, this, &StarRegisterGUI::setMinStarsValue);
-    connect(m_ui->minStarsSlider, &QSlider::valueChanged, this, &StarRegisterGUI::setApproximateMinStarsValue);
-    connect(m_ui->maxStars, &QDoubleSpinBox::valueChanged, this, &StarRegisterGUI::setMaxStarsValue);
-    connect(m_ui->maxStarsSlider, &QSlider::valueChanged, this, &StarRegisterGUI::setApproximateMaxStarsValue);
+    connect(m_ui->threshold, &QDoubleSpinBox::valueChanged, this, &StarRegisterGUI::setThresholdValue);
+    connect(m_ui->thresholdSlider, &QSlider::valueChanged, this, &StarRegisterGUI::setApproximateThresholdValue);
+    connect(m_ui->discardBigger, &QDoubleSpinBox::valueChanged, this, &StarRegisterGUI::setDiscardBiggerValue);
+    connect(m_ui->discardBiggerSlider, &QSlider::valueChanged, this, &StarRegisterGUI::setApproximateDiscardBiggerValue);
     connect(m_ui->fullGraph, &QDoubleSpinBox::valueChanged, this, &StarRegisterGUI::setFullGraphValue);
     connect(m_ui->fullGraphSlider, &QSlider::valueChanged, this, &StarRegisterGUI::setApproximateFullGraphValue);
     connect(m_ui->maxRatio, &QDoubleSpinBox::valueChanged, this, &StarRegisterGUI::setMaxRatioValue);
     connect(m_ui->maxRatioSlider, &QSlider::valueChanged, this, &StarRegisterGUI::setApproximateMaxRatioValue);
 }
 
-void StarRegisterGUI::setMinStarsValue(double val)
+void StarRegisterGUI::setThresholdValue(double val)
 {
-    m_ui->minStarsSlider->setValue(static_cast<int>(val));
+    m_ui->thresholdSlider->setValue(static_cast<int>(val * 100));
 }
 
-void StarRegisterGUI::setApproximateMinStarsValue(int val)
+void StarRegisterGUI::setApproximateThresholdValue(int val)
 {
-    m_ui->minStars->setValue(val);
+    m_ui->threshold->setValue(val / 100.);
 }
 
-void StarRegisterGUI::setMaxStarsValue(double val)
+void StarRegisterGUI::setDiscardBiggerValue(double val)
 {
-    m_ui->maxStarsSlider->setValue(static_cast<int>(val));
+    m_ui->discardBiggerSlider->setValue(static_cast<int>(val));
 }
 
-void StarRegisterGUI::setApproximateMaxStarsValue(int val)
+void StarRegisterGUI::setApproximateDiscardBiggerValue(int val)
 {
-    m_ui->maxStars->setValue(val);
+    m_ui->discardBigger->setValue(val);
 }
 
 void StarRegisterGUI::setFullGraphValue(double val)
@@ -108,8 +108,8 @@ try
     hsize_t dims[4];
     ndims = dataspace.getSimpleExtentDims(dims, nullptr);
 
-    int minStars = static_cast<int>(m_ui->minStars->value());
-    int maxStars = static_cast<int>(m_ui->maxStars->value());
+    float threshold = m_ui->threshold->value();
+    int discardBigger = static_cast<int>(m_ui->discardBigger->value());
     double maxRatio = m_ui->maxRatio->value();
     int fullGraph = static_cast<int>(m_ui->fullGraph->value());
     bool highDef = m_ui->highdef->isChecked();
@@ -136,7 +136,7 @@ try
     // Star detection, save in inter/stars
     for (size_t index = 0; index < dims[0]; ++index)
     {
-        processing::starDetection(greyDataset, index, starGroup, std::to_string(index), minStars, maxStars);
+        processing::starDetection(greyDataset, index, starGroup, std::to_string(index), threshold, discardBigger);
         updateTask(index + dims[0]);
     }
 
@@ -303,16 +303,16 @@ void StarRegisterGUI::restore(QSettings& settings)
     {
         return;
     }
-    m_ui->minStars->setValue(settings.value("minStars").toInt());
-    m_ui->maxStars->setValue(settings.value("maxStars").toInt());
+    m_ui->threshold->setValue(settings.value("threshold").toInt());
+    m_ui->discardBigger->setValue(settings.value("discardBigger").toInt());
     m_ui->fullGraph->setValue(settings.value("fullGraph").toInt());
     m_ui->maxRatio->setValue(settings.value("maxRatio").toDouble());
 }
 
 void StarRegisterGUI::save(QSettings& settings)
 {
-    settings.setValue("minStars", m_ui->minStars->value());
-    settings.setValue("maxStars", m_ui->maxStars->value());
+    settings.setValue("threshold", m_ui->threshold->value());
+    settings.setValue("discardBigger", m_ui->discardBigger->value());
     settings.setValue("fullGraph", m_ui->fullGraph->value());
     settings.setValue("maxRatio", m_ui->maxRatio->value());
 }

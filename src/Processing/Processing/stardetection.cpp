@@ -21,13 +21,12 @@ namespace
 constexpr int MAX_ITERATIONS{50};
 
 ScalarImageTypePtr starDetection(const ScalarImageTypePtr& inputImg, H5::Group& output, const std::string& dataset,
-                                 int32_t minStars, int32_t maxStars)
+                                 float threshold, int32_t discardBigger)
 {
     using BinaryThresholdImageFilterType = itk::BinaryThresholdImageFilter<ScalarImageType, ScalarIntegerImageType>;
     using ConnectedComponentImageFilterType =
             itk::ConnectedComponentImageFilter<ScalarIntegerImageType, ScalarIntegerImageType>;
 
-    float threshold = 0.5;
     auto segmented = BinaryThresholdImageFilterType::New();
     auto connected = ConnectedComponentImageFilterType::New();
 
@@ -36,33 +35,6 @@ ScalarImageTypePtr starDetection(const ScalarImageTypePtr& inputImg, H5::Group& 
     segmented->SetOutsideValue(0);
     segmented->SetInsideValue(std::numeric_limits<UnderlyingScalarPixelType>::max());
     connected->SetInput(segmented->GetOutput());
-
-    int counter = 0;
-    while (true)
-    {
-        segmented->SetLowerThreshold(threshold);
-        segmented->Update();
-        connected->Update();
-
-        if (connected->GetObjectCount() < minStars)
-        {
-            threshold *= .9;
-        }
-        else if (connected->GetObjectCount() > maxStars)
-        {
-            threshold *= 1.05;
-            threshold = std::min(threshold, 1.f);
-        }
-        else
-        {
-            break;
-        }
-        if (counter > MAX_ITERATIONS && connected->GetObjectCount() > minStars)
-        {
-            break;
-        }
-        ++counter;
-    }
 
     using IntegerIteratorType = itk::ImageRegionIterator<ScalarIntegerImageType>;
     using IteratorType = itk::ImageRegionIterator<ScalarImageType>;
@@ -86,7 +58,8 @@ ScalarImageTypePtr starDetection(const ScalarImageTypePtr& inputImg, H5::Group& 
     auto data = stats.getData();
     {
         std::sort(data.begin(), data.end(), [](const auto& r, const auto& l) { return r.back() > l.back(); });
-        auto it = std::remove_if(data.begin(), data.end(), [](const auto& el) { return el.back() == 0; });
+        auto it = std::remove_if(data.begin(), data.end(),
+                                 [=](const auto& el) { return el.back() == 0 || el.back() > discardBigger; });
         data.erase(it, data.end());
     }
 
@@ -108,19 +81,19 @@ ScalarImageTypePtr starDetection(const ScalarImageTypePtr& inputImg, H5::Group& 
 } // namespace
 
 ScalarImageTypePtr starDetection(const H5::DataSet& input, H5::Group& output, const std::string& dataset,
-                                 int32_t minStars, int32_t maxStars)
+                                 float threshold, int32_t discardBigger)
 {
     auto inputImg = astro::hdf5::extractScalarFrom(input);
 
-    return starDetection(inputImg, output, dataset, minStars, maxStars);
+    return starDetection(inputImg, output, dataset, threshold, threshold);
 }
 
 ScalarImageTypePtr starDetection(const H5::DataSet& input, size_t index, H5::Group& output, const std::string& dataset,
-                                 int32_t minStars, int32_t maxStars)
+                                 float threshold, int32_t discardBigger)
 {
     auto inputImg = astro::hdf5::extractScalarFrom(input, index);
 
-    return starDetection(inputImg, output, dataset, minStars, maxStars);
+    return starDetection(inputImg, output, dataset, threshold, discardBigger);
 }
 
 } // namespace processing

@@ -11,6 +11,7 @@ Internally does the following:
 
 ## Parameters
 
-* *minStars* Minimum stars to detect
-* *maxStars* Maximum stars to detect
+* *threshold* Threshold for star detection
+* *discardBigger* Discard elements that are bigger than this value (usually moon or fixed elements)
 * *fullGraph* Number of stars used for a full dense graph matching at the start of the process
+* *maxRatio* Maximum ratio allowed to create the star graph
