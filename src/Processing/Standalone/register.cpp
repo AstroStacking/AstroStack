@@ -33,12 +33,13 @@ int main(int argc, char** argv)
     parser.addOption(outputOption);
     QCommandLineOption highdefOption("high-def", QCoreApplication::translate("main", "Save in 16bits."));
     parser.addOption(highdefOption);
-    QCommandLineOption minStarsOption("min-stars", QCoreApplication::translate("main", "Minimum number of stars."),
-                                      "80", "80");
-    parser.addOption(minStarsOption);
-    QCommandLineOption maxStarsOption("max-stars", QCoreApplication::translate("main", "Maximum number of stars."),
-                                      "120", "120");
-    parser.addOption(maxStarsOption);
+    QCommandLineOption thresholdOption("threshold", QCoreApplication::translate("main", "Threshold to find stars."),
+                                       ".5", ".5");
+    parser.addOption(thresholdOption);
+    QCommandLineOption discardBiggerOption(
+            "discard-bigger", QCoreApplication::translate("main", "Discard elements that are bigger than this value."),
+            "100", "100");
+    parser.addOption(discardBiggerOption);
     QCommandLineOption fullGraphOption("full-graph", QCoreApplication::translate("main", "Full graph matching size."),
                                        "5", "5");
     parser.addOption(fullGraphOption);
@@ -65,8 +66,8 @@ int main(int argc, char** argv)
     std::string moving = parser.value(movingOption).toStdString();
     std::string output = parser.value(outputOption).toStdString();
 
-    int32_t minStars = parser.value(minStarsOption).toInt();
-    int32_t maxStars = parser.value(maxStarsOption).toInt();
+    float threshold = parser.value(thresholdOption).toFloat();
+    int32_t discardBigger = parser.value(discardBiggerOption).toInt();
     int fullGraph = parser.value(fullGraphOption).toInt();
     double maxRatio = parser.value(maxRatioOption).toDouble();
 
@@ -89,8 +90,8 @@ int main(int argc, char** argv)
     astro::ScalarImageTypePtr fixGrey = astro::processing::grey(inputs, 0, h5file, "fixGrey");
     astro::ScalarImageTypePtr movingGrey = astro::processing::grey(inputs, 1, h5file, "movingGrey");
 
-    astro::processing::starDetection(h5file.openDataSet("fixGrey"), h5file, "fixStar", minStars, maxStars);
-    astro::processing::starDetection(h5file.openDataSet("movingGrey"), h5file, "movingStar", minStars, maxStars);
+    astro::processing::starDetection(h5file.openDataSet("fixGrey"), h5file, "fixStar", threshold, discardBigger);
+    astro::processing::starDetection(h5file.openDataSet("movingGrey"), h5file, "movingStar", threshold, discardBigger);
 
     std::vector<std::pair<double, double>> fixGraph = astro::hdf5::readGraph<double>(h5file.openDataSet("fixStar"));
     std::vector<std::pair<double, double>> movingGraph =

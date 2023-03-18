@@ -32,9 +32,12 @@ ScalarImageTypePtr starDetection(const ScalarImageTypePtr& inputImg, H5::Group& 
 
     segmented->SetInput(inputImg);
     segmented->SetUpperThreshold(1);
+    segmented->SetLowerThreshold(threshold);
     segmented->SetOutsideValue(0);
     segmented->SetInsideValue(std::numeric_limits<UnderlyingScalarPixelType>::max());
+    segmented->Update();
     connected->SetInput(segmented->GetOutput());
+    connected->Update();
 
     using IntegerIteratorType = itk::ImageRegionIterator<ScalarIntegerImageType>;
     using IteratorType = itk::ImageRegionIterator<ScalarImageType>;
@@ -56,12 +59,15 @@ ScalarImageTypePtr starDetection(const ScalarImageTypePtr& inputImg, H5::Group& 
 
     stats.compute();
     auto data = stats.getData();
+    std::cout << discardBigger << std::endl;
+    std::cout << data.size() << std::endl;
     {
         std::sort(data.begin(), data.end(), [](const auto& r, const auto& l) { return r.back() > l.back(); });
         auto it = std::remove_if(data.begin(), data.end(),
                                  [=](const auto& el) { return el.back() == 0 || el.back() > discardBigger; });
         data.erase(it, data.end());
     }
+    std::cout << data.size() << std::endl;
 
     // Output data
     hsize_t outputImgDim[2]{data.size() / stats.getComponents(), stats.getComponents()};
@@ -85,7 +91,7 @@ ScalarImageTypePtr starDetection(const H5::DataSet& input, H5::Group& output, co
 {
     auto inputImg = astro::hdf5::extractScalarFrom(input);
 
-    return starDetection(inputImg, output, dataset, threshold, threshold);
+    return starDetection(inputImg, output, dataset, threshold, discardBigger);
 }
 
 ScalarImageTypePtr starDetection(const H5::DataSet& input, size_t index, H5::Group& output, const std::string& dataset,

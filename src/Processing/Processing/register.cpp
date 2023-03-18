@@ -1,14 +1,13 @@
 #include "register.h"
 #include <Processing/grey.h>
 
-#include <itkAffineTransform.h>
 #include <itkBSplineTransform.h>
 #include <itkImageRegistrationMethodv4.h>
 #include <itkLandmarkBasedTransformInitializer.h>
 #include <itkMeanSquaresImageToImageMetricv4.h>
 #include <itkRegularStepGradientDescentOptimizerv4.h>
 #include <itkResampleImageFilter.h>
-#include <itkTranslationTransform.h>
+#include <itkScalableAffineTransform.h>
 
 namespace astro
 {
@@ -81,7 +80,8 @@ ImageTypePtr registerImages(const ImageTypePtr& fix, const ImageTypePtr& moving,
                             const std::vector<std::pair<double, double>> fixStars,
                             const std::vector<std::pair<double, double>> movingStars, double defaultValue)
 {
-    return registerImages<itk::AffineTransform<double, Dimension>>(fix, moving, fixStars, movingStars, defaultValue);
+    return registerImages<itk::ScalableAffineTransform<double, Dimension>>(fix, moving, fixStars, movingStars,
+                                                                         defaultValue);
 }
 
 ImageTypePtr registerImagesBSpline(const ImageTypePtr& fix, const ImageTypePtr& moving,
