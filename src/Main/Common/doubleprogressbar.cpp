@@ -17,20 +17,23 @@ DoubleProgressBar::DoubleProgressBar(QString labelText, int tasks, QWidget* pare
     setModal(true);
 }
 
-void DoubleProgressBar::startNewTask(int steps)
+void DoubleProgressBar::startNewTask(int steps, QString title)
 {
+    m_title = title;
+    value = 0;
     m_ui->totalTasksLabel->setText(tr("Task ") + QString::number(m_ui->totalTasksBar->value() + 1) + "/" +
                                    QString::number(m_ui->totalTasksBar->maximum()));
     m_ui->totalTasksBar->setValue(m_ui->totalTasksBar->value() + 1);
 
     m_ui->currentTaskBar->setMaximum(steps);
-    m_ui->currentTaskLabel->setText(tr("Current Task: "));
+    m_ui->currentTaskLabel->setText(m_title + ": ");
     m_ui->currentTaskBar->setValue(0);
 }
 
-void DoubleProgressBar::setCurrentaskAdvancement(int value)
+void DoubleProgressBar::setCurrentaskAdvancement()
 {
-    m_ui->currentTaskLabel->setText(tr("Current Task: ") + QString::number(m_ui->currentTaskBar->value() + 1) + "/" +
+    ++value;
+    m_ui->currentTaskLabel->setText(m_title + ": " + QString::number(m_ui->currentTaskBar->value() + 1) + "/" +
                                     QString::number(m_ui->currentTaskBar->maximum()));
     m_ui->currentTaskBar->setValue(value);
 }

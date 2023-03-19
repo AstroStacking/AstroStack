@@ -25,14 +25,8 @@
     </message>
     <message>
         <location filename="../src/Main/Common/doubleprogressbar.cpp" line="12"/>
-        <location filename="../src/Main/Common/doubleprogressbar.cpp" line="22"/>
+        <location filename="../src/Main/Common/doubleprogressbar.cpp" line="24"/>
         <source>Task </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/Main/Common/doubleprogressbar.cpp" line="27"/>
-        <location filename="../src/Main/Common/doubleprogressbar.cpp" line="33"/>
-        <source>Current Task: </source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -178,7 +172,7 @@
 <context>
     <name>astro::Multi2MultiProcessing</name>
     <message>
-        <location filename="../src/Main/Multi2MultiProcessing/multi2multiprocessing.cpp" line="57"/>
+        <location filename="../src/Main/Multi2MultiProcessing/multi2multiprocessing.cpp" line="59"/>
         <source>Failed executing workflow</source>
         <translation type="unfinished"></translation>
     </message>

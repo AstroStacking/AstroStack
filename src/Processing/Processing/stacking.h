@@ -14,6 +14,6 @@ namespace processing
 template<typename Stacker>
 ASTRO_PROCESSING_EXPORT void
 stacking(const H5::DataSet& inputs, H5::DataSet& output, const Stacker& stacker,
-         std::optional<std::function<void(int)>> updateTask = std::optional<std::function<void(int)>>());
+         std::optional<std::function<void()>> updateTask = std::optional<std::function<void()>>());
 }
 } // namespace astro

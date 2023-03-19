@@ -219,7 +219,7 @@ H5::DataSet writeTo(const ImageType& img, const H5::Group& group, const std::str
     itk::Size<Dimension> size = img.GetRequestedRegion().GetSize();
     hsize_t inputDim[3]{size.at(0), size.at(1), Traits<ImageType>::LastDim};
     H5::DataSpace dataspace(3, inputDim);
-    H5::DataSet dataset = group.createDataSet(datasetName, H5::PredType::NATIVE_FLOAT, dataspace);
+    H5::DataSet dataset = createDataset<float>(datasetName, dataspace, group);
     dataset.write(img.GetBufferPointer(), H5::PredType::NATIVE_FLOAT, dataspace, dataspace);
     return dataset;
 }
@@ -229,7 +229,7 @@ H5::DataSet writeTo(const ScalarImageType& img, const H5::Group& group, const st
     itk::Size<Dimension> size = img.GetRequestedRegion().GetSize();
     hsize_t inputDim[2]{size.at(0), size.at(1)};
     H5::DataSpace dataspace(2, inputDim);
-    H5::DataSet dataset = group.createDataSet(datasetName, H5::PredType::NATIVE_FLOAT, dataspace);
+    H5::DataSet dataset = createDataset<float>(datasetName, dataspace, group);
     dataset.write(img.GetBufferPointer(), H5::PredType::NATIVE_FLOAT, dataspace, dataspace);
     return dataset;
 }
@@ -263,14 +263,14 @@ void writeTo(const ScalarImageType& img, const H5::DataSet& dataset, size_t inde
 }
 
 H5::DataSet readTo(const std::vector<std::string>& filenames, itk::Size<Dimension> size, const H5::Group& group,
-                   const std::string& datasetName, std::optional<std::function<void(int)>> updateTask)
+                   const std::string& datasetName, std::optional<std::function<void()>> updateTask)
 {
     hsize_t imageDim[4]{1, size.at(0), size.at(1), PixelDimension};
     H5::DataSpace imgDataspace(4, imageDim);
 
     hsize_t inputDim[4]{filenames.size(), size.at(0), size.at(1), PixelDimension};
     H5::DataSpace dataspace(4, inputDim);
-    H5::DataSet dataset = group.createDataSet(datasetName, H5::PredType::NATIVE_FLOAT, dataspace);
+    H5::DataSet dataset = createDataset<float>(datasetName, dataspace, group);
 
     for (size_t i = 0; i < filenames.size(); ++i)
     {
@@ -280,11 +280,15 @@ H5::DataSet readTo(const std::vector<std::string>& filenames, itk::Size<Dimensio
         fspace1.selectHyperslab(H5S_SELECT_SET, currSlab, offset);
 
         auto img = io::open(filenames[i]);
+        if (!img)
+        {
+            throw std::runtime_error("Failed to read " + filenames[i]);
+        }
 
         dataset.write(img->GetBufferPointer(), H5::PredType::NATIVE_FLOAT, imgDataspace, fspace1);
         if (updateTask)
         {
-            (*updateTask)(i);
+            (*updateTask)();
         }
     }
 
@@ -311,22 +315,34 @@ H5::Group getOrCreateGroup(const std::string& outputGroupName, const H5::Group& 
     }
 }
 
-H5::DataSet createDataset(const std::string& outputDatasetName, const H5::DataSpace& outputSpace, H5::PredType type,
+template<typename T>
+H5::DataSet createDataset(const std::string& outputDatasetName, const H5::DataSpace& outputSpace,
                           const H5::Group& h5file)
 {
     H5::DataSet outputDataset;
+    H5::DSetCreatPropList plist;
+    plist.setFillValue(DataTraits<T>::HDF5Type, &DataTraits<T>::defaultValue);
+
     size_t needSubGroup = outputDatasetName.rfind("/");
     if (needSubGroup == std::string::npos)
     {
-        outputDataset = h5file.createDataSet(outputDatasetName, type, outputSpace);
+        outputDataset = h5file.createDataSet(outputDatasetName, DataTraits<T>::HDF5Type, outputSpace);
     }
     else
     {
         H5::Group group = getOrCreateGroup(outputDatasetName.substr(0, needSubGroup), h5file);
-        outputDataset = group.createDataSet(outputDatasetName.substr(needSubGroup + 1), type, outputSpace);
+        outputDataset =
+                group.createDataSet(outputDatasetName.substr(needSubGroup + 1), DataTraits<T>::HDF5Type, outputSpace);
     }
     return outputDataset;
 }
+
+template ASTRO_IO_EXPORT H5::DataSet createDataset<double>(const std::string& outputDatasetName,
+                                                           const H5::DataSpace& outputSpace, const H5::Group& h5file);
+template ASTRO_IO_EXPORT H5::DataSet createDataset<double>(const std::string& outputDatasetName,
+                                                           const H5::DataSpace& outputSpace, const H5::Group& h5file);
+template ASTRO_IO_EXPORT H5::DataSet createDataset<uint64_t>(const std::string& outputDatasetName,
+                                                             const H5::DataSpace& outputSpace, const H5::Group& h5file);
 
 template<typename T>
 std::vector<std::pair<T, T>> readGraph(const H5::DataSet& dataset)
@@ -361,13 +377,13 @@ template ASTRO_IO_EXPORT std::vector<std::pair<double, double>> readGraph<double
 template ASTRO_IO_EXPORT std::vector<std::pair<uint64_t, uint64_t>> readGraph<uint64_t>(const H5::DataSet& dataset);
 
 template<typename T>
-void writeGraph(const std::vector<std::pair<T, T>>& graph, const H5::Group& h5file, const std::string& datasetName)
+void writeGraph(const std::vector<std::pair<T, T>>& graph, const H5::Group& group, const std::string& datasetName)
 {
     // Output data
     hsize_t outputImgDim[2]{graph.size() / 2, 2};
     H5::DataSpace outputSpace(2, outputImgDim);
     // output list
-    H5::DataSet outputDataset = h5file.createDataSet(datasetName, DataTraits<T>::HDF5Type, outputSpace);
+    H5::DataSet outputDataset = createDataset<T>(datasetName, outputSpace, group);
     outputDataset.write(graph.data(), DataTraits<T>::HDF5Type, outputSpace, outputSpace);
 }
 

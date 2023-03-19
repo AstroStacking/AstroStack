@@ -33,8 +33,8 @@ public:
 signals:
     void enable(bool enabled);
     void finished();
-    void startNewTask(int steps);
-    void setCurrentaskAdvancement(int value);
+    void startNewTask(int steps, QString title);
+    void setCurrentaskAdvancement();
 
 public slots:
     void run();

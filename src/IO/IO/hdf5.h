@@ -21,10 +21,11 @@ ASTRO_IO_EXPORT void writeTo(const ScalarImageType& img, const H5::DataSet& data
 ASTRO_IO_EXPORT H5::DataSet
 readTo(const std::vector<std::string>& filenames, itk::Size<Dimension> size, const H5::Group& group,
        const std::string& datasetName,
-       std::optional<std::function<void(int)>> updateTask = std::optional<std::function<void(int)>>());
+       std::optional<std::function<void()>> updateTask = std::optional<std::function<void()>>());
 ASTRO_IO_EXPORT H5::Group getOrCreateGroup(const std::string& outputGroupName, const H5::Group& h5file);
+template<typename T>
 ASTRO_IO_EXPORT H5::DataSet createDataset(const std::string& outputDatasetName, const H5::DataSpace& outputSpace,
-                                          H5::PredType type, const H5::Group& h5file);
+                                          const H5::Group& h5file);
 template<typename T>
 ASTRO_IO_EXPORT std::vector<std::pair<T, T>> readGraph(const H5::DataSet& dataset);
 template<typename T>

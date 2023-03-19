@@ -19,9 +19,11 @@ signals:
     void cancel();
 
 public slots:
-    void startNewTask(int steps);
-    void setCurrentaskAdvancement(int value);
+    void startNewTask(int steps, QString title);
+    void setCurrentaskAdvancement();
 
 private:
     std::unique_ptr<Ui::DoubleProgressBar> m_ui;
+    QString m_title;
+    int value;
 };

@@ -42,6 +42,7 @@ public:
                  QPromise<void>& promise) override;
     void restore(QSettings& settings) override;
     void save(QSettings& settings) override;
+    size_t subTasks() const override;
 
 private slots:
     void setThresholdValue(double val);
@@ -55,6 +56,17 @@ private slots:
 
 private:
     void setupSlots();
+
+    H5::DataSet greyImages(hsize_t dims[4], const H5::Group& intermediateGroup, const H5::DataSet& inputsDataset,
+                           const UpdateTask& updateTask);
+    H5::Group starDetection(hsize_t dim0, const H5::DataSet& greyDataset, const H5::Group& intermediateGroup,
+                            const UpdateTask& updateTask);
+    H5::Group localGraphMatching(hsize_t dim0, const H5::Group& starGroup, const H5::Group& intermediateGroup,
+                                 const UpdateTask& updateTask);
+    void graphPropagation(hsize_t dim0, const H5::Group& starGroup, const H5::Group& graphGroup,
+                          const H5::Group& intermediateGroup, const UpdateTask& updateTask);
+    void registration(hsize_t dim0, const H5::DataSet& inputsDataset, const H5::Group& graphGroup,
+                      const H5::H5File& group, const UpdateTask& updateTask);
 
     std::unique_ptr<Ui::StarRegister> m_ui;
 

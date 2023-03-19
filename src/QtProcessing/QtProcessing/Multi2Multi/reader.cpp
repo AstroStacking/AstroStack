@@ -48,6 +48,7 @@ ReaderGUI::ReaderGUI(QWidget* parent)
 
     m_model->setNameFilters(filters);
     m_model->setNameFilterDisables(false);
+    m_model->sort(0, Qt::AscendingOrder);
     m_ui->treeView->setModel(m_model.get());
     m_ui->treeView->setCurrentIndex(m_model->index(QDir::homePath())); // Should recover from somewhere
     m_ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -77,7 +78,7 @@ try
         throw std::runtime_error("No file selected");
     }
 
-    startNewTask(filenames.size());
+    startNewTask(filenames.size(), "Reading");
 
     auto refImg = InputInterface::loadImg(filenames.front(), this);
     auto size = refImg.getImg()->GetRequestedRegion().GetSize();

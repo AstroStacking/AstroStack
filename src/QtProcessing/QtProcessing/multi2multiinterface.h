@@ -25,8 +25,8 @@ public:
     ASTRO_QTPROCESSING_EXPORT Multi2MultiInterfaceGUI(QWidget* parent);
     ASTRO_QTPROCESSING_EXPORT virtual ~Multi2MultiInterfaceGUI();
 
-    using StartTask = std::function<void(int)>;
-    using UpdateTask = std::function<void(int)>;
+    using StartTask = std::function<void(int, QString)>;
+    using UpdateTask = std::function<void()>;
 
     /// Process the pipeline based on a promise.
     ASTRO_QTPROCESSING_EXPORT virtual void process(const H5::H5File& group, const StartTask& startNewTask,
@@ -39,6 +39,7 @@ public:
     ASTRO_QTPROCESSING_EXPORT virtual bool check() = 0;
     ASTRO_QTPROCESSING_EXPORT bool isActive() const;
     ASTRO_QTPROCESSING_EXPORT QString getName() const;
+    ASTRO_QTPROCESSING_EXPORT virtual size_t subTasks() const;
 
 protected:
     std::unique_ptr<Ui::Multi2MultiInterface> m_multiUi;

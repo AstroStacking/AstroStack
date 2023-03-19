@@ -156,16 +156,15 @@ try
 
     hsize_t outputImgDim[3]{dims[1], dims[2], astro::PixelDimension};
     H5::DataSpace outputSpace(3, outputImgDim);
-    H5::DataSet outputDataset =
-            hdf5::createDataset(m_outputDatasetName, outputSpace, H5::PredType::NATIVE_FLOAT, group);
-    startNewTask(dims[1] + 1);
+    H5::DataSet outputDataset = hdf5::createDataset<float>(m_outputDatasetName, outputSpace, group);
+    startNewTask(dims[1] + 1, tr("Max stacking"));
 
     processing::stacking(inputsDataset, outputDataset, filters::stackers::Max<float>(), updateTask);
 
     AstroImage img;
     img.setImg(hdf5::extractFrom(outputDataset));
     saveImg(img);
-    updateTask(dims[1] + 1);
+    updateTask();
 }
 catch (const std::exception& e)
 {

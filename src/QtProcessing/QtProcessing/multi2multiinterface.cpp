@@ -83,4 +83,9 @@ QString Multi2MultiInterfaceGUI::getName() const
     return m_name;
 }
 
+size_t Multi2MultiInterfaceGUI::subTasks() const
+{
+    return 1;
+}
+
 } // namespace astro

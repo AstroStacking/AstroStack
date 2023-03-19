@@ -59,21 +59,18 @@ ScalarImageTypePtr starDetection(const ScalarImageTypePtr& inputImg, H5::Group& 
 
     stats.compute();
     auto data = stats.getData();
-    std::cout << discardBigger << std::endl;
-    std::cout << data.size() << std::endl;
     {
         std::sort(data.begin(), data.end(), [](const auto& r, const auto& l) { return r.back() > l.back(); });
         auto it = std::remove_if(data.begin(), data.end(),
                                  [=](const auto& el) { return el.back() == 0 || el.back() > discardBigger; });
         data.erase(it, data.end());
     }
-    std::cout << data.size() << std::endl;
 
     // Output data
     hsize_t outputImgDim[2]{data.size() / stats.getComponents(), stats.getComponents()};
     H5::DataSpace outputSpace(2, outputImgDim);
     // output list
-    H5::DataSet outputDataset = output.createDataSet(dataset, H5::PredType::NATIVE_DOUBLE, outputSpace);
+    H5::DataSet outputDataset = astro::hdf5::createDataset<double>(dataset, outputSpace, output);
     outputDataset.write(data.data(), H5::PredType::NATIVE_DOUBLE, outputSpace, outputSpace);
 
     using FilterType = itk::MultiplyImageFilter<ScalarIntegerImageType, ScalarImageType, ScalarImageType>;

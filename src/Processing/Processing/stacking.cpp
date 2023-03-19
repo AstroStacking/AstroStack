@@ -12,7 +12,7 @@ namespace processing
 {
 template<typename Stacker>
 void stacking(const H5::DataSet& inputs, H5::DataSet& output, const Stacker& stacker,
-              std::optional<std::function<void(int)>> updateTask)
+              std::optional<std::function<void()>> updateTask)
 {
     H5::DataSpace inputDataspace = inputs.getSpace();
     int ndimsInput = inputDataspace.getSimpleExtentNdims();
@@ -87,7 +87,7 @@ void stacking(const H5::DataSet& inputs, H5::DataSet& output, const Stacker& sta
         output.write(outputSlab.data(), H5::PredType::NATIVE_FLOAT, memoryOutputSpace, outputDataspace);
         if (updateTask)
         {
-            (*updateTask)(i);
+            (*updateTask)();
         }
     }
 }
@@ -95,14 +95,14 @@ void stacking(const H5::DataSet& inputs, H5::DataSet& output, const Stacker& sta
 template ASTRO_PROCESSING_EXPORT void
 stacking<astro::filters::stackers::Max<float>>(const H5::DataSet& inputs, H5::DataSet& output,
                                                              const astro::filters::stackers::Max<float>& stacker,
-                                                             std::optional<std::function<void(int)>> updateTask);
+                                                             std::optional<std::function<void()>> updateTask);
 template ASTRO_PROCESSING_EXPORT void
 stacking<astro::filters::stackers::Median<float>>(const H5::DataSet& inputs, H5::DataSet& output,
                                                                 const astro::filters::stackers::Median<float>& stacker,
-                                                                std::optional<std::function<void(int)>> updateTask);
+                                                                std::optional<std::function<void()>> updateTask);
 template ASTRO_PROCESSING_EXPORT void
 stacking<astro::filters::stackers::RobustMean<float>>(const H5::DataSet& inputs, H5::DataSet& output,
                                                       const astro::filters::stackers::RobustMean<float>& stacker,
-                                                      std::optional<std::function<void(int)>> updateTask);
+                                                      std::optional<std::function<void()>> updateTask);
 } // namespace processing
 } // namespace astro

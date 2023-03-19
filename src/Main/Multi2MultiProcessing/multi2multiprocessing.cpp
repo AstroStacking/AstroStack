@@ -16,6 +16,8 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 
+#include <numeric>
+
 namespace astro
 {
 Multi2MultiProcessing::Multi2MultiProcessing(QString workflow, QWidget* parent)
@@ -75,7 +77,8 @@ void Multi2MultiProcessing::execute()
 {
     m_ui->frame->setEnabled(false);
 
-    m_progressDialog = new DoubleProgressBar(windowTitle(), m_tasks.size(), this);
+    m_progressDialog = new DoubleProgressBar(windowTitle(), std::accumulate(m_tasks.begin(), m_tasks.end(), 0U, [](size_t value, auto* task){
+        return value + task->subTasks();}), this);
     m_progressDialog->setAttribute(Qt::WA_DeleteOnClose);
 
     connect(m_progressDialog, &DoubleProgressBar::cancel, &m_watcher, &QFutureWatcher<void>::cancel);
@@ -107,8 +110,8 @@ void Multi2MultiProcessing::execute()
                 for (auto task : activeTasks)
                 {
                     task->process(
-                            h5file, [this](int steps) { emit startNewTask(steps); },
-                            [this](int value) { emit setCurrentaskAdvancement(value); }, promise);
+                            h5file, [this](int steps, QString title) { emit startNewTask(steps, title); },
+                            [this]() { emit setCurrentaskAdvancement(); }, promise);
                     promise.setProgressValue(++i);
                     if (promise.isCanceled())
                     {

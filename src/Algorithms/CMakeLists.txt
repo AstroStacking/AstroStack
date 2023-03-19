@@ -15,6 +15,7 @@ FILE(GLOB ASTRO_ALGORITHMS_HEADERS
     Algos/ransac.h
     Algos/Filters/Convertors/HSL2RGB.h
     Algos/Filters/Convertors/RGB2HSL.h
+    Algos/Filters/Stackers/count.h
     Algos/Filters/Stackers/max.h
     Algos/Filters/Stackers/median.h
     Algos/Filters/Stackers/robustmean.h

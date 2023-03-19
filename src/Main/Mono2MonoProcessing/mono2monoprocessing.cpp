@@ -133,7 +133,7 @@ void Mono2MonoProcessing::execute()
                 {
                     img = task->process(img, promise);
                     promise.setProgressValue(++i);
-                    if (promise.isCanceled())
+                    if (promise.isCanceled() || !img.getImg())
                     {
                         emit finished();
                         return;

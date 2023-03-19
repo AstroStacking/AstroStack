@@ -4,6 +4,7 @@ FILE(GLOB TESTS_ALGORITHMS_SRC
     ransac.cpp
     Filters/Convertors/HSL2RGB.cpp
     Filters/Convertors/RGB2HSL.cpp
+    Filters/Stackers/count.cpp
     Filters/Stackers/max.cpp
     Filters/Stackers/median.cpp
     Filters/Stackers/robustmean.cpp
