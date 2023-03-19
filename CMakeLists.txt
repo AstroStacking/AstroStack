@@ -19,6 +19,14 @@ find_package(ITK REQUIRED COMPONENTS ITKIOImageBase ITKIOJPEG ITKIOPNG ITKIOTIFF
 find_package(HDF5 COMPONENTS C CXX)
 find_package(Eigen3 REQUIRED)
 find_package(GTest REQUIRED)
+if(TBB_MODULE_PATH)
+    list(APPEND CMAKE_MODULE_PATH ${TBB_MODULE_PATH})
+    find_package(TBB REQUIRED)
+    set(ASTROSTACK_TBB TBB::tbb)
+    add_compile_definitions(ASTROSTACK_TBB=1)
+else()
+    MESSAGE(STATUS "TBB deactivated; set TBB_MODULE_PATH to the cmake module path if you want to use it")
+endif()
 
 add_compile_definitions(H5_BUILT_AS_DYNAMIC_LIB=1)
 

@@ -23,7 +23,7 @@ public:
     {
         return static_cast<Type>(std::accumulate(values.begin(), values.end(), 0U,
                                                  [](size_t value, Type other)
-                                                 { return value + !Traits<Type>::isnan(other); })) /
+                                                 { return value + (!Traits<Type>::isnan(other) && other != 0); })) /
                values.size();
     }
 };

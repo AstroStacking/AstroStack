@@ -6,6 +6,10 @@
 #include <itkCastImageFilter.h>
 #include <itkImportImageFilter.h>
 
+#ifdef ASTROSTACK_TBB
+#include <tbb/tbb.h>
+#endif
+
 namespace astro
 {
 namespace hdf5
@@ -272,25 +276,37 @@ H5::DataSet readTo(const std::vector<std::string>& filenames, itk::Size<Dimensio
     H5::DataSpace dataspace(4, inputDim);
     H5::DataSet dataset = createDataset<float>(datasetName, dataspace, group);
 
-    for (size_t i = 0; i < filenames.size(); ++i)
-    {
-        H5::DataSpace fspace1 = dataset.getSpace();
-        hsize_t currSlab[4]{1, size.at(0), size.at(1), PixelDimension};
-        hsize_t offset[4]{i, 0, 0, 0};
-        fspace1.selectHyperslab(H5S_SELECT_SET, currSlab, offset);
+    std::mutex mutex;
 
-        auto img = io::open(filenames[i]);
+#ifdef ASTROSTACK_TBB
+    tbb::parallel_for(size_t(0), filenames.size(), [&](size_t index)
+#else
+    for (size_t index = 0; index < filenames.size(); ++index)
+#endif
+    {
+
+        auto img = io::open(filenames[index]);
         if (!img)
         {
-            throw std::runtime_error("Failed to read " + filenames[i]);
+            throw std::runtime_error("Failed to read " + filenames[index]);
         }
 
-        dataset.write(img->GetBufferPointer(), H5::PredType::NATIVE_FLOAT, imgDataspace, fspace1);
+        {
+            std::lock_guard<std::mutex> lock(mutex);
+            H5::DataSpace fspace1 = dataset.getSpace();
+            hsize_t currSlab[4]{1, size.at(0), size.at(1), PixelDimension};
+            hsize_t offset[4]{index, 0, 0, 0};
+            fspace1.selectHyperslab(H5S_SELECT_SET, currSlab, offset);
+            dataset.write(img->GetBufferPointer(), H5::PredType::NATIVE_FLOAT, imgDataspace, fspace1);
+        }
         if (updateTask)
         {
             (*updateTask)();
         }
     }
+#ifdef ASTROSTACK_TBB
+    );
+#endif
 
     return dataset;
 }

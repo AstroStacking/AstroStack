@@ -8,6 +8,12 @@
 
 #include <QtCore/QJsonObject>
 
+#undef emit // Effing Qt...
+
+#ifdef ASTROSTACK_TBB
+#include <tbb/tbb.h>
+#endif
+
 namespace astro
 {
 
@@ -139,13 +145,27 @@ H5::DataSet StarRegisterGUI::greyImages(hsize_t dims[4], const H5::Group& interm
     H5::DataSpace greyDataspace(3, greyDims);
     H5::DataSet greyDataset = hdf5::createDataset<float>(m_greyDatasetName, greyDataspace, intermediateGroup);
     // create grey dataset
+#ifdef ASTROSTACK_TBB
+    tbb::parallel_for(size_t(0), dims[0], [&](size_t index)
+#else
     for (size_t index = 0; index < dims[0]; ++index)
+#endif
     {
-        ImageTypePtr img = hdf5::extractFrom(inputsDataset, index);
+        ImageTypePtr img; 
+        {
+            std::lock_guard<std::mutex> lock(m_hdf5mutex);
+            img = hdf5::extractFrom(inputsDataset, index);
+        }
         auto outputImg = processing::grey(img);
-        hdf5::writeTo(*outputImg, greyDataset, index);
+        {
+            std::lock_guard<std::mutex> lock(m_hdf5mutex);
+            hdf5::writeTo(*outputImg, greyDataset, index);
+        }
         updateTask();
     }
+#ifdef ASTROSTACK_TBB
+    );
+#endif
     return greyDataset;
 }
 
@@ -153,15 +173,23 @@ H5::Group StarRegisterGUI::starDetection(hsize_t dim0, const H5::DataSet& greyDa
                                          const H5::Group& intermediateGroup, const UpdateTask& updateTask)
 {
     float threshold = m_ui->threshold->value();
-    int discardBigger = static_cast<int>(m_ui->discardBigger->value());
+    int32_t discardBigger = static_cast<int>(m_ui->discardBigger->value());
 
     H5::Group starGroup = hdf5::getOrCreateGroup(m_starsGroupName, intermediateGroup);
     // Star detection, save in inter/stars
+#ifdef ASTROSTACK_TBB_
+    tbb::parallel_for(size_t(0), dim0,
+                      [&, this](size_t index)
+#else
     for (size_t index = 0; index < dim0; ++index)
+#endif
     {
         processing::starDetection(greyDataset, index, starGroup, std::to_string(index), threshold, discardBigger);
         updateTask();
     }
+#ifdef ASTROSTACK_TBB_
+    );
+#endif
     return starGroup;
 }
 
@@ -174,19 +202,28 @@ H5::Group StarRegisterGUI::localGraphMatching(hsize_t dim0, const H5::Group& sta
 
     H5::Group graphGroup = hdf5::getOrCreateGroup(m_graphGroupName, intermediateGroup);
     // Create graphs between current image and next one, save in inter/graphs
+#ifdef ASTROSTACK_TBB
+    tbb::parallel_for(size_t(0), middle, [&](size_t index)
+#else
     for (size_t index = 0; index < middle; ++index)
+#endif
     {
-        std::vector<std::pair<double, double>> currentGraph =
-                hdf5::readGraph<double>(starGroup.openDataSet(std::to_string(index)));
-        std::vector<std::pair<double, double>> nextGraph =
-                hdf5::readGraph<double>(starGroup.openDataSet(std::to_string(index + 1)));
-
+        std::vector<std::pair<double, double>> currentGraph;
+        std::vector<std::pair<double, double>> nextGraph;
+        {
+            std::lock_guard<std::mutex> lock(m_hdf5mutex);
+            currentGraph = hdf5::readGraph<double>(starGroup.openDataSet(std::to_string(index)));
+            nextGraph = hdf5::readGraph<double>(starGroup.openDataSet(std::to_string(index + 1)));
+        }
         try
         {
             std::vector<std::pair<size_t, size_t>> matches =
                     astro::processing::graphmatching(nextGraph, currentGraph, fullGraph, maxRatio);
 
-            hdf5::writeGraph(matches, graphGroup, "partial" + std::to_string(index));
+            {
+                std::lock_guard<std::mutex> lock(m_hdf5mutex);
+                hdf5::writeGraph(matches, graphGroup, "partial" + std::to_string(index));
+            }
         }
         catch (const std::exception& e)
         {
@@ -195,22 +232,33 @@ H5::Group StarRegisterGUI::localGraphMatching(hsize_t dim0, const H5::Group& sta
 
         updateTask();
     }
+#ifdef ASTROSTACK_TBB
+    );
+#endif
+#ifdef ASTROSTACK_TBB
+    tbb::parallel_for(middle + 1, dim0,
+            [&](size_t index)
+#else
     for (size_t index = middle + 1; index < dim0; ++index)
+#endif        
     {
-        std::vector<std::pair<double, double>> currentGraph =
-                hdf5::readGraph<double>(starGroup.openDataSet(std::to_string(index)));
-        std::vector<std::pair<double, double>> previousGraph =
-                hdf5::readGraph<double>(starGroup.openDataSet(std::to_string(index - 1)));
-
-        std::vector<std::pair<size_t, size_t>> matches =
-                astro::processing::graphmatching(previousGraph, currentGraph, fullGraph, maxRatio);
+        std::vector<std::pair<double, double>> currentGraph;
+        std::vector<std::pair<double, double>> previousGraph;
+        {
+            std::lock_guard<std::mutex> lock(m_hdf5mutex);
+            currentGraph = hdf5::readGraph<double>(starGroup.openDataSet(std::to_string(index)));
+            previousGraph = hdf5::readGraph<double>(starGroup.openDataSet(std::to_string(index - 1)));
+        }
 
         try
         {
             std::vector<std::pair<size_t, size_t>> matches =
                     astro::processing::graphmatching(previousGraph, currentGraph, fullGraph, maxRatio);
 
-            hdf5::writeGraph(matches, graphGroup, "partial" + std::to_string(index));
+            {
+                std::lock_guard<std::mutex> lock(m_hdf5mutex);
+                hdf5::writeGraph(matches, graphGroup, "partial" + std::to_string(index));
+            }
         }
         catch (const std::exception& e)
         {
@@ -219,6 +267,9 @@ H5::Group StarRegisterGUI::localGraphMatching(hsize_t dim0, const H5::Group& sta
 
         updateTask();
     }
+#ifdef ASTROSTACK_TBB
+    );
+#endif
     return graphGroup;
 }
 
@@ -272,7 +323,7 @@ void StarRegisterGUI::graphPropagation(hsize_t dim0, const H5::Group& starGroup,
             hdf5::writeGraph<double>(matchedMiddleStars, graphGroup, "middle" + std::to_string(index));
             hdf5::writeGraph<double>(matchedStars, graphGroup, "current" + std::to_string(index));
         }
-        catch (const std::exception& e)
+        catch (...)
         {
             // will need to bypass this one...
         }
@@ -315,7 +366,7 @@ void StarRegisterGUI::graphPropagation(hsize_t dim0, const H5::Group& starGroup,
             hdf5::writeGraph<double>(matchedMiddleStars, graphGroup, "middle" + std::to_string(index));
             hdf5::writeGraph<double>(matchedStars, graphGroup, "current" + std::to_string(index));
         }
-        catch (const std::exception& e)
+        catch (...)
         {
             // will need to bypass this one...
         }
@@ -333,34 +384,52 @@ void StarRegisterGUI::registration(hsize_t dim0, const H5::DataSet& inputsDatase
     H5::DataSet outputDataset = hdf5::createDataset<float>(m_outputsDatasetName, inputsDataset.getSpace(), group);
     // Create transformation, apply on image
     ImageTypePtr middleImg = hdf5::extractFrom(inputsDataset, middle);
+#ifdef ASTROSTACK_TBB
+    tbb::parallel_for(size_t(0), middle, [&](size_t index)
+#else
     for (size_t index = 0; index < middle; ++index)
+#endif
     {
         try
         {
-            ImageTypePtr img = hdf5::extractFrom(inputsDataset, index);
-            std::vector<std::pair<double, double>> middleStars =
-                    hdf5::readGraph<double>(graphGroup.openDataSet("middle" + std::to_string(index)));
-            std::vector<std::pair<double, double>> currentStars =
-                    hdf5::readGraph<double>(graphGroup.openDataSet("current" + std::to_string(index)));
+            ImageTypePtr img;
+            std::vector<std::pair<double, double>> middleStars;
+            std::vector<std::pair<double, double>> currentStars;
+            {
+                std::lock_guard<std::mutex> lock(m_hdf5mutex);
+                img = hdf5::extractFrom(inputsDataset, index);
+                middleStars = hdf5::readGraph<double>(graphGroup.openDataSet("middle" + std::to_string(index)));
+                currentStars = hdf5::readGraph<double>(graphGroup.openDataSet("current" + std::to_string(index)));
+            }
             ImageTypePtr registeredImg =
                     highDef ? processing::registerImagesBSpline(middleImg, img, middleStars, currentStars)
                             : processing::registerImages(middleImg, img, middleStars, currentStars);
 
-            hdf5::writeTo(*registeredImg, outputDataset, index);
+            {
+                std::lock_guard<std::mutex> lock(m_hdf5mutex);
+                hdf5::writeTo(*registeredImg, outputDataset, index);
+            }
         }
-        catch (const std::exception& e)
+        catch (...)
         {
             // will need to bypass this one...
         }
         updateTask();
     }
+#ifdef ASTROSTACK_TBB
+    );
+#endif
+    // Copy middle image
     {
         ImageTypePtr middleImg = hdf5::extractFrom(inputsDataset, middle);
         hdf5::writeTo(*middleImg, outputDataset, middle);
         updateTask();
     }
-    // Copy middle image
+#ifdef ASTROSTACK_TBB
+    tbb::parallel_for(middle + 1, dim0, [&](size_t index)
+#else
     for (size_t index = middle + 1; index < dim0; ++index)
+#endif
     {
         try
         {
@@ -375,12 +444,15 @@ void StarRegisterGUI::registration(hsize_t dim0, const H5::DataSet& inputsDatase
 
             hdf5::writeTo(*registeredImg, outputDataset, index);
         }
-        catch (const std::exception& e)
+        catch (...)
         {
             // will need to bypass this one...
         }
         updateTask();
     }
+#ifdef ASTROSTACK_TBB
+    );
+#endif
 }
 
 void StarRegisterGUI::restore(QSettings& settings)

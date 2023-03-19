@@ -46,6 +46,7 @@ public:
 protected:
     std::unique_ptr<Ui::Multi2MultiInterface> m_multiUi;
     QString m_name;
+    std::mutex m_hdf5mutex;
 };
 
 /**
@@ -64,9 +65,6 @@ public:
     virtual Multi2MultiInterfaceGUI* generateGUI(QWidget* parent) const = 0;
 
     ASTRO_QTPROCESSING_EXPORT static const std::map<QString, Multi2MultiInterface*>& getPlugins();
-
-protected:
-    std::mutex m_hdf5mutex;
 };
 } // namespace astro
 
