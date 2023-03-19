@@ -2,6 +2,7 @@
 #include "ui_multi2multiinterface.h"
 #include <Plugin/pluginfactory.h>
 #include <QtIO/output.h>
+#include <QtProcessing/Multi2Multi/countstacking.h>
 #include <QtProcessing/Multi2Multi/maxstacking.h>
 #include <QtProcessing/Multi2Multi/medianstacking.h>
 #include <QtProcessing/Multi2Multi/reader.h>
@@ -22,6 +23,10 @@ std::map<QString, Multi2MultiInterface*> scanPlugins()
     {
         auto* reader = new Reader();
         plugins.emplace(reader->name(), reader);
+    }
+    {
+        auto* stacker = new CountStacking();
+        plugins.emplace(stacker->name(), stacker);
     }
     {
         auto* stacker = new MaxStacking();

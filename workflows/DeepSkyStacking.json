@@ -1,49 +1,59 @@
 {
     "Name": "Deep Sky Stacking",
     "Type": "Multi2Multi",
-    "Steps": [
-        {
-            "Name": "Reader",
-            "Type": "Reader",
-            "Outputs": {
-                "data": {"dataset": "inputs"}
-            }
+  "Steps": [
+    {
+      "Name": "Reader",
+      "Type": "Reader",
+      "Outputs": {
+        "data": { "dataset": "inputs" }
+      }
+    },
+    {
+      "Name": "Registration",
+      "Type": "StarRegister",
+      "Inputs": {
+        "inputs": { "dataset": "inputs" }
+      },
+      "Outputs": {
+        "intermediate": {
+          "group": "inter",
+          "greys": { "dataset": "greys" },
+          "stars": { "group": "stars" },
+          "graphs": { "group": "graphs" }
         },
-        {
-            "Name": "Registration",
-            "Type": "StarRegister",
-            "Inputs": {
-                "inputs": {"dataset": "inputs"}
-            },
-            "Outputs": {
-                "intermediate": {
-                    "group": "inter",
-                    "greys": {"dataset": "greys"},
-                    "stars": {"group": "stars"},
-                    "graphs": {"group": "graphs"}
-                },
-                "outputs": {"dataset": "outputs"}
-            }
-        },
-        {
-            "Name": "Stacking1",
-            "Type": "MaxStacking",
-            "Inputs": {
-                "inputs": {"dataset": "outputs"}
-            },
-            "Outputs": {
-                "output": {"dataset": "maxstack"}
-            }
-        },
-        {
-            "Name": "Stacking2",
-            "Type": "MedianStacking",
-            "Inputs": {
-                "inputs": {"dataset": "outputs"}
-            },
-            "Outputs": {
-                "output": {"dataset": "medianstack"}
-            }
-        }
-    ]
+        "outputs": { "dataset": "outputs" }
+      }
+    },
+    {
+      "Name": "Stacking0",
+      "Type": "CountStacking",
+      "Inputs": {
+        "inputs": { "dataset": "outputs" }
+      },
+      "Outputs": {
+        "output": { "dataset": "countstack" }
+      }
+    },
+    {
+      "Name": "Stacking1",
+      "Type": "MaxStacking",
+      "Inputs": {
+        "inputs": { "dataset": "outputs" }
+      },
+      "Outputs": {
+        "output": { "dataset": "maxstack" }
+      }
+    },
+    {
+      "Name": "Stacking2",
+      "Type": "MedianStacking",
+      "Inputs": {
+        "inputs": { "dataset": "outputs" }
+      },
+      "Outputs": {
+        "output": { "dataset": "medianstack" }
+      }
+    }
+  ]
 }

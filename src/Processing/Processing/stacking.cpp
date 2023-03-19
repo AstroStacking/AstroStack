@@ -1,5 +1,6 @@
 #include "stacking.h"
 
+#include <Algos/Filters/Stackers/count.h>
 #include <Algos/Filters/Stackers/max.h>
 #include <Algos/Filters/Stackers/median.h>
 #include <Algos/Filters/Stackers/robustmean.h>
@@ -92,6 +93,10 @@ void stacking(const H5::DataSet& inputs, H5::DataSet& output, const Stacker& sta
     }
 }
 
+template ASTRO_PROCESSING_EXPORT void
+stacking<astro::filters::stackers::Count<float>>(const H5::DataSet& inputs, H5::DataSet& output,
+                                                 const astro::filters::stackers::Count<float>& stacker,
+                                                 std::optional<std::function<void()>> updateTask);
 template ASTRO_PROCESSING_EXPORT void
 stacking<astro::filters::stackers::Max<float>>(const H5::DataSet& inputs, H5::DataSet& output,
                                                              const astro::filters::stackers::Max<float>& stacker,

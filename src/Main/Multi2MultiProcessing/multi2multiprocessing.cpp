@@ -81,11 +81,14 @@ void Multi2MultiProcessing::execute()
         return value + task->subTasks();}), this);
     m_progressDialog->setAttribute(Qt::WA_DeleteOnClose);
 
-    connect(m_progressDialog, &DoubleProgressBar::cancel, &m_watcher, &QFutureWatcher<void>::cancel);
-    connect(&m_watcher, &QFutureWatcher<void>::finished, m_progressDialog, &DoubleProgressBar::close);
-    connect(this, &Multi2MultiProcessing::startNewTask, m_progressDialog, &DoubleProgressBar::startNewTask);
+    connect(m_progressDialog, &DoubleProgressBar::cancel, &m_watcher, &QFutureWatcher<void>::cancel,
+            Qt::QueuedConnection);
+    connect(&m_watcher, &QFutureWatcher<void>::finished, m_progressDialog, &DoubleProgressBar::close,
+            Qt::QueuedConnection);
+    connect(this, &Multi2MultiProcessing::startNewTask, m_progressDialog, &DoubleProgressBar::startNewTask,
+            Qt::QueuedConnection);
     connect(this, &Multi2MultiProcessing::setCurrentaskAdvancement, m_progressDialog,
-            &DoubleProgressBar::setCurrentaskAdvancement);
+            &DoubleProgressBar::setCurrentaskAdvancement, Qt::QueuedConnection);
 
     std::vector<Multi2MultiInterfaceGUI*> activeTasks;
     for (auto task : m_tasks)

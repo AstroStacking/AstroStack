@@ -24,7 +24,7 @@
    <item>
     <widget class="QProgressBar" name="totalTasksBar">
      <property name="value">
-      <number>24</number>
+      <number>0</number>
      </property>
     </widget>
    </item>
@@ -38,7 +38,7 @@
    <item>
     <widget class="QProgressBar" name="currentTaskBar">
      <property name="value">
-      <number>24</number>
+      <number>0</number>
      </property>
      <property name="invertedAppearance">
       <bool>false</bool>

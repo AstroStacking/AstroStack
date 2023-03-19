@@ -97,7 +97,7 @@ bool RobustMeanStackingGUI::check()
     {
         return true;
     }
-    int result = QMessageBox::question(this, m_name, tr("Overwrite existing file?"),
+    int result = QMessageBox::question(this, title(), tr("Overwrite existing file?"),
                                        QMessageBox::Yes | QMessageBox::No | QMessageBox::Abort);
     if (result == QMessageBox::Abort)
     {

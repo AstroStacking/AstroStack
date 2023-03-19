@@ -53,6 +53,7 @@ ReaderGUI::ReaderGUI(QWidget* parent)
     m_ui->treeView->setCurrentIndex(m_model->index(QDir::homePath())); // Should recover from somewhere
     m_ui->treeView->setContextMenuPolicy(Qt::CustomContextMenu);
     m_ui->treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    m_ui->treeView->setSortingEnabled(true);
 }
 
 ReaderGUI::~ReaderGUI() = default;
@@ -88,6 +89,7 @@ try
     {
         transformedFilenames.push_back(filename.toStdString());
     }
+    std::sort(transformedFilenames.begin(), transformedFilenames.end());
 
     astro::hdf5::readTo(transformedFilenames, size, group, m_outputDatasetName.toStdString(), updateTask);
 }

@@ -8,6 +8,8 @@
 #include <QtCore/QSettings>
 #include <QtWidgets/QGroupBox>
 
+#include <mutex>
+
 namespace Ui
 {
 class Multi2MultiInterface;
@@ -62,6 +64,9 @@ public:
     virtual Multi2MultiInterfaceGUI* generateGUI(QWidget* parent) const = 0;
 
     ASTRO_QTPROCESSING_EXPORT static const std::map<QString, Multi2MultiInterface*>& getPlugins();
+
+protected:
+    std::mutex m_hdf5mutex;
 };
 } // namespace astro
 

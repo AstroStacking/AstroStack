@@ -25,5 +25,5 @@ public slots:
 private:
     std::unique_ptr<Ui::DoubleProgressBar> m_ui;
     QString m_title;
-    int value;
+    int m_value;
 };

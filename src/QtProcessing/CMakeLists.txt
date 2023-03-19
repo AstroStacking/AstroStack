@@ -9,6 +9,8 @@ FILE(GLOB ASTRO_QTPROCESSING_SRC
     QtProcessing/Mono2Mono/lightpollution.ui
     QtProcessing/Mono2Mono/rldeconvolution.cpp
     QtProcessing/Mono2Mono/rldeconvolution.ui
+    QtProcessing/Multi2Multi/countstacking.cpp
+    QtProcessing/Multi2Multi/countstacking.ui
     QtProcessing/Multi2Multi/maxstacking.cpp
     QtProcessing/Multi2Multi/maxstacking.ui
     QtProcessing/Multi2Multi/medianstacking.cpp
@@ -29,6 +31,7 @@ FILE(GLOB ASTRO_QTPROCESSING_HEADERS
     QtProcessing/Mono2Mono/histostretch.h
     QtProcessing/Mono2Mono/lightpollution.h
     QtProcessing/Mono2Mono/rldeconvolution.h
+    QtProcessing/Multi2Multi/countstacking.h
     QtProcessing/Multi2Multi/maxstacking.h
     QtProcessing/Multi2Multi/medianstacking.h
     QtProcessing/Multi2Multi/reader.h
@@ -47,6 +50,7 @@ FILE(GLOB ASTRO_QTPROCESSING_DOC
     QtProcessing/Mono2Mono/histostretch.md
     QtProcessing/Mono2Mono/lightpollution.md
     QtProcessing/Mono2Mono/rldeconvolution.md
+    QtProcessing/Multi2Multi/countstacking.md
     QtProcessing/Multi2Multi/maxstacking.md
     QtProcessing/Multi2Multi/medianstacking.md
     QtProcessing/Multi2Multi/reader.md
@@ -61,5 +65,5 @@ ASTRO_add_library(
     SRC ${ASTRO_QTPROCESSING_SRC}
     HEADERS ${ASTRO_QTPROCESSING_HEADERS}
     DOC ${ASTRO_QTPROCESSING_DOC}
-    LIBRARIES AstroAlgorithms AstroPlugin AstroProcessing AstroQtIO Qt6::Core Qt6::Widgets ${ITK_LIBRARIES}
+    LIBRARIES AstroAlgorithms AstroPlugin AstroProcessing AstroQtIO Qt6::Core Qt6::Widgets ${ITK_LIBRARIES} ${ASTROSTACK_TBB}
 )
